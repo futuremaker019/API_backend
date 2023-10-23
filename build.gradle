@@ -46,7 +46,7 @@ tasks.named('test') {
 
 processResources.dependsOn('copySecret')
 
-tasks.register('copyPrivate') {
+tasks.register('copySecret') {
 	copy {
 		from 'src/main/resources/stock_backend_config'
 		include "*.yml"
