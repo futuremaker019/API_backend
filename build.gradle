@@ -39,9 +39,10 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-test {
-	exclude '**/*'
-}
+// 테스트 하지않고 빌드시 적용
+//test {
+//	exclude '**/*'
+//}
 
 tasks.register('copyPrivate') {
 	copy {
