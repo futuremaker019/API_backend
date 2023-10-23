@@ -44,6 +44,8 @@ tasks.named('test') {
 //	exclude '**/*'
 //}
 
+processResources.dependsOn('copySecret')
+
 tasks.register('copyPrivate') {
 	copy {
 		from 'src/main/resources/stock_backend_config'
