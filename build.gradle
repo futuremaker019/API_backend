@@ -38,3 +38,15 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+test {
+	exclude '**/*'
+}
+
+tasks.register('copyPrivate') {
+	copy {
+		from 'src/main/resources/stock_backend_config'
+		include "*.yml"
+		into 'src/main/resources'
+	}
+}

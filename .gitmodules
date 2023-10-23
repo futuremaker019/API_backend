@@ -1,0 +1,3 @@
+[submodule "src/main/resources/stock_backend_config"]
+	path = src/main/resources/stock_backend_config
+	url = https://github.com/futuremaker019/stock_backend_config.git
