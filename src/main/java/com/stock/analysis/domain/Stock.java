@@ -1,4 +1,4 @@
-package com.stock.analysis.entity;
+package com.stock.analysis.domain;
 
 import lombok.Getter;
 
