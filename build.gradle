@@ -49,9 +49,9 @@ tasks.named('test') {
 }
 
 // 테스트 하지않고 빌드시 적용
-//test {
-//	exclude '**/*'
-//}
+test {
+	exclude '**/*'
+}
 
 processResources.dependsOn('copySecret')
 

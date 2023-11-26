@@ -1,4 +1,4 @@
-package com.stock.analysis.domain;
+package com.stock.analysis.domain.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;
