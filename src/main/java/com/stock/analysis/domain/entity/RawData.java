@@ -12,9 +12,8 @@ import java.math.BigDecimal;
 @Getter
 @ToString(callSuper = true)     // auditing 의 데이터를 찍기 위해 callSuper를 붙임
 @Table(indexes = {
-        @Index(columnList = "title"),
-        @Index(columnList = "createdBy"),
-        @Index(columnList = "createdAt")
+        @Index(columnList = "year"),
+        @Index(columnList = "month"),
 })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RawData {
@@ -28,7 +27,7 @@ public class RawData {
     @Column(nullable = false)
     private Integer month;
 
-    @Column(precision = 6, scale = 10)
+    @Column(precision = 6, scale = 5)
     private BigDecimal close;
 
     @Column(precision = 3, scale = 3)

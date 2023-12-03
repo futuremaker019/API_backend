@@ -17,18 +17,18 @@ import java.util.Set;
 })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Article  extends AuditingFields {
+public class Article extends AuditingFields {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String title;
 
     @Setter
-    @Column(nullable = false, length = 10000)
+    @Column(nullable = false, length = 1000)
     private String content;
 
     @Setter
@@ -46,14 +46,19 @@ public class Article  extends AuditingFields {
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
     private final Set<Upload> articleUploads = new LinkedHashSet<>();
 
-    public Article(String title, String content, UserAccount userAccount) {
+    public Article(Long id, String title, String content, UserAccount userAccount) {
+        this.id = id;
         this.title = title;
         this.content = content;
         this.userAccount = userAccount;
     }
 
+    public static Article of(Long id, String title, String content, UserAccount userAccount) {
+        return new Article(id, title, content, userAccount);
+    }
+
     public static Article of(String title, String content, UserAccount userAccount) {
-        return new Article(title, content, userAccount);
+        return new Article(null, title, content, userAccount);
     }
 
     @Override
