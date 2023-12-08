@@ -10,7 +10,7 @@ import java.util.Objects;
 @Getter
 @ToString(callSuper = true)
 @Table(indexes = {
-        @Index(columnList = "email", unique = true),
+
 })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserAccount extends AuditingFields {
@@ -45,6 +45,10 @@ public class UserAccount extends AuditingFields {
 
     public static UserAccount of(Long id, String userId, String userPassword, String email, String nickname) {
         return new UserAccount(id, userId, userPassword, email, nickname);
+    }
+
+    public static UserAccount of(String userId, String userPassword, String email, String nickname) {
+        return new UserAccount(null, userId, userPassword, email, nickname);
     }
 
     @Override

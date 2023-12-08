@@ -1,9 +1,6 @@
 package com.stock.analysis.domain.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -21,15 +18,19 @@ public class RawData {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @Column(nullable = false)
     private Integer year;
 
+    @Setter
     @Column(nullable = false)
     private Integer month;
 
+    @Setter
     @Column(precision = 6, scale = 5)
     private BigDecimal close;
 
+    @Setter
     @Column(precision = 3, scale = 3)
     private BigDecimal value;       // value에 - (마이너스)가 가능한가...
 
