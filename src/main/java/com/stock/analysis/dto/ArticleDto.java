@@ -21,9 +21,9 @@ public record ArticleDto(
         String modifiedBy
 ) implements Serializable {
 
-//    @QueryProjection
-//    public ArticleDto {
-//    }
+    @QueryProjection
+    public ArticleDto {
+    }
 
     public static ArticleDto of(String title, String content, UserAccountDto userAccountDto) {
         return new ArticleDto(null, title, content,userAccountDto, null, null, null, null);

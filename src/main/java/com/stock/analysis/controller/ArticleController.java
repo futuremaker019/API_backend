@@ -1,6 +1,7 @@
 package com.stock.analysis.controller;
 
 import com.stock.analysis.dto.ArticleDto;
+import com.stock.analysis.dto.ArticleWithCommentsDto;
 import com.stock.analysis.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,4 +30,9 @@ public class ArticleController {
         return ResponseEntity.ok().body(articles);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ArticleWithCommentsDto> getArticle(@PathVariable Long id) {
+        ArticleWithCommentsDto dto = articleService.getArticle(id);
+        return ResponseEntity.ok().body(dto);
+    }
 }

@@ -61,13 +61,13 @@ test {
 
 processResources.dependsOn('copySecret')
 
-//tasks.register('copySecret') {
-//	copy {
-//		from 'src/main/resources/stock_backend_config'
-//		include "*.yml"
-//		into 'src/main/resources'
-//	}
-//}
+tasks.register('copySecret') {
+	copy {
+		from 'src/main/resources/stock_backend_config'
+		include "*.yml"
+		into 'src/main/resources'
+	}
+}
 
 // Querydsl 설정부
 def generated = 'src/main/generated'
