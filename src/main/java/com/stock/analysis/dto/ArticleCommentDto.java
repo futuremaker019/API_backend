@@ -4,7 +4,9 @@ package com.stock.analysis.dto;
 import com.stock.analysis.domain.entity.Article;
 import com.stock.analysis.domain.entity.ArticleComment;
 import com.stock.analysis.domain.entity.UserAccount;
+import com.stock.analysis.utils.Utils;
 
+import javax.swing.text.Utilities;
 import java.time.LocalDateTime;
 
 public record ArticleCommentDto(
@@ -12,13 +14,13 @@ public record ArticleCommentDto(
         Long articleId,
         String content,
         UserAccountDto userAccountDto,
-        LocalDateTime createdAt,
+        String createdAt,
         String createdBy,
-        LocalDateTime modifiedAt,
+        String modifiedAt,
         String modifiedBy
 ) {
     public static ArticleCommentDto of(Long id, Long articleId, String content, UserAccountDto userAccountDto, LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy) {
-        return new ArticleCommentDto(id, articleId, content, userAccountDto, createdAt, createdBy, modifiedAt, modifiedBy);
+        return new ArticleCommentDto(id, articleId, content, userAccountDto, Utils.ConvertDate(createdAt), createdBy, Utils.ConvertDate(modifiedAt), modifiedBy);
     }
 
     // ArticleComment -> from -> ArticleCommentDto
@@ -28,9 +30,9 @@ public record ArticleCommentDto(
                 entity.getArticle().getId(),
                 entity.getContent(),
                 UserAccountDto.from(entity.getUserAccount()),
-                entity.getCreatedAt(),
+                Utils.ConvertDate(entity.getCreatedAt()),
                 entity.getCreatedBy(),
-                entity.getModifiedAt(),
+                Utils.ConvertDate(entity.getModifiedAt()),
                 entity.getModifiedBy()
         );
     }

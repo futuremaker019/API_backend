@@ -2,6 +2,7 @@ package com.stock.analysis.dto;
 
 
 import com.stock.analysis.domain.entity.Article;
+import com.stock.analysis.utils.Utils;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
@@ -15,9 +16,9 @@ public record ArticleWithCommentsDto(
         String title,
         String content,
         UserAccountDto userAccountDto,
-        LocalDateTime createdAt,
+        String createdAt,
         String createdBy,
-        LocalDateTime modifiedAt,
+        String modifiedAt,
         String modifiedBy
 ) {
 
@@ -33,7 +34,7 @@ public record ArticleWithCommentsDto(
             LocalDateTime modifiedAt,
             String modifiedBy
     ) {
-        return new ArticleWithCommentsDto(id, articleCommentDtos, uploadDtos, title, content, accountDto, createdAt, createdBy, modifiedAt, modifiedBy);
+        return new ArticleWithCommentsDto(id, articleCommentDtos, uploadDtos, title, content, accountDto, Utils.ConvertDate(createdAt), createdBy, Utils.ConvertDate(modifiedAt), modifiedBy);
     }
 
     public static ArticleWithCommentsDto from(Article article) {
@@ -48,9 +49,9 @@ public record ArticleWithCommentsDto(
                 article.getTitle(),
                 article.getContent(),
                 UserAccountDto.from(article.getUserAccount()),
-                article.getCreatedAt(),
+                Utils.ConvertDate(article.getCreatedAt()),
                 article.getCreatedBy(),
-                article.getModifiedAt(),
+                Utils.ConvertDate(article.getModifiedAt()),
                 article.getModifiedBy()
         );
     }

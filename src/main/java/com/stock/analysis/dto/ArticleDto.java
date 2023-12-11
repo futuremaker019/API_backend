@@ -3,6 +3,7 @@ package com.stock.analysis.dto;
 import com.querydsl.core.annotations.QueryProjection;
 import com.stock.analysis.domain.entity.Article;
 import com.stock.analysis.domain.entity.UserAccount;
+import com.stock.analysis.utils.Utils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,9 +16,9 @@ public record ArticleDto(
         String title,
         String content,
         UserAccountDto accountDto,
-        LocalDateTime createdAt,
+        String createdAt,
         String createdBy,
-        LocalDateTime modifiedAt,
+        String modifiedAt,
         String modifiedBy
 ) implements Serializable {
 
@@ -30,7 +31,7 @@ public record ArticleDto(
     }
 
     public static ArticleDto of(Long id, String title, String content, UserAccountDto userAccountDto, LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy) {
-        return new ArticleDto(id, title, content, userAccountDto, createdAt, createdBy, modifiedAt, modifiedBy);
+        return new ArticleDto(id, title, content, userAccountDto, Utils.ConvertDate(createdAt), createdBy, Utils.ConvertDate(modifiedAt), modifiedBy);
     }
 
     // entity -> dto (from)
@@ -40,9 +41,9 @@ public record ArticleDto(
                 entity.getTitle(),
                 entity.getContent(),
                 UserAccountDto.from(entity.getUserAccount()),
-                entity.getCreatedAt(),
+                Utils.ConvertDate(entity.getCreatedAt()),
                 entity.getCreatedBy(),
-                entity.getModifiedAt(),
+                Utils.ConvertDate(entity.getModifiedAt()),
                 entity.getModifiedBy()
         );
     }

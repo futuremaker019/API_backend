@@ -3,6 +3,7 @@ package com.stock.analysis.dto;
 
 import com.stock.analysis.domain.contant.UploadType;
 import com.stock.analysis.domain.entity.Upload;
+import com.stock.analysis.utils.Utils;
 
 import java.time.LocalDateTime;
 
@@ -13,9 +14,9 @@ public record UploadDto(
         String path,
         UploadType uploadType,
         String createdBy,
-        LocalDateTime createdAt,
+        String createdAt,
         String modifiedBy,
-        LocalDateTime modifiedAt
+        String modifiedAt
 ) {
     public static UploadDto of(Long id,
                                String name,
@@ -26,7 +27,7 @@ public record UploadDto(
                                LocalDateTime createdAt,
                                String modifiedBy,
                                LocalDateTime modifiedAt) {
-        return new UploadDto(id, name, path, contentType, type, createdBy, createdAt, modifiedBy, modifiedAt);
+        return new UploadDto(id, name, path, contentType, type, createdBy, Utils.ConvertDate(createdAt), modifiedBy, Utils.ConvertDate(modifiedAt));
     }
 
     // 선택시 entity -> dto
@@ -39,9 +40,9 @@ public record UploadDto(
                 entity.getContentType(),
                 entity.getUploadType(),
                 entity. getCreatedBy(),
-                entity.getCreatedAt(),
+                Utils.ConvertDate(entity.getCreatedAt()),
                 entity.getModifiedBy(),
-                entity.getModifiedAt()
+                Utils.ConvertDate(entity.getModifiedAt())
         );
     }
 
