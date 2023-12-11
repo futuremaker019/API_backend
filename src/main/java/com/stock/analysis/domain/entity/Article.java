@@ -38,12 +38,12 @@ public class Article extends AuditingFields {
 
     @ToString.Exclude
     @OrderBy("createdAt DESC")
-    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("createdAt DESC")
-    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<Upload> articleUploads = new LinkedHashSet<>();
 
     public Article(Long id, String title, String content, UserAccount userAccount) {

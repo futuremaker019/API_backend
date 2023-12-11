@@ -2,18 +2,15 @@ package com.stock.analysis.repository;
 
 import com.stock.analysis.domain.entity.Article;
 import com.stock.analysis.domain.entity.UserAccount;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 import java.util.Optional;
@@ -68,7 +65,7 @@ public class JpaRepositoryTest {
         assertThat(articleRepository.count()).isEqualTo(prevArticleTotalCount + 1);
     }
 
-    @DisplayName("")
+    @DisplayName("article update 테스트")
     @Test
     public void givenTestData_whenUpdating_then() {
         // given
@@ -82,6 +79,28 @@ public class JpaRepositoryTest {
         // then
         assertThat(updatedArticle).hasFieldOrPropertyWithValue("title", updatedArticle.getTitle());
 
+    }
+
+    @DisplayName("article delete 테스트")
+    @Test
+    public void givenArticleId_whenDeleting_then() {
+
+        /**
+         * cascading으로 인해 연관관계의 자식 데이터가 같이 지워져야 한다는것을 기억하자.
+         */
+        // given
+        Long articleId = 1L;
+        Article article = articleRepository.findById(articleId).orElseThrow();
+        long prevArticleCount = articleRepository.count();
+        long prevArticleCommentCount = articleCommentRepository.count();
+        int articleCommentSize = article.getArticleComments().size();
+
+        // when
+        articleRepository.delete(article);
+
+        // then
+        assertThat(articleRepository.count()).isEqualTo(prevArticleCount - 1);
+        assertThat(articleCommentRepository.count()).isEqualTo(prevArticleCommentCount - articleCommentSize);
     }
 
     @EnableJpaAuditing
