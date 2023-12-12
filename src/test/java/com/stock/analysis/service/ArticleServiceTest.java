@@ -5,6 +5,7 @@ import com.stock.analysis.domain.entity.Article;
 import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.dto.ArticleDto;
 import com.stock.analysis.dto.ArticleWithCommentsDto;
+import com.stock.analysis.dto.UserAccountDto;
 import com.stock.analysis.repository.ArticleRepository;
 import com.stock.analysis.repository.UserAccountRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -69,7 +71,7 @@ class ArticleServiceTest {
 
     }
 
-    @DisplayName("게시글을 id로 조회하면 댓글이 달린 게시글을 반환한다.") // 첨부파일 추가해야 한다.
+    @DisplayName("게시글을 id로 조회하면 댓글이 달린 게시글을 반환한다.")
     @Test
     public void givenArticleId_whenCallingGetArticle_thenReturnArticle() {
         // given
@@ -106,6 +108,31 @@ class ArticleServiceTest {
                 .hasMessage("게시글을 찾지 못했습니다. articleId : " + articleId);
 
         then(articleRepository).should().findById(articleId);
+    }
+
+    @DisplayName("")
+    @Test
+    public void givenNewArticle_whenSavingArticle_thenSavesArticle() {
+        // given
+        ArticleDto articleDto = createArticleDto();
+
+        given(userAccountRepository.getReferenceById(articleDto.userAccountDto().id())).willReturn(createUserAccount());
+        given(articleRepository.save(any(Article.class))).willReturn(createArticle());
+
+        // when
+        sut.saveArticle(articleDto);
+
+        // then
+        then(userAccountRepository).should().getReferenceById(articleDto.userAccountDto().id());
+        then(articleRepository).should().save(any(Article.class));
+    }
+
+    private ArticleDto createArticleDto() {
+        return ArticleDto.of(
+                "new title",
+                "new content",
+                UserAccountDto.from(createUserAccount())
+        );
     }
 
     private Article createArticle() {

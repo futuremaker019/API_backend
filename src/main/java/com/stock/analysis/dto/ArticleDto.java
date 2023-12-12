@@ -15,7 +15,7 @@ public record ArticleDto(
         Long id,
         String title,
         String content,
-        UserAccountDto accountDto,
+        UserAccountDto userAccountDto,
         String createdAt,
         String createdBy,
         String modifiedAt,
