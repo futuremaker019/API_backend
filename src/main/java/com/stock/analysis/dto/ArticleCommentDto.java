@@ -24,6 +24,7 @@ public record ArticleCommentDto(
     }
 
     // ArticleComment -> from -> ArticleCommentDto
+    // entity -> dto
     public static ArticleCommentDto from(ArticleComment entity) {
         return new ArticleCommentDto(
                 entity.getId(),

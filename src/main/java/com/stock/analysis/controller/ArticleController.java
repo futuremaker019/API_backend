@@ -1,7 +1,13 @@
 package com.stock.analysis.controller;
 
+import com.stock.analysis.domain.contant.UploadType;
+import com.stock.analysis.domain.entity.Article;
+import com.stock.analysis.domain.entity.ArticleUpload;
+import com.stock.analysis.domain.entity.UploadItem;
 import com.stock.analysis.dto.ArticleDto;
+import com.stock.analysis.dto.ArticleUploadDto;
 import com.stock.analysis.dto.ArticleWithCommentsDto;
+import com.stock.analysis.dto.UploadItemDto;
 import com.stock.analysis.dto.request.ArticleRequest;
 import com.stock.analysis.dto.security.UserPrincipal;
 import com.stock.analysis.repository.UserAccountRepository;
@@ -47,8 +53,11 @@ public class ArticleController {
             @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
-        Long articleId = articleService.saveArticle(dto.toDto(userPrincipal.toDto()));
-        uploadService.saveUploads(articleId, attachments);
-        return ResponseEntity.ok().body(articleId);
+        Article savedArticle = articleService.saveArticle(dto.toDto(userPrincipal.toDto()));
+        uploadService.saveUploads(
+                UploadItemDto.builder().article(savedArticle).build(),
+                attachments, UploadType.ARTICLE
+        );
+        return ResponseEntity.ok().body(savedArticle.getId());
     }
 }

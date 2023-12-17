@@ -44,7 +44,7 @@ public class Article extends AuditingFields {
     @ToString.Exclude
     @OrderBy("createdAt DESC")
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private final Set<Upload> articleUploads = new LinkedHashSet<>();
+    private final Set<ArticleUpload> articleUploads = new LinkedHashSet<>();
 
     public Article(Long id, String title, String content, UserAccount userAccount) {
         this.id = id;

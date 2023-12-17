@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public record ArticleWithCommentsDto(
         Long id,
         Set<ArticleCommentDto> articleCommentDtos,
-        Set<UploadDto> uploadDtos,
+        Set<UploadItemDto> uploadDtos,
         String title,
         String content,
         UserAccountDto userAccountDto,
@@ -25,7 +25,7 @@ public record ArticleWithCommentsDto(
     public static ArticleWithCommentsDto of(
             Long id,
             Set<ArticleCommentDto> articleCommentDtos,
-            Set<UploadDto> uploadDtos,
+            Set<UploadItemDto> uploadDtos,
             String title,
             String content,
             UserAccountDto accountDto,
@@ -44,7 +44,7 @@ public record ArticleWithCommentsDto(
                         .map(ArticleCommentDto::from)
                         .collect(Collectors.toCollection(LinkedHashSet::new)),
                 article.getArticleUploads().stream()
-                        .map(UploadDto::from)
+                        .map(UploadItemDto::from)
                         .collect(Collectors.toCollection(LinkedHashSet::new)),
                 article.getTitle(),
                 article.getContent(),

@@ -1,6 +1,7 @@
 package com.stock.analysis.service;
 
 import com.stock.analysis.domain.contant.SearchType;
+import com.stock.analysis.domain.contant.UploadType;
 import com.stock.analysis.domain.entity.Article;
 import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.dto.ArticleDto;
@@ -24,6 +25,7 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
     private final UserAccountRepository userAccountRepository;
+    private final UploadService uploadService;
 
     @Transactional(readOnly = true)
     public Page<ArticleDto> searchArticles(SearchType searchType, String searchKeyword, Pageable pageable) {
@@ -48,9 +50,9 @@ public class ArticleService {
                 .orElseThrow(() -> new EntityNotFoundException("게시글을 찾지 못했습니다. articleId : " + id));
     }
 
-    public Long saveArticle(ArticleDto dto) {
+    public Article saveArticle(ArticleDto dto) {
         UserAccount userAccount = userAccountRepository.getReferenceById(dto.userAccountDto().id());
         Article savedArticle = articleRepository.save(dto.toEntity(userAccount));
-        return savedArticle.getId();
+        return savedArticle;
     }
 }

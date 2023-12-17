@@ -5,6 +5,7 @@ import com.stock.analysis.domain.contant.UploadType;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -20,6 +21,9 @@ public class Upload extends AuditingFields {
     private String name;
 
     @Column(length = 100)
+    private String storeName;
+
+    @Column(length = 100)
     private String contentType;
 
     @Column(length = 100)
@@ -32,14 +36,32 @@ public class Upload extends AuditingFields {
     @ManyToOne(optional = false)
     private Article article;
 
-    private Upload(String name, String contentType, String path, UploadType uploadType) {
+    @Setter
+    @ManyToOne(optional = false)
+    private Asset asset;
+
+    private Upload(String name, String storeName, String contentType, String path, UploadType uploadType, Article article) {
         this.name = name;
+        this.storeName = storeName;
         this.contentType = contentType;
         this.path = path;
         this.uploadType = uploadType;
+        this.article = article;
     }
 
-    public static Upload of(String name, String contentType, String path, UploadType uploadType) {
-        return new Upload(name, contentType, path, uploadType);
+    public static Upload of(String name, String savedName, String contentType, String path, UploadType uploadType, Article article) {
+        return new Upload(name, savedName, contentType, path, uploadType, article);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Upload upload)) return false;
+        return Objects.equals(id, upload.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
