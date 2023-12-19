@@ -1,7 +1,6 @@
 package com.stock.analysis.service;
 
 import com.stock.analysis.domain.contant.SearchType;
-import com.stock.analysis.domain.contant.UploadType;
 import com.stock.analysis.domain.entity.Article;
 import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.dto.ArticleDto;
@@ -13,10 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 
 @Service
 @Transactional

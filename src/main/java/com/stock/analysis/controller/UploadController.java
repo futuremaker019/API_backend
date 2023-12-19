@@ -1,6 +1,5 @@
 package com.stock.analysis.controller;
 
-import com.stock.analysis.domain.entity.Upload;
 import com.stock.analysis.dto.UploadResult;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;

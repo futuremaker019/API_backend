@@ -1,9 +1,8 @@
 package com.stock.analysis.service;
 
-import com.stock.analysis.domain.contant.UploadType;
-import com.stock.analysis.domain.entity.ArticleUpload;
-import com.stock.analysis.dto.UploadItemDto;
-import com.stock.analysis.repository.UploadItemRepository;
+import com.stock.analysis.domain.entity.upload.ArticleUpload;
+import com.stock.analysis.dto.upload.UploadDto;
+import com.stock.analysis.repository.ArticleUploadRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -26,13 +24,13 @@ public class UploadService {
     @Value("${rootPath}")
     private String rootPath;
 
-    private final UploadItemRepository uploadItemRepository;
+    private final ArticleUploadRepository articleUploadRepository;
 
     public String getFullPath(String fileName) {
         return rootPath + fileName;
     }
 
-    public void saveUploads(UploadItemDto uploadItemDto, List<MultipartFile> files, UploadType uploadType) {
+    public void saveUploads(UploadDto uploadDto, List<MultipartFile> files) {
         String filePath = DateTimeFormatter.ofPattern("YYYY/MM/dd").format(LocalDate.now());
         File rootDir = new File(getFullPath(filePath));
         if (!rootDir.exists()) {
@@ -43,9 +41,6 @@ public class UploadService {
             }
         }
 
-        /**
-         *  TODO : upload는 article만 할게 아닌데 어떻게 여러 엔티티가 upload를 바라볼수 있게 만들까?
-         */
         files.forEach(file -> {
             String originalFilename = file.getOriginalFilename();
             String storedFileName = createStoredFileName(originalFilename);
@@ -56,14 +51,14 @@ public class UploadService {
                 e.printStackTrace();
             }
 
-            ArticleUpload articleUpload = uploadItemDto.toArticleUpload(
+            ArticleUpload articleUpload = uploadDto.toEntity(
                     originalFilename,
                     storedFileName,
                     file.getContentType(),
                     String.format("%s/%s", filePath, storedFileName)
             );
 
-            uploadItemRepository.save(articleUpload);
+            articleUploadRepository.save(articleUpload);
         });
     }
 

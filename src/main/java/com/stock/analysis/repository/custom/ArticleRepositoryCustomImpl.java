@@ -1,7 +1,6 @@
 package com.stock.analysis.repository.custom;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.stock.analysis.domain.entity.QArticle;
 import com.stock.analysis.dto.ArticleDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

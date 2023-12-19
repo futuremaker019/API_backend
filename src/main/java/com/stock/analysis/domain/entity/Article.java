@@ -1,6 +1,7 @@
 package com.stock.analysis.domain.entity;
 
 import com.stock.analysis.domain.AuditingFields;
+import com.stock.analysis.domain.entity.upload.ArticleUpload;
 import lombok.*;
 
 import javax.persistence.*;

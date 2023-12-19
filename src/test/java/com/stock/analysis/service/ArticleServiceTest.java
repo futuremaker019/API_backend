@@ -110,7 +110,7 @@ class ArticleServiceTest {
         then(articleRepository).should().findById(articleId);
     }
 
-    @DisplayName("")
+    @DisplayName("새로운 게시글이 들어오면 게시글을 저장한다.")
     @Test
     public void givenNewArticle_whenSavingArticle_thenSavesArticle() {
         // given
