@@ -72,4 +72,8 @@ public class UploadService {
         int delimiter = originalFileName.lastIndexOf(".");
         return originalFileName.substring(delimiter + 1);
     }
+
+    public void getFile(Long id) {
+
+    }
 }
