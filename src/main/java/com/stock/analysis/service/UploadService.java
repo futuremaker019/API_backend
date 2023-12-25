@@ -5,12 +5,18 @@ import com.stock.analysis.dto.upload.UploadDto;
 import com.stock.analysis.repository.ArticleUploadRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -48,14 +54,14 @@ public class UploadService {
             try {
                 file.transferTo(new File(rootDir, storedFileName));
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
 
             ArticleUpload articleUpload = uploadDto.toEntity(
                     originalFilename,
                     storedFileName,
-                    file.getContentType(),
-                    String.format("%s/%s", filePath, storedFileName)
+                    filePath,
+                    file.getContentType()
             );
 
             articleUploadRepository.save(articleUpload);
@@ -73,7 +79,17 @@ public class UploadService {
         return originalFileName.substring(delimiter + 1);
     }
 
-    public void getFile(Long id) {
+    public Resource getFile(Long id) {
+        ArticleUpload articleUpload = articleUploadRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("upload file not found, id: " + id));
 
+        String fullRootPath = getFullPath(articleUpload.getPath());
+        Path filePath = Paths.get(fullRootPath).resolve(Paths.get(articleUpload.getStoredName()));
+
+        try {
+            return new UrlResource(filePath.toUri());
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

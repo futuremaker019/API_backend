@@ -38,7 +38,7 @@ public class ArticleUploadDto extends UploadDto {
         this.article = article;
     }
 
-    public ArticleUpload toEntity(String name, String storedName, String contentType, String path) {
+    public ArticleUpload toEntity(String name, String storedName, String path, String contentType) {
         return ArticleUpload.builder()
                 .article(this.article)
                 .name(name)

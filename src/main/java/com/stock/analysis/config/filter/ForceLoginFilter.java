@@ -22,10 +22,13 @@ public class ForceLoginFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        UserDetails userDetails = userDetailsService.loadUserByUsername("noah");
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, "1122", userDetails.getAuthorities());
         SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(authentication);
+
+        if (securityContext.getAuthentication() == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername("noah");
+            Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, "1122", userDetails.getAuthorities());
+            securityContext.setAuthentication(authentication);
+        }
 
         filterChain.doFilter(request, response);
     }
