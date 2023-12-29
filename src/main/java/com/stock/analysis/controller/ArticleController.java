@@ -36,13 +36,13 @@ public class ArticleController {
         return ResponseEntity.ok().body(articles);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ArticleWithCommentsDto> getArticle(@PathVariable Long id) {
-        ArticleWithCommentsDto dto = articleService.getArticle(id);
+    @GetMapping("/{articleId}")
+    public ResponseEntity<ArticleWithCommentsDto> getArticle(@PathVariable Long articleId) {
+        ArticleWithCommentsDto dto = articleService.getArticle(articleId);
         return ResponseEntity.ok().body(dto);
     }
 
-    @PostMapping(value = "/create")
+    @PostMapping( "/create")
     public ResponseEntity<Long> saveArticle(
             @RequestPart(value = "dto") ArticleRequest dto,
             @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments,
@@ -54,5 +54,17 @@ public class ArticleController {
                 attachments
         );
         return ResponseEntity.ok().body(savedArticle.getId());
+    }
+
+    @PutMapping("/{articleId}")
+    public ResponseEntity<Boolean> updateArticle(
+            @RequestBody ArticleRequest dto,
+            @PathVariable Long articleId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+
+        articleService.updateArticle(articleId, dto.toDto(userPrincipal.toDto()));
+
+        return ResponseEntity.ok().body(true);
     }
 }
