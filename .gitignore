@@ -38,3 +38,6 @@ out/
 
 src/main/generated/**
 src/main/resources/*.yml
+
+### docker related file
+.env

@@ -1,6 +1,7 @@
 package com.stock.analysis.domain.entity;
 
 import com.stock.analysis.domain.AuditingFields;
+import com.stock.analysis.domain.entity.upload.ArticleUpload;
 import lombok.*;
 
 import javax.persistence.*;
@@ -38,13 +39,13 @@ public class Article extends AuditingFields {
 
     @ToString.Exclude
     @OrderBy("createdAt DESC")
-    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("createdAt DESC")
-    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
-    private final Set<Upload> articleUploads = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private final Set<ArticleUpload> articleUploads = new LinkedHashSet<>();
 
     public Article(Long id, String title, String content, UserAccount userAccount) {
         this.id = id;
