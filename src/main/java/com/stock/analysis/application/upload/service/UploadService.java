@@ -1,8 +1,8 @@
-package com.stock.analysis.service;
+package com.stock.analysis.application.upload.service;
 
+import com.stock.analysis.application.upload.repository.ArticleUploadRepository;
 import com.stock.analysis.domain.entity.upload.ArticleUpload;
 import com.stock.analysis.dto.upload.UploadDto;
-import com.stock.analysis.repository.ArticleUploadRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;

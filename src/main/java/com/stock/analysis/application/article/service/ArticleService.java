@@ -1,12 +1,13 @@
-package com.stock.analysis.service;
+package com.stock.analysis.application.article.service;
 
+import com.stock.analysis.application.article.repository.ArticleRepository;
 import com.stock.analysis.domain.contant.SearchType;
 import com.stock.analysis.domain.entity.Article;
 import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.dto.ArticleDto;
 import com.stock.analysis.dto.ArticleWithCommentsDto;
-import com.stock.analysis.repository.ArticleRepository;
-import com.stock.analysis.repository.UserAccountRepository;
+import com.stock.analysis.application.upload.service.UploadService;
+import com.stock.analysis.application.useraccount.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

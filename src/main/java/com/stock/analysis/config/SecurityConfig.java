@@ -2,7 +2,7 @@ package com.stock.analysis.config;
 
 import com.stock.analysis.config.filter.ForceLoginFilter;
 import com.stock.analysis.dto.security.UserPrincipal;
-import com.stock.analysis.service.UserAccountService;
+import com.stock.analysis.application.useraccount.service.UserAccountService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

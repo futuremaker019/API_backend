@@ -1,4 +1,4 @@
-package com.stock.analysis.repository;
+package com.stock.analysis.application.useraccount.repository;
 
 import com.stock.analysis.domain.entity.UserAccount;
 import org.springframework.data.jpa.repository.JpaRepository;

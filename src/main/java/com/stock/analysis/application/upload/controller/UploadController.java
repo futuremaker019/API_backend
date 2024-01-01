@@ -1,6 +1,6 @@
-package com.stock.analysis.controller;
+package com.stock.analysis.application.upload.controller;
 
-import com.stock.analysis.service.UploadService;
+import com.stock.analysis.application.upload.service.UploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;

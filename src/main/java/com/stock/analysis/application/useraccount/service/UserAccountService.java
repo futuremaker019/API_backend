@@ -1,7 +1,7 @@
-package com.stock.analysis.service;
+package com.stock.analysis.application.useraccount.service;
 
+import com.stock.analysis.application.useraccount.repository.UserAccountRepository;
 import com.stock.analysis.dto.UserAccountDto;
-import com.stock.analysis.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

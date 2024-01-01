@@ -1,13 +1,14 @@
 package com.stock.analysis.service;
 
+import com.stock.analysis.application.article.service.ArticleService;
 import com.stock.analysis.domain.contant.SearchType;
 import com.stock.analysis.domain.entity.Article;
 import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.dto.ArticleDto;
 import com.stock.analysis.dto.ArticleWithCommentsDto;
 import com.stock.analysis.dto.UserAccountDto;
-import com.stock.analysis.repository.ArticleRepository;
-import com.stock.analysis.repository.UserAccountRepository;
+import com.stock.analysis.application.article.repository.ArticleRepository;
+import com.stock.analysis.application.useraccount.repository.UserAccountRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

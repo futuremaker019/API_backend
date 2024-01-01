@@ -1,4 +1,4 @@
-package com.stock.analysis.controller;
+package com.stock.analysis.application.article.controller;
 
 import com.stock.analysis.domain.entity.Article;
 import com.stock.analysis.dto.ArticleDto;
@@ -6,8 +6,8 @@ import com.stock.analysis.dto.ArticleWithCommentsDto;
 import com.stock.analysis.dto.request.ArticleRequest;
 import com.stock.analysis.dto.security.UserPrincipal;
 import com.stock.analysis.dto.upload.ArticleUploadDto;
-import com.stock.analysis.service.ArticleService;
-import com.stock.analysis.service.UploadService;
+import com.stock.analysis.application.article.service.ArticleService;
+import com.stock.analysis.application.upload.service.UploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

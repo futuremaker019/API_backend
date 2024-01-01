@@ -1,7 +1,10 @@
 package com.stock.analysis.repository;
 
+import com.stock.analysis.application.article.repository.ArticleRepository;
+import com.stock.analysis.application.articlecomment.repository.ArticleCommentRepository;
 import com.stock.analysis.domain.entity.Article;
 import com.stock.analysis.domain.entity.UserAccount;
+import com.stock.analysis.application.useraccount.repository.UserAccountRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

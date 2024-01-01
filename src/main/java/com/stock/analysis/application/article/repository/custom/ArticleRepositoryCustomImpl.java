@@ -1,4 +1,4 @@
-package com.stock.analysis.repository.custom;
+package com.stock.analysis.application.article.repository.custom;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.stock.analysis.dto.ArticleDto;

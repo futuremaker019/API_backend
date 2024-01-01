@@ -1,12 +1,11 @@
-package com.stock.analysis.repository;
+package com.stock.analysis.application.article.repository;
 
 import com.stock.analysis.domain.entity.Article;
-import com.stock.analysis.repository.custom.ArticleRepositoryCustom;
+import com.stock.analysis.application.article.repository.custom.ArticleRepositoryCustom;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
