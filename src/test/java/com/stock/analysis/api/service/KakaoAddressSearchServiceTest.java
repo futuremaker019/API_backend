@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,6 +19,8 @@ class KakaoAddressSearchServiceTest {
 
     @Mock
     private KaKaoURIBuilderService kaKaoURIBuilderService;
+    @Mock
+    private RestTemplate restTemplate;
 
     @DisplayName("address 파라미터가 null이면, null 을 return 한다.")
     @Test
