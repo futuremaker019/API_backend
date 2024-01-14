@@ -9,9 +9,9 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid token"),
+    HAS_NO_AUTHORITIES(HttpStatus.UNAUTHORIZED, "Has no Authorities"),
 
     ;
-
 
     private final HttpStatus status;
     private final String message;
