@@ -1,10 +1,14 @@
 package com.stock.analysis.domain.entity;
 
 import com.stock.analysis.domain.AuditingFields;
+import com.stock.analysis.domain.contant.RoleType;
+import com.stock.analysis.domain.converter.RoleTypesConverter;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -35,6 +39,10 @@ public class UserAccount extends AuditingFields {
     @Column(length = 100)
     private String nickname;
 
+    @Convert(converter = RoleTypesConverter.class)
+    @Column(nullable = false)
+    private Set<RoleType> roleTypes = new LinkedHashSet<>();
+
     private UserAccount(Long id, String userId, String userPassword, String email, String nickname) {
         this.id = id;
         this.userId = userId;
@@ -49,6 +57,10 @@ public class UserAccount extends AuditingFields {
 
     public static UserAccount of(String userId, String userPassword, String email, String nickname) {
         return new UserAccount(null, userId, userPassword, email, nickname);
+    }
+
+    public static UserAccount of(String userId, String userPassword) {
+        return new UserAccount(null, userId, userPassword, null, null);
     }
 
     @Override

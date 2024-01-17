@@ -1,5 +1,6 @@
 package com.stock.analysis.dto.security;
 
+import com.stock.analysis.domain.contant.RoleType;
 import com.stock.analysis.dto.UserAccountDto;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,17 +22,31 @@ public record UserPrincipal(
 
     public static UserPrincipal of(Long id, String userId, String password, String email, String nickname) {
         Set<RoleType> roleTypes = Set.of(RoleType.USER);
-
         return new UserPrincipal(
                 id,
                 userId,
                 password,
                 roleTypes.stream()
-                        .map(RoleType::getName)
+                        .map(RoleType::getRoleName)
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toUnmodifiableSet()),
                 email,
                 nickname
+        );
+    }
+
+    public static UserPrincipal of(String userId, String password) {
+        Set<RoleType> roleTypes = Set.of(RoleType.USER);
+        return new UserPrincipal(
+                null,
+                userId,
+                password,
+                roleTypes.stream()
+                        .map(RoleType::getRoleName)
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toUnmodifiableSet()),
+                null,
+                null
         );
     }
 
@@ -55,25 +70,31 @@ public record UserPrincipal(
         );
     }
 
-    public enum RoleType {
-        USER("ROLE_USER");
+//    public enum RoleType {
+//        USER("ROLE_USER");
+//
+//        @Getter
+//        private final String name;
+//
+//        RoleType(String name) {
+//            this.name = name;
+//        }
+//    }
 
-        @Getter
-        private final String name;
-
-        RoleType(String name) {
-            this.name = name;
-        }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() { return authorities; }
+    public String getPassword() {
+        return password;
+    }
 
     @Override
-    public String getPassword() { return password; }
-
-    @Override
-    public String getUsername() { return userId; }
+    public String getUsername() {
+        return userId;
+    }
 
     @Override
     public boolean isAccountNonExpired() {

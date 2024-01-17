@@ -3,7 +3,7 @@ package com.stock.analysis.config;
 import com.stock.analysis.exception.CustomAccessDeniedHandler;
 import com.stock.analysis.exception.CustomAuthenticationEntryPoint;
 import com.stock.analysis.config.jwt.JwtFilter;
-import com.stock.analysis.config.jwt.TokenManager;
+import com.stock.analysis.config.jwt.JwtUtils;
 import com.stock.analysis.dto.security.UserPrincipal;
 import com.stock.analysis.application.useraccount.service.UserAccountService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -27,21 +28,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final TokenManager tokenManager;
+    private final JwtUtils jwtUtils;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        String[] swaggerPatterns = {"/v3/api-docs/**", "/configuration/ui",
+                "/swagger-resources/**", "/configuration/security",
+                "/swagger-ui/**", "/swagger/**", "/swagger-ui.html"};
+
         return http
                 .csrf().disable()
                 .cors().configurationSource(corsConfigurationSource())
                 .and()
                 .authorizeRequests(auth -> auth
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .requestMatchers(PathRequest.toH2Console()).permitAll()
-                        .antMatchers(HttpMethod.GET, "/", "/swagger-ui/**").permitAll()
+//                        .requestMatchers(PathRequest.toH2Console()).permitAll()
+//                        .antMatchers(HttpMethod.GET).permitAll()
+                        .antMatchers(swaggerPatterns).permitAll()
                         .antMatchers("/api/*/users/join", "/api/*/users/login").permitAll()
                         .antMatchers("/api/**").authenticated()
-                        .antMatchers("/admin/**").hasRole("ADMIN")
+//                        .antMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
                 )
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -50,15 +56,8 @@ public class SecurityConfig {
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .accessDeniedHandler(new CustomAccessDeniedHandler())
                 .and()
-                .addFilterBefore(new JwtFilter(tokenManager), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class)
                 .build();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService(UserAccountService userAccountService) {
-        return username -> userAccountService.searchUser(username)
-                .map(UserPrincipal::from)
-                .orElseThrow(() -> new UsernameNotFoundException("user not found. userId : " + username));
     }
 
     @Bean
@@ -75,4 +74,15 @@ public class SecurityConfig {
         return source;
     }
 
+    @Bean
+    public UserDetailsService userDetailsService(UserAccountService userAccountService) {
+        return username -> userAccountService.searchUser(username)
+                .map(UserPrincipal::from)
+                .orElseThrow(() -> new UsernameNotFoundException("user not found. userId : " + username));
+    }
+
+    @Bean
+    public BCryptPasswordEncoder encodePassword() {
+        return new BCryptPasswordEncoder();
+    }
 }

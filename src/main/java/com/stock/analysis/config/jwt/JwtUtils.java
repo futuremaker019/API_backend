@@ -6,28 +6,28 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Configuration
-public class TokenManager implements InitializingBean {
+public class JwtUtils implements InitializingBean {
 
     @Value("${jwt.secret-key}")
     private String secretKey;
-
     @Value("${jwt.token.expired-time-ms}")
     private long accessTokenExpiredTimeMs;
 
-    private long refreshTokenExpiredTimeMs = accessTokenExpiredTimeMs + 60;
-
+    private static final String AUTHORITIES_KEY = "auth";
+    private long refreshTokenExpiredTimeMs = accessTokenExpiredTimeMs + 60000;
     private Key key;
 
     /**
@@ -41,18 +41,13 @@ public class TokenManager implements InitializingBean {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    private static Key getSigningKey(String secretKey) {
-        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
     // createToken
-
     public String createToken(Authentication auth, TokenType tokenType) {
         String authorities = auth.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
 
         Map payload = new HashMap<>();
-        payload.put("auth", authorities);
+        payload.put(AUTHORITIES_KEY, authorities);
         payload.put("username", auth.getName());
         long now = new Date().getTime();
         Date validTime = tokenType == TokenType.ACCESS_TOKEN ? new Date(now + accessTokenExpiredTimeMs) : new Date(now + refreshTokenExpiredTimeMs);
@@ -61,10 +56,9 @@ public class TokenManager implements InitializingBean {
                 .setClaims(payload)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(validTime)
-                .signWith(getSigningKey(secretKey), SignatureAlgorithm.HS256)
+                .signWith(this.key, SignatureAlgorithm.HS256)
                 .compact();
     }
-
 
     // tokenValidation
     public boolean validateToken(String jwt) {
@@ -84,7 +78,30 @@ public class TokenManager implements InitializingBean {
             log.info("JWT 토큰이 잘못되었습니다.");
             throw e;
         }
-        // getAuthentication
+
     }
+
+    // getAuthentication
+    public Authentication getAuthentication(String token) {
+        Claims claims = Jwts
+                .parserBuilder()
+                .setSigningKey(this.key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+
+        Collection<? extends GrantedAuthority> authorities =
+                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
+
+        User principal = new User(claims.getSubject(), "", authorities);
+
+        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+    }
+
+
+
 
 }
