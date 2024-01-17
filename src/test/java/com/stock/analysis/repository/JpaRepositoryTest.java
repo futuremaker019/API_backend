@@ -106,6 +106,16 @@ public class JpaRepositoryTest {
         assertThat(articleCommentRepository.count()).isEqualTo(prevArticleCommentCount - articleCommentSize);
     }
 
+    @DisplayName("사용자 등록 테스트")
+    @Test
+    public void 사용자등록() {
+        // given1
+
+        // when
+
+        // then
+    }
+
     @EnableJpaAuditing
     @TestConfiguration
     public static class TestJpaConfig {

@@ -1,6 +1,7 @@
 package com.stock.analysis.application.useraccount.service;
 
 import com.stock.analysis.application.useraccount.repository.UserAccountRepository;
+import com.stock.analysis.config.jwt.JwtUtils;
 import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.dto.UserAccountDto;
 import com.stock.analysis.dto.request.UserLoginRequest;
@@ -19,8 +20,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserAccountService {
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final UserAccountRepository userAccountRepository;
+    private final JwtUtils jwtUtils;
 
     @Transactional(readOnly = true)
     public Optional<UserAccountDto> searchUser(String userId) {
@@ -32,7 +34,9 @@ public class UserAccountService {
             throw new UsernameNotFoundException("UserId Existed");
         });
 
-        return UserAccountDto.from(userAccountRepository.save(UserAccount.of(userId, passwordEncoder.encode(password))));
+        return UserAccountDto.from(userAccountRepository.save(
+                UserAccount.of(userId, passwordEncoder.encode(password))
+        ));
     }
 
     /**
