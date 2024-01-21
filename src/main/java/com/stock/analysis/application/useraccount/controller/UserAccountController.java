@@ -5,13 +5,17 @@ import com.stock.analysis.dto.request.UserJoinRequest;
 import com.stock.analysis.dto.request.UserLoginRequest;
 import com.stock.analysis.dto.response.Response;
 import com.stock.analysis.dto.response.UserLoginResponse;
+import com.stock.analysis.exception.AuthArgsException;
+import com.stock.analysis.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -24,8 +28,14 @@ public class UserAccountController {
      * 가입성공 시, "SUCCESS" 메시지 전송
      */
     @PostMapping("/join")
-    public Response<Void> join(@Valid @RequestBody UserJoinRequest request) {
-        userAccountService.saveUserAccount(request.userId(), request.password());
+    public Response<?> join(@Valid @RequestBody UserJoinRequest request, Errors errors) {
+        if (errors.hasErrors()) {
+            String defaultMessage = Objects.requireNonNull(errors.getFieldError()).getDefaultMessage();
+            System.out.println("errors = " + defaultMessage);
+            throw new AuthArgsException(ErrorCode.HAS_NO_ARGUMENTS, defaultMessage);
+        }
+
+        userAccountService.saveUserAccount(request);
         return Response.success();
     }
 

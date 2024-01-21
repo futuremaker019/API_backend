@@ -5,7 +5,10 @@ import com.stock.analysis.domain.contant.RoleType;
 import com.stock.analysis.domain.converter.RoleTypesConverter;
 import lombok.*;
 
+import javax.management.relation.Role;
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -25,10 +28,12 @@ public class UserAccount extends AuditingFields {
 
     @Setter
     @Column(nullable = false)
+    @NotBlank(message = "아이디 필수")
     private String userId;
 
     @Setter
     @Column(nullable = false)
+    @NotBlank(message = "패스워드 필수")
     private String userPassword;
 
     @Setter
@@ -43,24 +48,33 @@ public class UserAccount extends AuditingFields {
     @Column(nullable = false)
     private Set<RoleType> roleTypes = new LinkedHashSet<>();
 
-    private UserAccount(Long id, String userId, String userPassword, String email, String nickname) {
+    private UserAccount(Long id, String userId, String userPassword, String email, String nickname, Set<RoleType> roleTypes) {
         this.id = id;
         this.userId = userId;
         this.userPassword = userPassword;
         this.email = email;
         this.nickname = nickname;
+        this.roleTypes = roleTypes;
     }
 
-    public static UserAccount of(Long id, String userId, String userPassword, String email, String nickname) {
-        return new UserAccount(id, userId, userPassword, email, nickname);
+    public static UserAccount of(Long id, String userId, String userPassword, String email, String nickname, Set<RoleType> roleTypes) {
+        return new UserAccount(id, userId, userPassword, email, nickname, roleTypes);
     }
 
-    public static UserAccount of(String userId, String userPassword, String email, String nickname) {
-        return new UserAccount(null, userId, userPassword, email, nickname);
+    public static UserAccount of(String userId, String userPassword, String email, String nickname, Set<RoleType> roleTypes) {
+        return new UserAccount(null, userId, userPassword, email, nickname, roleTypes);
     }
 
-    public static UserAccount of(String userId, String userPassword) {
-        return new UserAccount(null, userId, userPassword, null, null);
+    public void addRoleType(RoleType roleType) {
+        this.getRoleTypes().add(roleType);
+    }
+
+    public void addRoleTypes(Collection<RoleType> roleTypes) {
+        this.getRoleTypes().addAll(roleTypes);
+    }
+
+    public void removeRoleType(RoleType roleType) {
+        this.getRoleTypes().remove(roleType);
     }
 
     @Override

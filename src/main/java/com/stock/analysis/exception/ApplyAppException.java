@@ -2,16 +2,15 @@ package com.stock.analysis.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.apache.logging.log4j.message.StringFormattedMessage;
 
 @Getter
 @AllArgsConstructor
-public class ApplyApplicationException extends RuntimeException {
+public class ApplyAppException extends RuntimeException {
 
     private ErrorCode errorCode;
     private String message;
 
-    public ApplyApplicationException(ErrorCode errorCode) {
+    public ApplyAppException(ErrorCode errorCode) {
         this.errorCode = errorCode;
         this.message = null;
     }

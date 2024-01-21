@@ -1,7 +1,7 @@
 insert into user_account (user_id, user_password, nickname, email, role_types, created_by, created_at, modified_by, modified_at) values
-('noah', '1122', 'noah', 'noah@naver.com', 'noah', 'USER,ADMIN', '2022-11-07 16:00:51', 'noah', '2022-11-07 16:00:51'),
-('noah00o', '1122', 'noah00o', 'noah00o@naver.com', 'noah00o', 'USER,DEVELOPER','2022-11-07 16:00:51', 'noah00o', '2022-11-07 16:00:51'),
-('john', '1122', 'john', 'john@gmail.com', 'john', 'USER,MANAGER','2022-11-07 16:00:51', 'john', '2022-11-07 16:00:51');
+('noah', '1122', 'noah', 'noah@naver.com', 'USER,ADMIN', 'noah',  '2022-11-07 16:00:51', 'noah', '2022-11-07 16:00:51'),
+('noah00o', '1122', 'noah00o', 'noah00o@naver.com', 'USER,DEVELOPER','noah00o', '2022-11-07 16:00:51', 'noah00o', '2022-11-07 16:00:51'),
+('john', '1122', 'john', 'john@gmail.com', 'USER,MANAGER', 'john', '2022-11-07 16:00:51', 'john', '2022-11-07 16:00:51');
 
 insert into article (created_at,created_by,modified_at,modified_by,content,title,account_id) values
 ('2023-07-03 23:23:40','noah00o','2023-06-01 18:01:26','noah00o','Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.','Lalmonirhat Airport',1),

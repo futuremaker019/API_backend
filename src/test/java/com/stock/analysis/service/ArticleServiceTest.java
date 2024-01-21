@@ -1,6 +1,7 @@
 package com.stock.analysis.service;
 
 import com.stock.analysis.application.article.service.ArticleService;
+import com.stock.analysis.domain.contant.RoleType;
 import com.stock.analysis.domain.contant.SearchType;
 import com.stock.analysis.domain.entity.Article;
 import com.stock.analysis.domain.entity.UserAccount;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -149,7 +151,8 @@ class ArticleServiceTest {
                 "noah",
                 "1122",
                 "noah00o@naver.com",
-                "noah"
+                "noah",
+                Set.of(RoleType.USER)
         );
     }
 }

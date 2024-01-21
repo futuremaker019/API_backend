@@ -2,11 +2,14 @@ package com.stock.analysis.application.useraccount.service;
 
 import com.stock.analysis.application.useraccount.repository.UserAccountRepository;
 import com.stock.analysis.config.jwt.JwtUtils;
+import com.stock.analysis.domain.contant.RoleType;
 import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.dto.UserAccountDto;
+import com.stock.analysis.dto.request.UserJoinRequest;
 import com.stock.analysis.dto.request.UserLoginRequest;
 import com.stock.analysis.dto.response.Response;
 import com.stock.analysis.dto.response.UserLoginResponse;
+import com.stock.analysis.dto.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -29,14 +33,16 @@ public class UserAccountService {
         return userAccountRepository.findByUserId(userId).map(UserAccountDto::from);
     }
 
-    public UserAccountDto saveUserAccount(String userId, String password) {
-        userAccountRepository.findByUserId(userId).ifPresent(e -> {
+    public UserAccountDto saveUserAccount(UserJoinRequest userJoinRequest) {
+        userAccountRepository.findByUserId(userJoinRequest.userId()).ifPresent(e -> {
             throw new UsernameNotFoundException("UserId Existed");
         });
 
-        return UserAccountDto.from(userAccountRepository.save(
-                UserAccount.of(userId, passwordEncoder.encode(password))
-        ));
+        UserAccountDto dto = userJoinRequest.toDto();
+        System.out.println("dto = " + dto);
+        UserAccountDto result = UserAccountDto.from(userAccountRepository.save(dto.toEntity()));
+        System.out.println("result = " + result);
+        return result;
     }
 
     /**

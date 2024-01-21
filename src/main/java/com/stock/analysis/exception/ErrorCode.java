@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ErrorCode {
 
+    HAS_NO_ARGUMENTS(HttpStatus.BAD_REQUEST, "has no Arguments"),
+
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid token"),
     HAS_NO_AUTHORITIES(HttpStatus.UNAUTHORIZED, "Has no Authorities"),
 

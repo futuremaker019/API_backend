@@ -1,6 +1,7 @@
 package com.stock.analysis.dto.security;
 
 import com.stock.analysis.domain.contant.RoleType;
+import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.dto.UserAccountDto;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -65,21 +66,14 @@ public record UserPrincipal(
                 id,
                 userId,
                 password,
+                authorities.stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .map(RoleType::valueOf)
+                        .collect(Collectors.toUnmodifiableSet()),
                 email,
                 nickname
         );
     }
-
-//    public enum RoleType {
-//        USER("ROLE_USER");
-//
-//        @Getter
-//        private final String name;
-//
-//        RoleType(String name) {
-//            this.name = name;
-//        }
-//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

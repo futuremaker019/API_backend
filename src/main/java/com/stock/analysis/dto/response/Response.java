@@ -23,4 +23,8 @@ public class Response<T> {
     public static Response<Void> error(String resultCode) {
         return new Response<Void>(resultCode, null);
     }
+
+    public static <T> Response<T> error(String resultCode, T message) {
+        return new Response<T>(resultCode, message);
+    }
  }

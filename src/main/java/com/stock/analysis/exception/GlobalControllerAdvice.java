@@ -10,9 +10,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalControllerAdvice {
 
-    @ExceptionHandler(ApplyApplicationException.class)
-    public ResponseEntity<?> errorHandler(ApplyApplicationException e) {
-        log.error("Error occured {}", e.toString());        // ?? e.toString 은 뭐야
+    @ExceptionHandler(AuthArgsException.class)
+    public ResponseEntity<?> authArgsErrorHandler(AuthArgsException e) {
+        log.error("Error occurred {}", e.toString());
+        return ResponseEntity.status(e.getErrorCode().getStatus())
+                .body(Response.error(e.getErrorCode().name(), e.getMessage()));
+    }
+
+    @ExceptionHandler(ApplyAppException.class)
+    public ResponseEntity<?> errorHandler(ApplyAppException e) {
+        log.error("Error occurred {}", e.toString());
         return ResponseEntity.status(e.getErrorCode().getStatus())
                 .body(Response.error(e.getErrorCode().name()));
     }
