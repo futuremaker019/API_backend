@@ -18,7 +18,7 @@ public class AuthArgsException extends RuntimeException {
     @Override
     public String getMessage() {
         if (message != null) {
-            return errorCode.getMessage();
+            return message;
         }
         return String.format("%s, %s", errorCode.getMessage(), message);
     }
