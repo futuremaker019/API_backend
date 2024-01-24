@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalControllerAdvice {
 
-    @ExceptionHandler(AuthArgsException.class)
-    public ResponseEntity<?> authArgsErrorHandler(AuthArgsException e) {
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<?> authArgsErrorHandler(AuthenticationException e) {
         log.error("Error occurred {}", e.toString());
         return ResponseEntity.status(e.getErrorCode().getStatus())
                 .body(Response.error(e.getErrorCode().name(), e.getMessage()));

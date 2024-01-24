@@ -19,7 +19,7 @@ public record UserJoinRequest(
         );
     }
 
-    public UserAccountDto toDto() {
+    public UserAccountDto toDto(String encodedPassword) {
         Set<RoleType> roleTypes;
         switch (authority) {
             case "DEVELOPER" -> roleTypes = Set.of(RoleType.USER, RoleType.DEVELOPER);
@@ -28,6 +28,6 @@ public record UserJoinRequest(
             default -> roleTypes = Set.of(RoleType.USER);
         }
 
-        return UserAccountDto.of(userId, password, roleTypes);
+        return UserAccountDto.of(userId, encodedPassword, roleTypes);
     }
 }

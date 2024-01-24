@@ -45,7 +45,7 @@ public class SecurityConfig {
 //                        .requestMatchers(PathRequest.toH2Console()).permitAll()
 //                        .antMatchers(HttpMethod.GET).permitAll()
                         .antMatchers(swaggerPatterns).permitAll()
-                        .antMatchers("/api/*/users/join", "/api/*/users/login").permitAll()
+                        .antMatchers(HttpMethod.POST, "/api/*/users/join", "/api/*/users/login").permitAll()
                         .antMatchers("/api/**").authenticated()
 //                        .antMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
@@ -74,15 +74,5 @@ public class SecurityConfig {
         return source;
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(UserAccountService userAccountService) {
-        return username -> userAccountService.searchUser(username)
-                .map(UserPrincipal::from)
-                .orElseThrow(() -> new UsernameNotFoundException("user not found. userId : " + username));
-    }
 
-    @Bean
-    public BCryptPasswordEncoder encodePassword() {
-        return new BCryptPasswordEncoder();
-    }
 }

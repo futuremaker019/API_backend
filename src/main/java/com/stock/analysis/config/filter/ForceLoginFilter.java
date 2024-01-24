@@ -17,7 +17,7 @@ import java.io.IOException;
 public class ForceLoginFilter {
 //public class ForceLoginFilter extends OncePerRequestFilter {
 
-    @Autowired
+//    @Autowired
     private UserDetailsService userDetailsService;
 
 //    @Override

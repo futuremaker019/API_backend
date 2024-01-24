@@ -5,12 +5,12 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class AuthArgsException extends RuntimeException {
+public class AuthenticationException extends RuntimeException {
 
     private ErrorCode errorCode;
     private String message;
 
-    public AuthArgsException(ErrorCode errorCode) {
+    public AuthenticationException(ErrorCode errorCode) {
         this.errorCode = errorCode;
         this.message = null;
     }

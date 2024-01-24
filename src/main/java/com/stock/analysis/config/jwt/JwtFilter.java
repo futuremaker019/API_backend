@@ -13,7 +13,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.http.HttpRequest;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,11 +22,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String jwt = resolveToken(request);
+        String token = resolveToken(request);
         String requestURI = request.getRequestURI();
 
-        if (StringUtils.hasText(jwt) && jwtUtils.validateToken(jwt)) {
-            Authentication authentication = jwtUtils.getAuthentication(jwt);
+        if (StringUtils.hasText(token) && jwtUtils.validateToken(token)) {
+            Authentication authentication = jwtUtils.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             log.debug("인증 정보를 저장했습니다 {}, uri: {}", authentication.getName(), requestURI);
         } else {
