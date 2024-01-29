@@ -8,8 +8,10 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ErrorCode {
 
-    HAS_NO_ARGUMENTS(HttpStatus.BAD_REQUEST, "has no Arguments"),
+    //Authentication
+    HAS_NO_ARGUMENTS(HttpStatus.BAD_REQUEST, "has no Arguments"),           // 인풋의 데이터가 없을떄
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
+    USER_EXISTED(HttpStatus.CONFLICT, "User Existed"),
 
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid token"),
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid refresh token"),

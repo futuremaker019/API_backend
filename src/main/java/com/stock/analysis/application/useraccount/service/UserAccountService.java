@@ -45,7 +45,7 @@ public class UserAccountService {
 
     public void saveUserAccount(UserJoinRequest userJoinRequest) {
         userAccountRepository.findByUserId(userJoinRequest.userId()).ifPresent(e -> {
-            throw new UsernameNotFoundException("UserId Existed");
+            throw new AuthenticationException(ErrorCode.USER_EXISTED, "UserId Existed");
         });
 
         String encodedPassword = passwordEncoder.encode(userJoinRequest.password());

@@ -20,9 +20,13 @@ public class Response<T> {
         return new Response<T>("SUCCESS", result);
     }
 
-    public static Response<Void> error(String resultCode) {
-        return new Response<Void>(resultCode, null);
+    public static <T> Response<T> error(T resultCode) {
+        return new Response<T>("ERROR", resultCode);
     }
+
+//    public static Response<Void> error(String resultCode) {
+//        return new Response<Void>(resultCode, null);
+//    }
 
     public static <T> Response<T> error(String resultCode, T message) {
         return new Response<T>(resultCode, message);

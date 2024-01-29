@@ -14,7 +14,7 @@ public class GlobalControllerAdvice {
     public ResponseEntity<?> authArgsErrorHandler(AuthenticationException e) {
         log.error("Error occurred {}", e.toString());
         return ResponseEntity.status(e.getErrorCode().getStatus())
-                .body(Response.error(e.getErrorCode().name(), e.getMessage()));
+                .body(Response.error(e.getErrorCode().name()));
     }
 
     @ExceptionHandler(ApplyAppException.class)

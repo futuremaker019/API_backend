@@ -9,12 +9,10 @@ import com.stock.analysis.exception.AuthenticationException;
 import com.stock.analysis.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -30,8 +28,8 @@ public class UserAccountController {
     /**
      * 가입성공 시, "SUCCESS" 메시지 전송
      */
-    @PostMapping("/join")
-    public Response<Void> join(@Valid @RequestBody UserJoinRequest request, Errors errors) {
+    @PostMapping("/signup")
+    public Response<Void> signup(@Valid @RequestBody UserJoinRequest request, Errors errors) {
         if (errors.hasErrors()) {
             String defaultMessage = Objects.requireNonNull(errors.getFieldError()).getDefaultMessage();
             System.out.println("errors = " + defaultMessage);
@@ -45,8 +43,8 @@ public class UserAccountController {
     /**
      * 로그인 성공시, "SUCCESS" 메시지 및 바디 전송
      */
-    @PostMapping("/login")
-    public Response<UserLoginResponse> login(
+    @PostMapping("/signin")
+    public Response<UserLoginResponse> signin(
             @Valid @RequestBody UserLoginRequest request,
             Errors errors,
             HttpServletResponse response

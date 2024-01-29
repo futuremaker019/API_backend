@@ -9,7 +9,7 @@ import java.util.Set;
 public record UserJoinRequest(
         @NotBlank(message = "아이디는 필수값입니다.") String userId,
         @NotBlank(message = "패스워드는 필수값입니다.") String password,
-        @NotBlank(message = "권한은 필수값입니다.") String authority
+        String authority
 ) {
     public static UserJoinRequest of(String userId, String password, String authority) {
         return new UserJoinRequest(

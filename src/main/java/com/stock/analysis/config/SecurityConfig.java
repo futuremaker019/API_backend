@@ -45,7 +45,7 @@ public class SecurityConfig {
 //                        .requestMatchers(PathRequest.toH2Console()).permitAll()
 //                        .antMatchers(HttpMethod.GET).permitAll()
                         .antMatchers(swaggerPatterns).permitAll()
-                        .antMatchers(HttpMethod.POST, "/api/*/users/join", "/api/*/users/login").permitAll()
+                        .antMatchers(HttpMethod.POST, "/api/*/users/signup", "/api/*/users/signin").permitAll()
                         .antMatchers("/api/**").authenticated()
 //                        .antMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
