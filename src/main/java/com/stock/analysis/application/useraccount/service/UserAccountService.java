@@ -83,9 +83,12 @@ public class UserAccountService {
     // refresh token을 검증하여 cookie에 넣어주고 accesstoken을 response 하는 작업이 필요하다.
     public String reissueToken(HttpServletRequest request) {
         String refreshToken = cookieUtils.getCookie(request, TokenType.ACCESS_TOKEN.getValue()).getValue();
+        // refresh token이 없거나, 발급된 refresh token이 유효하지 않다면 에러를 던진다.
         if (StringUtils.isBlank(refreshToken) && !jwtUtils.validateToken(refreshToken)) {
             throw new AuthenticationException(ErrorCode.INVALID_REFRESH_TOKEN, ErrorCode.INVALID_REFRESH_TOKEN.getMessage());
         }
+        // refresh token의 만료기간 이전이라면 access token을 재발급하여 돌려준다.
+        // refresh token은 재발급하지 않는다.
         Authentication authentication = jwtUtils.getAuthentication(refreshToken);
         return jwtUtils.createToken(authentication, TokenType.ACCESS_TOKEN);
     }

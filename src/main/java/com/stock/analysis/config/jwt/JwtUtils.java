@@ -27,19 +27,26 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class JwtUtils implements InitializingBean {
 
-    private final CookieUtils cookieUtils;
+    private CookieUtils cookieUtils;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
-    @Value("${jwt.token.expired-time-ms}")
-    private long accessTokenExpiredTimeMs;
+    private final long accessTokenExpiredTimeMs;
+    private final long refreshTokenExpiredTimeMs;
 
     private static final String AUTHORITIES_KEY = "auth";
-    private long refreshTokenExpiredTimeMs = accessTokenExpiredTimeMs + 60000;
     private Key key;
+
+    public JwtUtils(
+            @Value("${jwt.token.expired-time-ms}") long expiredTimeMs,
+            CookieUtils cookieUtils
+    ) {
+        this.cookieUtils = cookieUtils;
+        this.accessTokenExpiredTimeMs = expiredTimeMs;          // 1분
+        this.refreshTokenExpiredTimeMs = expiredTimeMs * 10;    // 10분
+    }
 
     /**
      * Access 토큰은 헤더에 담아보내고
@@ -49,6 +56,8 @@ public class JwtUtils implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         System.out.println("secretKey = " + secretKey);
+        System.out.println("accessTokenExpiredTimeMs = " + accessTokenExpiredTimeMs);
+        System.out.println("refreshTokenExpiredTimeMs = " + refreshTokenExpiredTimeMs);
         byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
