@@ -14,22 +14,22 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+public class ForceLoginFilter {
+//public class ForceLoginFilter extends OncePerRequestFilter {
 
-public class ForceLoginFilter extends OncePerRequestFilter {
-
-    @Autowired
+//    @Autowired
     private UserDetailsService userDetailsService;
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-
-        if (securityContext.getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername("noah");
-            Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, "1122", userDetails.getAuthorities());
-            securityContext.setAuthentication(authentication);
-        }
-
-        filterChain.doFilter(request, response);
-    }
+//    @Override
+//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+//        SecurityContext securityContext = SecurityContextHolder.getContext();
+//
+//        if (securityContext.getAuthentication() == null) {
+//            UserDetails userDetails = userDetailsService.loadUserByUsername("noah");
+//            Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, "1122", userDetails.getAuthorities());
+//            securityContext.setAuthentication(authentication);
+//        }
+//
+//        filterChain.doFilter(request, response);
+//    }
 }

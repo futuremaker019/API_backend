@@ -2,6 +2,7 @@ package com.stock.analysis.repository;
 
 import com.stock.analysis.application.article.repository.ArticleRepository;
 import com.stock.analysis.application.articlecomment.repository.ArticleCommentRepository;
+import com.stock.analysis.domain.contant.RoleType;
 import com.stock.analysis.domain.entity.Article;
 import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.application.useraccount.repository.UserAccountRepository;
@@ -17,6 +18,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -58,7 +60,7 @@ public class JpaRepositoryTest {
     public void givenDummyData_whenInserting_then() {
         // given
         long prevArticleTotalCount = articleRepository.count();
-        UserAccount userAccount = userAccountRepository.save(UserAccount.of("noah00o", "1122", "noah@gmail.com", "noah"));
+        UserAccount userAccount = userAccountRepository.save(UserAccount.of("noah00o", "1122", "noah@gmail.com", "noah", Set.of(RoleType.USER)));
         Article newArticle = Article.of("title", "content", userAccount);
 
         // when
@@ -104,6 +106,16 @@ public class JpaRepositoryTest {
         // then
         assertThat(articleRepository.count()).isEqualTo(prevArticleCount - 1);
         assertThat(articleCommentRepository.count()).isEqualTo(prevArticleCommentCount - articleCommentSize);
+    }
+
+    @DisplayName("사용자 등록 테스트")
+    @Test
+    public void 사용자등록() {
+        // given1
+
+        // when
+
+        // then
     }
 
     @EnableJpaAuditing
