@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .antMatchers(HttpMethod.POST, "/api/*/users/signup", "/api/*/users/signin").permitAll()
                         .antMatchers("/api/**").authenticated()
 //                        .antMatchers("/admin/**").hasRole("ADMIN")
+
                         .anyRequest().permitAll()
                 )
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
