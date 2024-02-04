@@ -44,7 +44,9 @@ public class JwtUtils implements InitializingBean {
             CookieUtils cookieUtils
     ) {
         this.cookieUtils = cookieUtils;
-        this.accessTokenExpiredTimeMs = expiredTimeMs;          // 1분
+//        this.accessTokenExpiredTimeMs = expiredTimeMs;          // 1분
+        this.accessTokenExpiredTimeMs = expiredTimeMs * 60 * 24;          // 1분
+
         this.refreshTokenExpiredTimeMs = expiredTimeMs * 10;    // 10분
     }
 

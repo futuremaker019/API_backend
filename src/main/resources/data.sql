@@ -1,9 +1,9 @@
 insert into user_account (user_id, user_password, nickname, email, role_types, created_by, created_at, modified_by, modified_at) values
-('noah', '1122', 'noah', 'noah@naver.com', 'USER,ADMIN', 'noah',  '2022-11-07 16:00:51', 'noah', '2022-11-07 16:00:51'),
-('noah00o', '1122', 'noah00o', 'noah00o@naver.com', 'USER,DEVELOPER','noah00o', '2022-11-07 16:00:51', 'noah00o', '2022-11-07 16:00:51'),
-('john', '1122', 'john', 'john@gmail.com', 'USER,MANAGER', 'john', '2022-11-07 16:00:51', 'john', '2022-11-07 16:00:51');
+('noah', '$2a$10$wCcynHi7x06kxPJqIJe.HuJdxcAJyyk1uwxUCJGf9tern2wnKPmnW', 'noah', 'noah@naver.com', 'USER,ADMIN', 'noah',  '2022-11-07 16:00:51', 'noah', '2022-11-07 16:00:51'),
+('noah00o', '$2a$10$wCcynHi7x06kxPJqIJe.HuJdxcAJyyk1uwxUCJGf9tern2wnKPmnW', 'noah00o', 'noah00o@naver.com', 'USER,DEVELOPER','noah00o', '2022-11-07 16:00:51', 'noah00o', '2022-11-07 16:00:51'),
+('john', '$2a$10$wCcynHi7x06kxPJqIJe.HuJdxcAJyyk1uwxUCJGf9tern2wnKPmnW', 'john', 'john@gmail.com', 'USER,MANAGER', 'john', '2022-11-07 16:00:51', 'john', '2022-11-07 16:00:51');
 
-insert into article (created_at,created_by,modified_at,modified_by,content,title,account_id) values
+insert into article (created_at, created_by, modified_at, modified_by, content, title, account_id) values
 ('2023-07-03 23:23:40','noah00o','2023-06-01 18:01:26','noah00o','Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.','Lalmonirhat Airport',1),
 ('2022-11-06 20:07:00','noah00o','2023-05-29 04:23:02','noah','Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum.','Albertus Airport',1),
 ('2023-03-14 08:34:47','john','2023-08-27 21:01:32','john','Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.','Bauerfield International Airport',1),
@@ -161,3 +161,6 @@ insert into article_comment (account_id, content, article_id, created_by, create
                                                                                                          ,(2, 'Nam nulla.', 31, 2, '2023-08-01 02:54:00', 1, '2023-03-02 16:55:25')
                                                                                                          ,(2, 'Pellentesque at nulla.', 25, 2, '2023-02-27 15:20:55', 3, '2023-03-29 18:15:33');
 
+insert into code (`name`, parent_id, created_by, created_at, modified_by, modified_at) values
+                                                  ('플랫폼', null, 1, '2023-03-07 18:33:10', 2, '2022-10-24 18:24:21'),
+                                                  ('채용전형', null, 3, '2023-03-07 18:33:10', 1, '2022-10-24 18:24:21');
