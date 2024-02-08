@@ -1,22 +1,18 @@
 package com.stock.analysis.config.jwt;
 
+import com.stock.analysis.exception.AuthenticationException;
+import com.stock.analysis.exception.ErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -44,10 +40,8 @@ public class JwtUtils implements InitializingBean {
             CookieUtils cookieUtils
     ) {
         this.cookieUtils = cookieUtils;
-//        this.accessTokenExpiredTimeMs = expiredTimeMs;          // 1분
-        this.accessTokenExpiredTimeMs = expiredTimeMs * 60 * 24;          // 1분
-
-        this.refreshTokenExpiredTimeMs = expiredTimeMs * 10;    // 10분
+        this.accessTokenExpiredTimeMs = expiredTimeMs;               // 1분
+        this.refreshTokenExpiredTimeMs = expiredTimeMs * 60 * 24;    // 24시간
     }
 
     /**
@@ -97,7 +91,7 @@ public class JwtUtils implements InitializingBean {
             throw e;
         } catch (ExpiredJwtException e) {
             log.info("만료된 JWT 토큰입니다.");
-            throw e;
+            throw new AuthenticationException(ErrorCode.EXPIRED_TOKEN, "Token expired");
         } catch (UnsupportedJwtException e) {
             log.info("지원되지 않는 JWT 토큰입니다.");
             throw e;
