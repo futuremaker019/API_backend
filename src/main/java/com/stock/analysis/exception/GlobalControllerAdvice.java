@@ -24,4 +24,11 @@ public class GlobalControllerAdvice {
                 .body(Response.error(e.getErrorCode().name()));
     }
 
+    @ExceptionHandler(CodeAppException.class)
+    public ResponseEntity<?> codeErrorHandler(ApplyAppException e) {
+        log.error("Error occurred {}", e.toString());
+        return ResponseEntity.status(e.getErrorCode().getStatus())
+                .body(Response.error(e.getErrorCode().name()));
+    }
+
 }
