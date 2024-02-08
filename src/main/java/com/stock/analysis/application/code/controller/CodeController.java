@@ -6,7 +6,6 @@ import com.stock.analysis.dto.request.CodeRequestDto;
 import com.stock.analysis.dto.response.CodeResponseDto;
 import com.stock.analysis.dto.response.Response;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +21,7 @@ public class CodeController {
     public Response<List<CodeResponseDto>> select(
             @RequestParam(value = "codeType", required = false) CodeType codeType
     ) {
-        return Response.success(codeService.selectCodes(codeType));
+        return Response.success(codeService.getCodes(codeType));
     }
 
     @GetMapping("/{codeId}")
@@ -37,12 +36,15 @@ public class CodeController {
         return Response.success();
     }
 
-    @PutMapping("/{codeId}")
-    public Response<CodeResponseDto> update(
-            @PathVariable(value = "codeId") Long codeId,
-            @RequestBody CodeRequestDto requestDto
-    ) {
-        codeService.updateCode(codeId, requestDto);
+    @PutMapping
+    public Response<CodeResponseDto> update(@RequestBody CodeRequestDto requestDto) {
+        codeService.updateCode(requestDto);
+        return Response.success();
+    }
+
+    @DeleteMapping("/{codeId}")
+    public Response<Void> delete(@PathVariable("codeId") Long codeId) {
+        codeService.deleteCode(codeId);
         return Response.success();
     }
 }

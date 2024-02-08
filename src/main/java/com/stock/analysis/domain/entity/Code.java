@@ -3,6 +3,9 @@ package com.stock.analysis.domain.entity;
 import com.stock.analysis.domain.AuditingFields;
 import com.stock.analysis.dto.request.CodeRequestDto;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -14,6 +17,9 @@ import java.util.Set;
 @Entity
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicUpdate
+@DynamicInsert
+@SQLDelete(sql = "UPDATE code SET is_removed = true WHERE id = ?")
 @Where(clause = "is_removed = false")
 public class Code extends AuditingFields {
 
@@ -30,6 +36,10 @@ public class Code extends AuditingFields {
     @ToString.Exclude
     @OneToMany(mappedBy = "parentId")
     private Set<Code> children = new LinkedHashSet<>();
+
+    @Setter
+    @Column(columnDefinition = "bit DEFAULT false NOT NULL COMMENT '삭제여부'")
+    private Boolean isRemoved;
 
     public Code(Long id, String name, Long parentId, Set<Code> children) {
         this.id = id;
@@ -59,7 +69,7 @@ public class Code extends AuditingFields {
     }
 
     public void updateCode(CodeRequestDto dto) {
-        setName(dto.name());;
+        setName(dto.name());
         setParentId(dto.parentId());
     }
 }
