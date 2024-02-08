@@ -31,6 +31,10 @@ public class Code extends AuditingFields {
     private String name;
 
     @Setter
+    @Column(length = 100)
+    private String icon;
+
+    @Setter
     private Long parentId;
 
     @ToString.Exclude
