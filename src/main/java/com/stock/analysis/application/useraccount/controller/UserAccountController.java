@@ -58,6 +58,12 @@ public class UserAccountController {
         return Response.success(userAccountService.loginUserAccount(request, response));
     }
 
+    @PostMapping("/signout")
+    public Response<Void> signout(HttpServletRequest request) {
+        userAccountService.signout(request);
+        return Response.success();
+    }
+
     @GetMapping("/reissue")
     public ResponseEntity<String> reissue(HttpServletRequest request) {
         String accessToken = userAccountService.reissueToken(request);

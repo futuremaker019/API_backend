@@ -24,4 +24,11 @@ public class CookieUtils {
         return null;
     }
 
+    public Cookie deleteCookie(HttpServletRequest request, String cookieName) {
+        Cookie cookie = getCookie(request, cookieName);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        return cookie;
+    }
+
 }

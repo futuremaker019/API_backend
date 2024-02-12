@@ -36,10 +36,9 @@ public class JwtFilter extends OncePerRequestFilter {
 //            }
         } catch (Exception e) {
             log.error("Token error occurred, reason: {}, uri : {}", e.getLocalizedMessage(), requestURI);
+        } finally {
             filterChain.doFilter(request, response);
         }
-
-        filterChain.doFilter(request, response);
     }
 
     private String resolveToken(HttpServletRequest request) {
