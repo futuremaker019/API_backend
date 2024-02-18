@@ -1,4 +1,4 @@
-package com.stock.analysis.application.apply.controller;
+package com.stock.analysis.application.apply;
 
 import com.stock.analysis.application.apply.repository.ApplyRepository;
 import com.stock.analysis.dto.response.Response;

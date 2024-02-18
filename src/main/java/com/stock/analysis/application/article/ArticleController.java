@@ -1,4 +1,4 @@
-package com.stock.analysis.application.article.controller;
+package com.stock.analysis.application.article;
 
 import com.stock.analysis.domain.entity.Article;
 import com.stock.analysis.dto.ArticleDto;

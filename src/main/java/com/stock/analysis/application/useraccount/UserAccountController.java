@@ -1,4 +1,4 @@
-package com.stock.analysis.application.useraccount.controller;
+package com.stock.analysis.application.useraccount;
 
 import com.stock.analysis.application.useraccount.service.UserAccountService;
 import com.stock.analysis.dto.request.UserJoinRequest;

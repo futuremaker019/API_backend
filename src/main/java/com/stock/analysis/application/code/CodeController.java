@@ -1,4 +1,4 @@
-package com.stock.analysis.application.code.controller;
+package com.stock.analysis.application.code;
 
 import com.stock.analysis.application.code.service.CodeService;
 import com.stock.analysis.domain.contant.CodeType;
@@ -43,7 +43,7 @@ public class CodeController {
     }
 
     @DeleteMapping("/{codeId}")
-    public Response<Void> delete(@PathVariable("codeId") Long codeId) {
+    public Response<Void> delete(@PathVariable(value = "codeId") Long codeId) {
         codeService.deleteCode(codeId);
         return Response.success();
     }
