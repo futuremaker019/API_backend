@@ -94,6 +94,7 @@ public class UserAccountService {
     }
 
     public void signout(HttpServletRequest request) {
+        // TODO: security 로그아웃 처리 및 header에서 accessToken 삭제해야 한다.
         // 쿠키에 담겨있는 refresh token의 만료일을 지워준다.
         cookieUtils.deleteCookie(request, TokenType.REFRESH_TOKEN.name());
     }
