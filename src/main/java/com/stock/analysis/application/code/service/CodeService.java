@@ -42,6 +42,9 @@ public class CodeService {
     }
 
     public void createCode(CodeRequestDto requestDto) {
+        codeRepository.findByNameAndParentId(requestDto.name(), requestDto.parentId()).ifPresent(c -> {
+            throw new CodeAppException(ErrorCode.CODE_NAME_EXISTED, "code name existed : %s".formatted(c.getName()));
+        });
         codeRepository.save(requestDto.to());
     }
 
