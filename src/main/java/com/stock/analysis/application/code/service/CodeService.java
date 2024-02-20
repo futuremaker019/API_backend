@@ -7,6 +7,12 @@ import com.stock.analysis.dto.request.CodeRequestDto;
 import com.stock.analysis.dto.response.CodeResponseDto;
 import com.stock.analysis.exception.CodeAppException;
 import com.stock.analysis.exception.ErrorCode;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,14 +37,13 @@ public class CodeService {
             return null;
         } else {
             //
-            return codeRepository.findAllByParentIdIsNull().stream()
-                    .map(CodeResponseDto::from).toList();
+            return codeRepository.findAllByParentIdIsNull().stream().map(CodeResponseDto::from).toList();
         }
     }
 
     @Transactional(readOnly = true)
-    public CodeResponseDto getCode(Long codeId) {
-        return null;
+    public List<CodeResponseDto> getCode(Long parentId) {
+        return codeRepository.findAllById(parentId).stream().map(CodeResponseDto::from).toList();
     }
 
     public void createCode(CodeRequestDto requestDto) {
@@ -56,9 +61,12 @@ public class CodeService {
     }
 
     public void deleteCode(Long codeId) {
-        codeRepository.findById(codeId).orElseThrow(
+        Code code = codeRepository.findById(codeId).orElseThrow(
                 () -> new CodeAppException(ErrorCode.CODE_NOT_FOUND, "code not found : id - %d".formatted(codeId))
         );
+        if (!code.getChildren().isEmpty()) {
+            throw new CodeAppException(ErrorCode.CODE_CHILDREN_EXISTED, "children existed");
+        }
         codeRepository.deleteById(codeId);
     }
 }

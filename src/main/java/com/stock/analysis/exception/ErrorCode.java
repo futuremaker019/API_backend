@@ -25,7 +25,9 @@ public enum ErrorCode {
     PASSWORD_NOT_MATCHED(HttpStatus.NOT_FOUND, "Password not matched"),
 
     CODE_NOT_FOUND(HttpStatus.NOT_FOUND, "Code not found"),
-    CODE_NAME_EXISTED(HttpStatus.CONFLICT, "code name existed")
+    CODE_NAME_EXISTED(HttpStatus.CONFLICT, "code name existed"),
+
+    CODE_CHILDREN_EXISTED(HttpStatus.CONFLICT, "children existed")
 
     ;
 

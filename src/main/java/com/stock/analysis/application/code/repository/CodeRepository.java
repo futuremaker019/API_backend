@@ -14,4 +14,5 @@ public interface CodeRepository extends JpaRepository<Code, Long> {
 
     Optional<Code> findByNameAndParentId(String name, Long parentId);
 
+    List<Code> findAllByParentId(Long parentId);
 }
