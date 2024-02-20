@@ -18,13 +18,14 @@ public enum ErrorCode {
     USER_EXISTED(HttpStatus.CONFLICT, "User Existed"),
 
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid token"),
-    INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid refresh token"),
-    EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "token expired"),
+    REFRESH_TOKEN_NOT_FOUND(HttpStatus.GONE, "Invalid refresh token"),
+    EXPIRED_TOKEN(HttpStatus.GONE, "token expired"),
 
     HAS_NO_AUTHORITIES(HttpStatus.FORBIDDEN, "Has no Authorities"),
-
     PASSWORD_NOT_MATCHED(HttpStatus.NOT_FOUND, "Password not matched"),
+
     CODE_NOT_FOUND(HttpStatus.NOT_FOUND, "Code not found"),
+    CODE_NAME_EXISTED(HttpStatus.CONFLICT, "code name existed")
 
     ;
 
