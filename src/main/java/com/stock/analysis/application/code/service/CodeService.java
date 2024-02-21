@@ -7,12 +7,6 @@ import com.stock.analysis.dto.request.CodeRequestDto;
 import com.stock.analysis.dto.response.CodeResponseDto;
 import com.stock.analysis.exception.CodeAppException;
 import com.stock.analysis.exception.ErrorCode;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,8 +36,19 @@ public class CodeService {
     }
 
     @Transactional(readOnly = true)
-    public List<CodeResponseDto> getCode(Long parentId) {
-        return codeRepository.findAllById(parentId).stream().map(CodeResponseDto::from).toList();
+    public List<CodeResponseDto> getCodesByParentId(Long parentId) {
+        return codeRepository.findAllByParentId(parentId).stream().map(CodeResponseDto::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<CodeResponseDto> selectCodesById(Long codeId) {
+        return codeRepository.findAllById(codeId).stream().map(CodeResponseDto::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public CodeResponseDto getCodeById(Long codeId) {
+        Code code = codeRepository.findById(codeId).orElseThrow(() -> new CodeAppException(ErrorCode.CODE_NOT_FOUND));
+        return CodeResponseDto.from(code);
     }
 
     public void createCode(CodeRequestDto requestDto) {

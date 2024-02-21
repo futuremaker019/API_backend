@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface CodeRepository extends JpaRepository<Code, Long> {
 
     List<Code> findAllById(Long id);
+    Optional<Code> findById(Long id);
 
     List<Code> findAllByParentIdIsNull();
 
