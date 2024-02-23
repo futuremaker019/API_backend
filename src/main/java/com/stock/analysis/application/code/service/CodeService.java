@@ -31,7 +31,7 @@ public class CodeService {
             return null;
         } else {
             //
-            return codeRepository.findAllByParentIdIsNull().stream().map(CodeResponseDto::from).toList();
+            return codeRepository.findAllByParentIdIsNullOrderByCreatedAtAsc().stream().map(CodeResponseDto::from).toList();
         }
     }
 

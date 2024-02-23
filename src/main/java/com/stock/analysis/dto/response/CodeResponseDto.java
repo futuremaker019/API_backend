@@ -4,6 +4,7 @@ import com.stock.analysis.application.code.repository.CodeRepository;
 import com.stock.analysis.domain.entity.Code;
 import com.stock.analysis.utils.Utils;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -11,7 +12,7 @@ public record CodeResponseDto(
         Long id,
         String name,
         Long parentId,
-        Set<CodeResponseDto> children,
+        List<CodeResponseDto> children,
         String createdAt,
         String createdBy,
         String modifiedAt,
@@ -20,7 +21,7 @@ public record CodeResponseDto(
     public static CodeResponseDto of(Long id,
                                      String name,
                                      Long parentId,
-                                     Set<CodeResponseDto> children,
+                                     List<CodeResponseDto> children,
                                      String createdAt,
                                      String createdBy,
                                      String modifiedAt,
@@ -35,8 +36,7 @@ public record CodeResponseDto(
                 code.getName(),
                 code.getParentId(),
                 code.getChildren().stream()
-                        .map(CodeResponseDto::from)
-                        .collect(Collectors.toUnmodifiableSet()),
+                        .map(CodeResponseDto::from).toList(),
                 Utils.ConvertDate(code.getCreatedAt()),
                 code.getCreatedBy(),
                 Utils.ConvertDate(code.getModifiedAt()),

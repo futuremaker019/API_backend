@@ -9,9 +9,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Entity
@@ -39,20 +37,20 @@ public class Code extends AuditingFields {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "parentId")
-    private Set<Code> children = new LinkedHashSet<>();
+    private List<Code> children = new ArrayList<>();
 
     @Setter
     @Column(columnDefinition = "bit DEFAULT false NOT NULL COMMENT '삭제여부'")
     private Boolean isRemoved;
 
-    public Code(Long id, String name, Long parentId, Set<Code> children) {
+    public Code(Long id, String name, Long parentId, List<Code> children) {
         this.id = id;
         this.name = name;
         this.parentId = parentId;
         this.children = children;
     }
 
-    public static Code of(Long id, String name, Long parentId, Set<Code> children) {
+    public static Code of(Long id, String name, Long parentId, List<Code> children) {
         return new Code(id, name, parentId, children);
     }
 
