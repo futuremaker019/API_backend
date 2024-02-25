@@ -19,7 +19,9 @@ import java.util.List;
 @Tag(name = "Code Api", description = "Code Application Api")
 @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = {@Content(schema = @Schema(implementation = CodeResponseDto.class))}),
-        @ApiResponse(responseCode = "404", description = "코드가 존재하지 않습니다."),
+        @ApiResponse(responseCode = "404", description = "코드가 존재하지 않는다."),
+        @ApiResponse(responseCode = "409", description = "중복된 코드명이 존재한다."),    // 코드 등록시
+        @ApiResponse(responseCode = "409", description = "하위코드가 존재한다."),        // 코드 삭제시
 })
 @RestController
 @RequiredArgsConstructor
