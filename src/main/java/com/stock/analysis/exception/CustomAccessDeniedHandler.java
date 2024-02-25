@@ -1,5 +1,6 @@
 package com.stock.analysis.exception;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stock.analysis.dto.response.Response;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -8,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
 
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
@@ -23,6 +25,10 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
         response.setContentType("application/json");
         response.setStatus(ErrorCode.HAS_NO_AUTHORITIES.getStatus().value());
-        response.getWriter().write(Response.error(ErrorCode.HAS_NO_AUTHORITIES.name()).toString());
+        try (OutputStream os = response.getOutputStream()) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.writeValue(os, Response.error(ErrorCode.HAS_NO_AUTHORITIES.name()));
+            os.flush();
+        }
     }
 }

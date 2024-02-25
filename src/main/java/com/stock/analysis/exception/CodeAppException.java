@@ -5,12 +5,12 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class AuthenticationException extends RuntimeException {
+public class CodeAppException extends RuntimeException {
 
     private ErrorCode errorCode;
     private String message;
 
-    public AuthenticationException(ErrorCode errorCode) {
+    public CodeAppException(ErrorCode errorCode) {
         this.errorCode = errorCode;
         this.message = null;
     }
@@ -22,5 +22,4 @@ public class AuthenticationException extends RuntimeException {
         }
         return String.format("%s, %s", errorCode.getMessage(), message);
     }
-
 }

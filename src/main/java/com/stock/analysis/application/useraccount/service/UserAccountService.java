@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
@@ -81,14 +82,24 @@ public class UserAccountService {
 
     // refresh token을 검증하여 cookie에 넣어주고 accesstoken을 response 하는 작업이 필요하다.
     public String reissueToken(HttpServletRequest request) {
-        String refreshToken = cookieUtils.getCookie(request, TokenType.ACCESS_TOKEN.getValue()).getValue();
+        Cookie cookie = cookieUtils.getCookie(request, TokenType.REFRESH_TOKEN.getValue());
+        String refreshToken = null;
+        if (cookie != null) {
+            refreshToken = cookie.getValue();
+        }
         // refresh token이 없거나, 발급된 refresh token이 유효하지 않다면 에러를 던진다.
-        if (StringUtils.isBlank(refreshToken) && !jwtUtils.validateToken(refreshToken)) {
-            throw new AuthenticationException(ErrorCode.INVALID_REFRESH_TOKEN, ErrorCode.INVALID_REFRESH_TOKEN.getMessage());
+        if (StringUtils.isBlank(refreshToken) || !jwtUtils.validateToken(refreshToken)) {
+            throw new AuthenticationException(ErrorCode.REFRESH_TOKEN_NOT_FOUND, ErrorCode.REFRESH_TOKEN_NOT_FOUND.getMessage());
+//            return null;
         }
         // refresh token의 만료기간 이전이라면 access token을 재발급하여 돌려준다.
-        // refresh token은 재발급하지 않는다.
         Authentication authentication = jwtUtils.getAuthentication(refreshToken);
         return jwtUtils.createToken(authentication, TokenType.ACCESS_TOKEN);
+    }
+
+    public void signout(HttpServletRequest request) {
+        // TODO: security 로그아웃 처리 및 header에서 accessToken 삭제해야 한다.
+        // 쿠키에 담겨있는 refresh token의 만료일을 지워준다.
+        cookieUtils.deleteCookie(request, TokenType.REFRESH_TOKEN.name());
     }
 }
