@@ -35,24 +35,6 @@ public class CodeController {
         return Response.success(codeService.getCodes(codeType));
     }
 
-    @GetMapping("/{parentId}/parentId")
-    @Parameter(name = "parentId", description = "")
-    public Response<List<CodeResponseDto>> selectCodesByParentId(@PathVariable(value = "parentId") Long parentId) {
-        return Response.success(codeService.selectCodesById(parentId));
-    }
-
-    @GetMapping("/{id}/id")
-    @Parameter(name = "id", description = "")
-    public Response<List<CodeResponseDto>> selectCodesById(@PathVariable(value = "id") Long id) {
-        return Response.success(codeService.selectCodesById(id));
-    }
-
-    @GetMapping("/{parentId}/one")
-    @Parameter(name = "parentId", description = "")
-    public Response<CodeResponseDto> getCodeById(@PathVariable(value = "parentId") Long parentId) {
-        return Response.success(codeService.getCodeById(parentId));
-    }
-
     @PostMapping
     public Response<Void> create(@RequestBody CodeRequestDto requestDto) {
         codeService.createCode(requestDto);
