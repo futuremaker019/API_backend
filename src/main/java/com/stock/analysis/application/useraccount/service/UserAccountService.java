@@ -9,6 +9,7 @@ import com.stock.analysis.dto.UserAccountDto;
 import com.stock.analysis.dto.request.UserJoinRequest;
 import com.stock.analysis.dto.request.UserLoginRequest;
 import com.stock.analysis.dto.response.UserLoginResponse;
+import com.stock.analysis.dto.security.UserPrincipal;
 import com.stock.analysis.exception.AuthenticationException;
 import com.stock.analysis.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +33,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserAccountService {
+public class UserAccountService implements UserDetailsService {
 
     private final JwtUtils jwtUtils;
     private final CookieUtils cookieUtils;
@@ -101,5 +105,12 @@ public class UserAccountService {
         // TODO: security 로그아웃 처리 및 header에서 accessToken 삭제해야 한다.
         // 쿠키에 담겨있는 refresh token의 만료일을 지워준다.
         cookieUtils.deleteCookie(request, TokenType.REFRESH_TOKEN.name());
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userAccountRepository.findByUserId(username)
+                .map(UserPrincipal::fromEntity)
+                .orElseThrow(() -> new UsernameNotFoundException("user not found. userId : " + username));
     }
 }

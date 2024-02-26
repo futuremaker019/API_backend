@@ -21,6 +21,20 @@ public record UserPrincipal(
         String nickname
 ) implements UserDetails {
 
+    public static UserPrincipal of(Long id, String userId, String password, Set<RoleType> roleTypes, String email, String nickname) {
+        return new UserPrincipal(
+                id,
+                userId,
+                password,
+                roleTypes.stream()
+                        .map(RoleType::getRoleName)
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toUnmodifiableSet()),
+                email,
+                nickname
+        );
+    }
+
     public static UserPrincipal of(Long id, String userId, String password, String email, String nickname) {
         Set<RoleType> roleTypes = Set.of(RoleType.USER);
         return new UserPrincipal(
@@ -58,6 +72,17 @@ public record UserPrincipal(
                 dto.userPassword(),
                 dto.email(),
                 dto.nickname()
+        );
+    }
+
+    public static UserPrincipal fromEntity(UserAccount userAccount) {
+        return UserPrincipal.of(
+                userAccount.getId(),
+                userAccount.getUserId(),
+                userAccount.getUserPassword(),
+                userAccount.getRoleTypes(),
+                userAccount.getEmail(),
+                userAccount.getNickname()
         );
     }
 

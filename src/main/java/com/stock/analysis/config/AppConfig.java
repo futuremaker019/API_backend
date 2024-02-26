@@ -16,10 +16,10 @@ public class AppConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(UserAccountService userAccountService) {
-        return username -> userAccountService.searchUser(username)
-                .map(UserPrincipal::from)
-                .orElseThrow(() -> new UsernameNotFoundException("user not found. userId : " + username));
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService(UserAccountService userAccountService) {
+//        return username -> userAccountService.searchUser(username)
+//                .map(UserPrincipal::from)
+//                .orElseThrow(() -> new UsernameNotFoundException("user not found. userId : " + username));
+//    }
 }
