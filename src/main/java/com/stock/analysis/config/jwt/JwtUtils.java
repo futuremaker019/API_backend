@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,16 +30,14 @@ import java.util.stream.Collectors;
 @Component
 public class JwtUtils implements InitializingBean {
 
-    private CookieUtils cookieUtils;
+    private final CookieUtils cookieUtils;
+    private Key key;
+    private final UserAccountRepository userAccountRepository;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
     private final long accessTokenExpiredTimeMs;
     private final long refreshTokenExpiredTimeMs;
-
-    private static final String AUTHORITIES_KEY = "auth";
-    private Key key;
-    private UserAccountRepository userAccountRepository;
 
     public JwtUtils(
             @Value("${jwt.token.expired-time-ms}") long expiredTimeMs,
@@ -55,12 +54,11 @@ public class JwtUtils implements InitializingBean {
      * Access 토큰은 헤더에 담아보내고
      * Refresh 토큰을 쿠키에 담아서 발행하지만 갱신은 하지 않는것으로 하자
      */
-
     @Override
     public void afterPropertiesSet() throws Exception {
-        System.out.println("secretKey = " + secretKey);
-        System.out.println("accessTokenExpiredTimeMs = " + accessTokenExpiredTimeMs);
-        System.out.println("refreshTokenExpiredTimeMs = " + refreshTokenExpiredTimeMs);
+        log.info("secretKey = {}", secretKey);
+        log.info("accessTokenExpiredTimeMs = {}", accessTokenExpiredTimeMs);
+        log.info("refreshTokenExpiredTimeMs = {}", refreshTokenExpiredTimeMs);
         byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
@@ -72,10 +70,8 @@ public class JwtUtils implements InitializingBean {
                 .map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
 
         Map<String, Object> payload = new HashMap<>();
-        payload.put(AUTHORITIES_KEY, authorities);
+        payload.put(HttpHeaders.AUTHORIZATION, authorities);
         payload.put("username", auth.getName());
-
-        System.out.println("auth.getName() = " + auth.getName());
 
         long now = new Date().getTime();
         Date validTime = tokenType == TokenType.ACCESS_TOKEN ? new Date(now + accessTokenExpiredTimeMs) : new Date(now + refreshTokenExpiredTimeMs);
@@ -88,7 +84,6 @@ public class JwtUtils implements InitializingBean {
                 .compact();
     }
 
-    // tokenValidation
     public boolean validateToken(String jwt) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt);
@@ -98,20 +93,16 @@ public class JwtUtils implements InitializingBean {
             throw e;
         } catch (ExpiredJwtException e) {
             log.error("만료된 JWT 토큰입니다.", e);
-            throw new AuthenticationException(ErrorCode.EXPIRED_TOKEN, "Token expired");
+            throw new AuthenticationException(ErrorCode.REFRESH_EXPIRED_TOKEN, "Refresh token expired");
         } catch (UnsupportedJwtException e) {
             log.error("지원되지 않는 JWT 토큰입니다.");
             throw e;
         } catch (IllegalArgumentException e) {
             log.error("JWT 토큰이 잘못되었습니다.");
             throw e;
-        } finally {
-            log.error("finally log");
         }
-
     }
 
-    // getAuthentication
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts
                 .parserBuilder()
@@ -121,7 +112,7 @@ public class JwtUtils implements InitializingBean {
                 .getBody();
 
         Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+                Arrays.stream(claims.get(HttpHeaders.AUTHORIZATION).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
