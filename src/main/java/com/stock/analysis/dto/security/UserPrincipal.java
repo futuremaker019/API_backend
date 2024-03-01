@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -83,6 +84,17 @@ public record UserPrincipal(
                 userAccount.getRoleTypes(),
                 userAccount.getEmail(),
                 userAccount.getNickname()
+        );
+    }
+
+    public static UserPrincipal of(UserPrincipal userPrincipal, List<SimpleGrantedAuthority> grantedAuthorities) {
+        return new UserPrincipal(
+                userPrincipal.id,
+                userPrincipal.userId(),
+                userPrincipal.password(),
+                grantedAuthorities,
+                userPrincipal.email(),
+                userPrincipal.nickname()
         );
     }
 

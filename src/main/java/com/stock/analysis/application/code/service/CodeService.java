@@ -5,6 +5,7 @@ import com.stock.analysis.domain.contant.CodeType;
 import com.stock.analysis.domain.entity.Code;
 import com.stock.analysis.dto.request.CodeRequestDto;
 import com.stock.analysis.dto.response.CodeResponseDto;
+import com.stock.analysis.dto.security.UserPrincipal;
 import com.stock.analysis.exception.CodeAppException;
 import com.stock.analysis.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -52,5 +53,10 @@ public class CodeService {
             throw new CodeAppException(ErrorCode.CODE_CHILDREN_EXISTED, "children existed");
         }
         codeRepository.deleteById(codeId);
+    }
+
+    public List<CodeResponseDto> selectCodesByUserId(UserPrincipal userPrincipal) {
+        System.out.println("userPrincipal = " + userPrincipal);
+        return null;
     }
 }

@@ -79,8 +79,8 @@ public class UserAccountController {
     }
 
     @PostMapping("/signout")
-    public Response<Void> signout(HttpServletRequest request) {
-        userAccountService.signout(request);
+    public Response<Void> signout(HttpServletRequest request, HttpServletResponse response) {
+        userAccountService.signout(request, response);
         return Response.success();
     }
 

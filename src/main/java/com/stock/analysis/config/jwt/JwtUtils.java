@@ -1,11 +1,15 @@
 package com.stock.analysis.config.jwt;
 
+import com.stock.analysis.application.useraccount.repository.UserAccountRepository;
+import com.stock.analysis.domain.entity.UserAccount;
+import com.stock.analysis.dto.security.CustomUser;
 import com.stock.analysis.exception.AuthenticationException;
 import com.stock.analysis.exception.ErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,14 +38,17 @@ public class JwtUtils implements InitializingBean {
 
     private static final String AUTHORITIES_KEY = "auth";
     private Key key;
+    private UserAccountRepository userAccountRepository;
 
     public JwtUtils(
             @Value("${jwt.token.expired-time-ms}") long expiredTimeMs,
-            CookieUtils cookieUtils
+            CookieUtils cookieUtils,
+            UserAccountRepository userAccountRepository
     ) {
         this.cookieUtils = cookieUtils;
         this.accessTokenExpiredTimeMs = expiredTimeMs;               // 1분
         this.refreshTokenExpiredTimeMs = expiredTimeMs * 60 * 24;    // 24시간
+        this.userAccountRepository = userAccountRepository;
     }
 
     /**
@@ -118,9 +125,12 @@ public class JwtUtils implements InitializingBean {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        User principal = new User(claims.get("username", String.class), "", authorities);
+        String username = getUsername(token, this.key);
+        UserAccount userAccount = userAccountRepository.findByUserId(username)
+                .orElseThrow(() -> new AuthenticationException(ErrorCode.USER_NOT_FOUND, "user not found - username : %s".formatted(username)));
 
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+//        User principal = new User(claims.get("username", String.class), "", authorities);
+        return new UsernamePasswordAuthenticationToken(new CustomUser(userAccount), token, authorities);
     }
 
     public void addRefreshTokenInCookie(String refreshToken, HttpServletResponse response) {
