@@ -3,8 +3,10 @@ package com.stock.analysis.application.code.service;
 import com.stock.analysis.application.code.repository.CodeRepository;
 import com.stock.analysis.domain.contant.CodeType;
 import com.stock.analysis.domain.entity.Code;
+import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.dto.request.CodeRequestDto;
 import com.stock.analysis.dto.response.CodeResponseDto;
+import com.stock.analysis.dto.security.CurrentUser;
 import com.stock.analysis.dto.security.UserPrincipal;
 import com.stock.analysis.exception.CodeAppException;
 import com.stock.analysis.exception.ErrorCode;
@@ -55,8 +57,8 @@ public class CodeService {
         codeRepository.deleteById(codeId);
     }
 
-    public List<CodeResponseDto> selectCodesByUserId(UserPrincipal userPrincipal) {
-        System.out.println("userPrincipal = " + userPrincipal);
+    public List<CodeResponseDto> selectCodesByUser(UserAccount userAccount) {
+        codeRepository.selectCodesByUser(userAccount);
         return null;
     }
 }

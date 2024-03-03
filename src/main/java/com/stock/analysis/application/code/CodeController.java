@@ -7,15 +7,12 @@ import com.stock.analysis.dto.request.CodeRequestDto;
 import com.stock.analysis.dto.response.CodeResponseDto;
 import com.stock.analysis.dto.response.Response;
 import com.stock.analysis.dto.security.CurrentUser;
-import com.stock.analysis.dto.security.CustomUser;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,16 +39,8 @@ public class CodeController {
     }
 
     @GetMapping("/user")
-    public Response<List<CodeResponseDto>> selectCodesByUserId(
-            Authentication authentication,
-            @AuthenticationPrincipal CustomUser customUser,
-            @CurrentUser UserAccount userAccount
-            ) {
-        System.out.println("authentication = " + authentication);
-        System.out.println("userPrincipal = " + customUser);
-        System.out.println("userAccount = " + userAccount);
-//        return Response.success(codeService.selectCodesByUserId(userPrincipal));
-        return Response.success();
+    public Response<List<CodeResponseDto>> selectCodesByUser(@CurrentUser UserAccount userAccount) {
+        return Response.success(codeService.selectCodesByUser(userAccount));
     }
 
     @PostMapping

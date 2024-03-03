@@ -39,6 +39,11 @@ public class Code extends AuditingFields {
     @OneToMany(mappedBy = "parentId")
     private List<Code> children = new ArrayList<>();
 
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserAccount userAccount;
+
     @Setter
     @Column(columnDefinition = "bit DEFAULT false NOT NULL COMMENT '삭제여부'")
     private Boolean isRemoved;
