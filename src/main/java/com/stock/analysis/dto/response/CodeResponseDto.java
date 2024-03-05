@@ -1,5 +1,6 @@
 package com.stock.analysis.dto.response;
 
+import com.querydsl.core.annotations.QueryProjection;
 import com.stock.analysis.application.code.repository.CodeRepository;
 import com.stock.analysis.domain.entity.Code;
 import com.stock.analysis.utils.Utils;
@@ -7,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,21 +23,30 @@ public class CodeResponseDto{
     private String name;
     private Long parentId;
     private List<CodeResponseDto> children;
-    private String createdAt;
     private String createdBy;
-    private String modifiedAt;
     private String modifiedBy;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
+
+    @QueryProjection
+    public CodeResponseDto(Long id, String name, Long parentId, List<CodeResponseDto> children) {
+        this.id = id;
+        this.name = name;
+        this.parentId = parentId;
+        this.children = children;
+    }
 
     public static CodeResponseDto of(Long id,
                                      String name,
                                      Long parentId,
                                      List<CodeResponseDto> children,
-                                     String createdAt,
                                      String createdBy,
-                                     String modifiedAt,
-                                     String modifiedBy
-    ) {
-        return new CodeResponseDto(id, name, parentId, children, createdAt, createdBy, modifiedAt, modifiedBy);
+                                     LocalDateTime createdAt,
+                                     String modifiedBy,
+                                     LocalDateTime modifiedAt
+                                     ) {
+        return new CodeResponseDto(id, name, parentId, children, createdBy, modifiedBy, createdAt, modifiedAt);
     }
 
     public static CodeResponseDto from(Code code) {
@@ -44,10 +56,10 @@ public class CodeResponseDto{
                 code.getParentId(),
                 code.getChildren().stream()
                         .map(CodeResponseDto::from).toList(),
-                Utils.ConvertDate(code.getCreatedAt()),
                 code.getCreatedBy(),
-                Utils.ConvertDate(code.getModifiedAt()),
-                code.getModifiedBy()
+                code.getCreatedAt(),
+                code.getModifiedBy(),
+                code.getModifiedAt()
         );
     }
 }

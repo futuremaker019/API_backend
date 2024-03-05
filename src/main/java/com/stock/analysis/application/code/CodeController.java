@@ -38,9 +38,12 @@ public class CodeController {
         return Response.success(codeService.getCodes(codeType));
     }
 
-    @GetMapping("/user")
-    public Response<List<CodeResponseDto>> selectCodesByUser(@CurrentUser UserAccount userAccount) {
-        return Response.success(codeService.selectCodesByUser(userAccount));
+    @GetMapping("/{codeId}/users")
+    public Response<List<CodeResponseDto>> selectCodesByUser(
+            @PathVariable("codeId") Long codeId,
+            @CurrentUser UserAccount userAccount
+    ) {
+        return Response.success(codeService.selectCodesByUserAndParentId(codeId, userAccount));
     }
 
     @PostMapping

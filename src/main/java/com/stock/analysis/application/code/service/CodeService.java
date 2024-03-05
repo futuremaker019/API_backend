@@ -1,13 +1,12 @@
 package com.stock.analysis.application.code.service;
 
 import com.stock.analysis.application.code.repository.CodeRepository;
+import com.stock.analysis.application.code.repository.CodeRepositorySupport;
 import com.stock.analysis.domain.contant.CodeType;
 import com.stock.analysis.domain.entity.Code;
 import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.dto.request.CodeRequestDto;
 import com.stock.analysis.dto.response.CodeResponseDto;
-import com.stock.analysis.dto.security.CurrentUser;
-import com.stock.analysis.dto.security.UserPrincipal;
 import com.stock.analysis.exception.CodeAppException;
 import com.stock.analysis.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +21,7 @@ import java.util.List;
 public class CodeService {
 
     private final CodeRepository codeRepository;
+    private final CodeRepositorySupport codeRepositorySupport;
 
     @Transactional(readOnly = true)
     public List<CodeResponseDto> getCodes(CodeType codeType) {
@@ -57,8 +57,11 @@ public class CodeService {
         codeRepository.deleteById(codeId);
     }
 
-    public List<CodeResponseDto> selectCodesByUser(UserAccount userAccount) {
-        codeRepository.selectCodesByUser(userAccount);
-        return null;
+    /**
+     * 코드 드로워에서 사용할수 있도록
+     */
+    public List<CodeResponseDto> selectCodesByUserAndParentId(Long codeId, UserAccount userAccount) {
+        return codeRepositorySupport.selectCodesByUserAndParentId(codeId, userAccount)
+                .stream().map(CodeResponseDto::from).toList();
     }
 }
