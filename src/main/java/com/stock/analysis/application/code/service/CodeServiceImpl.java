@@ -14,7 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -74,22 +75,36 @@ public class CodeServiceImpl implements CodeService {
     }
 
     @Override
-    public List<String> selectSequencingCodes(Long codeId) {
-        // 선택된 코드를 기준으로 어떻게 위로 코드값을 불러오지?
-        // 전체 리스트를 가지는 코드 하나가 필요하다.
-        return null;
+    public List<CodeDto> selectSequencingCodes(Long codeId, UserAccount userAccount) {
+        List<CodeDto> result = new ArrayList<>();
+        Map<Long, CodeDto> resultMap = selectFlatCodes(userAccount);
+        Set<Long> codeIds = resultMap.keySet();
+        findParentCode(resultMap, codeIds, result, codeId);
+        result.sort(Comparator.comparing(CodeDto::id));
+        return result;
+    }
+
+    private void findParentCode(Map<Long, CodeDto> codes, Set<Long> codeIds, List<CodeDto> list, Long codeId) {
+        if (codeId != null && codeIds.contains(codeId)) {
+            CodeDto codeDto = codes.get(codeId);
+            Long parentId = codeDto.parentId();
+            if (parentId != null) {
+                list.add(codeDto);
+                findParentCode(codes, codeIds, list, parentId);
+            }
+        }
     }
 
     /**
      * user_id에 따른 code의 리스트를 가져온다.
-     *  하위코드들의 아이디 리스트로 변경하여 가져온다.
+     * 하위코드들의 아이디 리스트로 변경하여 가져온다.
      */
     @Override
-    public List<CodeDto> selectFlatCodes(UserAccount userAccount) {
+    public Map<Long, CodeDto> selectFlatCodes(UserAccount userAccount) {
         List<Code> codes = codeRepository.selectCodesByUser(userAccount);
         if (codes.isEmpty()) {
             throw new CodeAppException(ErrorCode.CODE_NOT_FOUND);
         }
-        return codes.stream().map(CodeDto::from).toList();
+        return codes.stream().collect(Collectors.toMap(Code::getId, CodeDto::from));
     }
 }

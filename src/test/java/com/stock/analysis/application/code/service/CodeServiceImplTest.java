@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -26,8 +27,8 @@ import static org.mockito.BDDMockito.given;
 /**
  *   application.yml에 명시한 test 코드의 profile에 의해 동작된다.
  *      AnalysisApplicationTests 에 명시한 ActiveProfile에 따라 동작한다.
+ *      따라서 @AutoConfigureTestDatabase는 profile에서 명시한 데이터소스를 따라간다.
   */
-
 //@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class CodeServiceImplTest {
 
@@ -45,12 +46,14 @@ class CodeServiceImplTest {
         given(codeRepository.selectCodesByUser(userAccount)).willReturn(List.of(code));
 
         //when
-        List<CodeDto> codeDtos = sut.selectFlatCodes(userAccount);
+        Map<Long, CodeDto> codeDtoMap = sut.selectFlatCodes(userAccount);
 
         //then
-        assertThat(codeDtos).extracting("name").contains("채용전형");
-        assertThat(codeDtos).extracting("children").contains(List.of(2L, 3L, 4L));
+        // map에서 value만 리스트로 만드는 방법은?
+        List<CodeDto> codeDtoList = codeDtoMap.values().stream().toList();
 
+        assertThat(codeDtoList).extracting("name").contains("채용전형");
+        assertThat(codeDtoList).extracting("children").contains(List.of(2L, 3L, 4L));
     }
 
     @DisplayName("코드 아이디로 코드를 조회한다.")

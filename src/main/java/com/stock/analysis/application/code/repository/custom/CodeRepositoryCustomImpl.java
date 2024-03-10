@@ -28,7 +28,8 @@ public class CodeRepositoryCustomImpl extends QuerydslRepositorySupport implemen
     public List<Code> selectCodesByUser(UserAccount userAccount) {
         return queryFactory
                 .selectFrom(code)
-                .where(code.parentId.isNull().and(code.userAccount.eq(userAccount)))
+                .where(code.userAccount.eq(userAccount))
                 .fetch();
     }
+
 }

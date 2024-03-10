@@ -3,6 +3,7 @@ package com.stock.analysis.application.code;
 import com.stock.analysis.application.code.service.CodeService;
 import com.stock.analysis.domain.contant.CodeType;
 import com.stock.analysis.domain.entity.UserAccount;
+import com.stock.analysis.dto.CodeDto;
 import com.stock.analysis.dto.request.CodeRequestDto;
 import com.stock.analysis.dto.response.CodeResponseDto;
 import com.stock.analysis.dto.response.Response;
@@ -47,8 +48,11 @@ public class CodeController {
     }
 
     @GetMapping("/{codeId}/sequencing")
-    public Response<List<String>> selectSequencingCodeNames(@PathVariable("codeId") Long codeId) {
-        return Response.success(codeService.selectSequencingCodes(codeId));
+    public Response<List<CodeDto>> selectSequencingCodeNames(
+            @PathVariable("codeId") Long codeId,
+            @CurrentUser UserAccount userAccount
+    ) {
+        return Response.success(codeService.selectSequencingCodes(codeId, userAccount));
     }
 
     @PostMapping

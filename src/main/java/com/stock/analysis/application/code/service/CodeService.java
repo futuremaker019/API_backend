@@ -7,6 +7,7 @@ import com.stock.analysis.dto.request.CodeRequestDto;
 import com.stock.analysis.dto.response.CodeResponseDto;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CodeService {
 
@@ -16,6 +17,6 @@ public interface CodeService {
     void updateCode(CodeRequestDto requestDto);
     void deleteCode(Long codeId);
     List<CodeResponseDto> selectCodesByUserAndParentId(Long codeId, UserAccount userAccount);
-    List<String> selectSequencingCodes(Long codeId);
-    List<CodeDto> selectFlatCodes(UserAccount userAccount);
+    List<CodeDto> selectSequencingCodes(Long codeId, UserAccount userAccount);
+    Map<Long, CodeDto> selectFlatCodes(UserAccount userAccount);
 }
