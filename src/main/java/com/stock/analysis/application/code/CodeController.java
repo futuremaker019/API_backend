@@ -35,7 +35,7 @@ public class CodeController {
     public Response<List<CodeResponseDto>> select(
             @RequestParam(value = "codeType", required = false) CodeType codeType
     ) {
-        return Response.success(codeService.getCodes(codeType));
+        return Response.success(codeService.selectCodes(codeType));
     }
 
     @GetMapping("/{codeId}/users")
@@ -44,6 +44,11 @@ public class CodeController {
             @CurrentUser UserAccount userAccount
     ) {
         return Response.success(codeService.selectCodesByUserAndParentId(codeId, userAccount));
+    }
+
+    @GetMapping("/{codeId}/sequencing")
+    public Response<List<String>> selectSequencingCodeNames(@PathVariable("codeId") Long codeId) {
+        return Response.success(codeService.selectSequencingCodes(codeId));
     }
 
     @PostMapping

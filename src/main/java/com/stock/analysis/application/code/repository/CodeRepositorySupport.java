@@ -19,10 +19,7 @@ public class CodeRepositorySupport {
     public List<Code> selectCodesByUserAndParentId(Long codeId, UserAccount userAccount) {
         return queryFactory
                 .selectFrom(code)
-                .where(
-                        code.userAccount.eq(userAccount)
-                                .and(code.parentId.eq(codeId))
-                )
+                .where(code.userAccount.eq(userAccount).and(code.parentId.eq(codeId)))
                 .fetch();
     }
 }

@@ -1,0 +1,95 @@
+package com.stock.analysis.application.code.service;
+
+import com.stock.analysis.application.code.repository.CodeRepository;
+import com.stock.analysis.application.code.repository.CodeRepositorySupport;
+import com.stock.analysis.domain.contant.CodeType;
+import com.stock.analysis.domain.entity.Code;
+import com.stock.analysis.domain.entity.UserAccount;
+import com.stock.analysis.dto.CodeDto;
+import com.stock.analysis.dto.request.CodeRequestDto;
+import com.stock.analysis.dto.response.CodeResponseDto;
+import com.stock.analysis.exception.CodeAppException;
+import com.stock.analysis.exception.ErrorCode;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class CodeServiceImpl implements CodeService {
+
+    private final CodeRepository codeRepository;
+    private final CodeRepositorySupport codeRepositorySupport;
+
+    @Transactional(readOnly = true)
+    public List<CodeResponseDto> selectCodes(CodeType codeType) {
+        if (codeType != null) {
+            return null;
+        } else {
+            return codeRepository.findAllByParentIdIsNullOrderByCreatedAtAsc()
+                    .stream().map(CodeResponseDto::from).toList();
+        }
+    }
+
+    @Override
+    public CodeResponseDto getCode(Long codeId) {
+        Code code = codeRepository.findById(codeId).orElseThrow(
+                () -> new CodeAppException(ErrorCode.CODE_NOT_FOUND));
+        return CodeResponseDto.from(code);
+    }
+
+    public void createCode(CodeRequestDto requestDto) {
+        codeRepository.findByNameAndParentId(requestDto.name(), requestDto.parentId()).ifPresent(c -> {
+            throw new CodeAppException(ErrorCode.CODE_NAME_EXISTED, "code name existed : %s".formatted(c.getName()));
+        });
+        codeRepository.save(requestDto.to());
+    }
+
+    public void updateCode(CodeRequestDto requestDto) {
+        Code code = codeRepository.findById(requestDto.id()).orElseThrow(
+                () -> new CodeAppException(ErrorCode.CODE_NOT_FOUND, "code not found : id - %d".formatted(requestDto.id()))
+        );
+        code.updateCode(requestDto);
+    }
+
+    public void deleteCode(Long codeId) {
+        Code code = codeRepository.findById(codeId).orElseThrow(
+                () -> new CodeAppException(ErrorCode.CODE_NOT_FOUND, "code not found : id - %d".formatted(codeId))
+        );
+        if (!code.getChildren().isEmpty()) {
+            throw new CodeAppException(ErrorCode.CODE_CHILDREN_EXISTED, "children existed");
+        }
+        codeRepository.deleteById(codeId);
+    }
+
+    /**
+     * 코드 드로워에서 사용함 - 채용전형을 선택하여 보여줄 수 있도록 만듬
+     */
+    public List<CodeResponseDto> selectCodesByUserAndParentId(Long codeId, UserAccount userAccount) {
+        return codeRepositorySupport.selectCodesByUserAndParentId(codeId, userAccount)
+                .stream().map(CodeResponseDto::from).toList();
+    }
+
+    @Override
+    public List<String> selectSequencingCodes(Long codeId) {
+        // 선택된 코드를 기준으로 어떻게 위로 코드값을 불러오지?
+        // 전체 리스트를 가지는 코드 하나가 필요하다.
+        return null;
+    }
+
+    /**
+     * user_id에 따른 code의 리스트를 가져온다.
+     *  하위코드들의 아이디 리스트로 변경하여 가져온다.
+     */
+    @Override
+    public List<CodeDto> selectFlatCodes(UserAccount userAccount) {
+        List<Code> codes = codeRepository.selectCodesByUser(userAccount);
+        if (codes.isEmpty()) {
+            throw new CodeAppException(ErrorCode.CODE_NOT_FOUND);
+        }
+        return codes.stream().map(CodeDto::from).toList();
+    }
+}
