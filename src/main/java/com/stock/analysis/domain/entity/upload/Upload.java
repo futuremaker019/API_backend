@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DiscriminatorColumn(name = "upload_type")
-public abstract class Upload extends AuditingFields {
+public abstract class Upload {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -43,7 +43,6 @@ public class Article extends AuditingFields {
     private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
 
     @ToString.Exclude
-    @OrderBy("createdAt DESC")
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<ArticleUpload> articleUploads = new LinkedHashSet<>();
 
