@@ -1,7 +1,6 @@
 package com.stock.analysis.application.code.service;
 
 import com.stock.analysis.application.code.repository.CodeRepository;
-import com.stock.analysis.application.code.repository.CodeRepositorySupport;
 import com.stock.analysis.domain.contant.CodeType;
 import com.stock.analysis.domain.entity.Code;
 import com.stock.analysis.domain.entity.UserAccount;
@@ -68,6 +67,12 @@ public class CodeServiceImpl implements CodeService {
         codeRepository.deleteById(codeId);
     }
 
+    @Override
+    public List<CodeResponseDto> selectCodesByUserAndParentIdIsNull(UserAccount userAccount) {
+        return codeRepository.selectCodesByUserAndParentIsNull(userAccount)
+                .stream().map(CodeResponseDto::from).toList();
+    }
+
     /**
      * 코드 드로워에서 사용함 - 채용전형을 선택하여 보여줄 수 있도록 만듬
      * (유저마다 서로다른 채용전형의 키값을 특정할수 없다. primeCodeName을 추가함)
@@ -113,7 +118,7 @@ public class CodeServiceImpl implements CodeService {
      */
     @Override
     public Map<Long, CodeDto> selectFlatCodes(UserAccount userAccount) {
-        List<Code> codes = codeRepository.selectCodesByUser(userAccount);
+        List<Code> codes = codeRepository.selectCodesByUserAndParentIsNull(userAccount);
         if (codes.isEmpty()) {
             throw new CodeAppException(ErrorCode.CODE_NOT_FOUND);
         }

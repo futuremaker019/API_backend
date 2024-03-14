@@ -21,10 +21,10 @@ public class CodeRepositoryCustomImpl extends QuerydslRepositorySupport implemen
     }
 
     @Override
-    public List<Code> selectCodesByUser(UserAccount userAccount) {
+    public List<Code> selectCodesByUserAndParentIsNull(UserAccount userAccount) {
         return queryFactory
                 .selectFrom(code)
-                .where(code.userAccount.eq(userAccount))
+                .where(code.userAccount.eq(userAccount).and(code.parentId.isNull()))
                 .fetch();
     }
 

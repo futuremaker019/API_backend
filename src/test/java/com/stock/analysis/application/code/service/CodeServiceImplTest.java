@@ -1,7 +1,6 @@
 package com.stock.analysis.application.code.service;
 
 import com.stock.analysis.application.code.repository.CodeRepository;
-import com.stock.analysis.domain.contant.RoleType;
 import com.stock.analysis.domain.entity.Code;
 import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.dto.CodeDto;
@@ -17,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -43,7 +41,7 @@ class CodeServiceImplTest {
         // given
         UserAccount userAccount = DummyData.createUserAccount();
         Code code = DummyData.createCode();
-        given(codeRepository.selectCodesByUser(userAccount)).willReturn(List.of(code));
+        given(codeRepository.selectCodesByUserAndParentIsNull(userAccount)).willReturn(List.of(code));
 
         //when
         Map<Long, CodeDto> codeDtoMap = sut.selectFlatCodes(userAccount);

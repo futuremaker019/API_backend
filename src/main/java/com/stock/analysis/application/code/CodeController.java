@@ -39,6 +39,11 @@ public class CodeController {
         return Response.success(codeService.selectCodes(codeType));
     }
 
+    @GetMapping("/users")
+    public Response<List<CodeResponseDto>> selectCodesByUser(@CurrentUser UserAccount userAccount) {
+        return Response.success(codeService.selectCodesByUserAndParentIdIsNull(userAccount));
+    }
+
     @GetMapping("/primeCodeName/{primeCodeName}")
     public Response<List<CodeResponseDto>> selectCodesByUserAndPrimeCodeName(
        @PathVariable("primeCodeName") String primeCodeName,
