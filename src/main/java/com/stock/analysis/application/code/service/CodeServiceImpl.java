@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 public class CodeServiceImpl implements CodeService {
 
     private final CodeRepository codeRepository;
-    private final CodeRepositorySupport codeRepositorySupport;
 
     @Transactional(readOnly = true)
     public List<CodeResponseDto> selectCodes(CodeType codeType) {
@@ -42,6 +41,7 @@ public class CodeServiceImpl implements CodeService {
         return CodeResponseDto.from(code);
     }
 
+    @Override
     public void createCode(CodeRequestDto requestDto) {
         codeRepository.findByNameAndParentId(requestDto.name(), requestDto.parentId()).ifPresent(c -> {
             throw new CodeAppException(ErrorCode.CODE_NAME_EXISTED, "code name existed : %s".formatted(c.getName()));
@@ -49,6 +49,7 @@ public class CodeServiceImpl implements CodeService {
         codeRepository.save(requestDto.to());
     }
 
+    @Override
     public void updateCode(CodeRequestDto requestDto) {
         Code code = codeRepository.findById(requestDto.id()).orElseThrow(
                 () -> new CodeAppException(ErrorCode.CODE_NOT_FOUND, "code not found : id - %d".formatted(requestDto.id()))
@@ -56,6 +57,7 @@ public class CodeServiceImpl implements CodeService {
         code.updateCode(requestDto);
     }
 
+    @Override
     public void deleteCode(Long codeId) {
         Code code = codeRepository.findById(codeId).orElseThrow(
                 () -> new CodeAppException(ErrorCode.CODE_NOT_FOUND, "code not found : id - %d".formatted(codeId))
@@ -68,9 +70,19 @@ public class CodeServiceImpl implements CodeService {
 
     /**
      * 코드 드로워에서 사용함 - 채용전형을 선택하여 보여줄 수 있도록 만듬
+     * (유저마다 서로다른 채용전형의 키값을 특정할수 없다. primeCodeName을 추가함)
      */
+    @Override
     public List<CodeResponseDto> selectCodesByUserAndParentId(Long codeId, UserAccount userAccount) {
-        return codeRepositorySupport.selectCodesByUserAndParentId(codeId, userAccount)
+        return codeRepository.selectCodesByUserAndParentId(codeId, userAccount)
+                .stream().map(CodeResponseDto::from).toList();
+    }
+
+    @Override
+    public List<CodeResponseDto> selectCodesByUserAndPrimeCodeName(String primeCodeName, UserAccount userAccount) {
+        Code code = codeRepository.findByPrimeCodeNameAndUserAccount(primeCodeName, userAccount).orElseThrow(
+                () -> new CodeAppException(ErrorCode.CODE_NOT_FOUND));
+        return codeRepository.selectCodesByUserAndParentId(code.getId(), userAccount)
                 .stream().map(CodeResponseDto::from).toList();
     }
 

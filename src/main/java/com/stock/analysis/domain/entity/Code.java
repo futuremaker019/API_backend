@@ -29,7 +29,11 @@ public class Code extends AuditingFields {
     private String name;
 
     @Setter
-    @Column(length = 100)
+    @Column(length = 50)
+    private String primeCodeName;
+
+    @Setter
+    @Column(length = 50)
     private String icon;
 
     @Setter

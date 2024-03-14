@@ -17,6 +17,7 @@ public interface CodeService {
     void updateCode(CodeRequestDto requestDto);
     void deleteCode(Long codeId);
     List<CodeResponseDto> selectCodesByUserAndParentId(Long codeId, UserAccount userAccount);
+    List<CodeResponseDto> selectCodesByUserAndPrimeCodeName(String primeCodeName, UserAccount userAccount);
     List<CodeDto> selectSequencingCodes(Long codeId, UserAccount userAccount);
     Map<Long, CodeDto> selectFlatCodes(UserAccount userAccount);
 }

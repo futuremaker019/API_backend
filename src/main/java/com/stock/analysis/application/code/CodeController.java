@@ -39,6 +39,18 @@ public class CodeController {
         return Response.success(codeService.selectCodes(codeType));
     }
 
+    @GetMapping("/primeCodeName/{primeCodeName}")
+    public Response<List<CodeResponseDto>> selectCodesByUserAndPrimeCodeName(
+       @PathVariable("primeCodeName") String primeCodeName,
+       @CurrentUser UserAccount userAccount
+    ) {
+        return Response.success(codeService.selectCodesByUserAndPrimeCodeName(primeCodeName, userAccount));
+    }
+
+    /**
+     * 최상위코드의 아이디를 사용하여 채용전형을 불러오는 방식은 잘못됨,
+     *  각 유저별 채용전형에 대한 codeId를 특정할수 없기 떄문에 (commit 후 삭제하자)
+     */
     @GetMapping("/{codeId}/users")
     public Response<List<CodeResponseDto>> selectCodesByUser(
             @PathVariable("codeId") Long codeId,

@@ -10,4 +10,8 @@ public interface CodeRepositoryCustom {
 
     List<Code> selectCodesByUser(UserAccount userAccount);
 
+    List<Code> selectCodesByUserAndParentId(Long codeId, UserAccount userAccount);
+
+    List<Code> selectCodesByUserAndPrimeCodeName(String primeCodeName, UserAccount userAccount);
+
 }

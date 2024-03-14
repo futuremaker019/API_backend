@@ -20,10 +20,6 @@ public class CodeRepositoryCustomImpl extends QuerydslRepositorySupport implemen
         this.queryFactory = queryFactory;
     }
 
-    /**
-     * 어떻게 재귀적으로 코드값을 불러와야 할까
-     *  유저에 따라 코드를 재귀적으로 불러와야한다.
-     */
     @Override
     public List<Code> selectCodesByUser(UserAccount userAccount) {
         return queryFactory
@@ -32,4 +28,19 @@ public class CodeRepositoryCustomImpl extends QuerydslRepositorySupport implemen
                 .fetch();
     }
 
+    @Override
+    public List<Code> selectCodesByUserAndParentId(Long codeId, UserAccount userAccount) {
+        return queryFactory
+                .selectFrom(code)
+                .where(code.userAccount.eq(userAccount).and(code.parentId.eq(codeId)))
+                .fetch();
+    }
+
+    @Override
+    public List<Code> selectCodesByUserAndPrimeCodeName(String primeCodeName, UserAccount userAccount) {
+        return queryFactory
+                .selectFrom(code)
+                .where(code.userAccount.eq(userAccount).and(code.primeCodeName.eq(primeCodeName)))
+                .fetch();
+    }
 }
