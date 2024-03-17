@@ -10,10 +10,10 @@ import java.util.Optional;
 
 public interface CodeRepository extends JpaRepository<Code, Long>, CodeRepositoryCustom {
 
+    List<Code> findAllByParentIdIsNullOrderByCreatedAtAsc();
+    List<Code> findAllByUserAccount(UserAccount userAccount);
+
     Optional<Code> findById(Long id);
     Optional<Code> findByPrimeCodeNameAndUserAccount(String primeCodeName, UserAccount userAccount);
-
-    List<Code> findAllByParentIdIsNullOrderByCreatedAtAsc();
-
     Optional<Code> findByNameAndParentId(String name, Long parentId);
 }

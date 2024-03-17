@@ -11,6 +11,8 @@ public interface CodeRepositoryCustom {
 
     List<Code> selectCodesByUserAndParentId(Long codeId, UserAccount userAccount);
 
-    List<Code> selectCodesByUserAndPrimeCodeName(String primeCodeName, UserAccount userAccount);
-
+    /**
+     * 간단한 코드라 메서드쿼리로 변경함
+     */
+//    List<Code> selectCodesByUserAndPrimeCodeName(String primeCodeName, UserAccount userAccount);
 }

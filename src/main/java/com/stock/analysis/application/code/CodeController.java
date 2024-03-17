@@ -32,13 +32,6 @@ public class CodeController {
 
     private final CodeService codeService;
 
-    @GetMapping
-    public Response<List<CodeResponseDto>> select(
-            @RequestParam(value = "codeType", required = false) CodeType codeType
-    ) {
-        return Response.success(codeService.selectCodes(codeType));
-    }
-
     @GetMapping("/users")
     public Response<List<CodeResponseDto>> selectCodesByUser(@CurrentUser UserAccount userAccount) {
         return Response.success(codeService.selectCodesByUserAndParentIdIsNull(userAccount));
@@ -73,8 +66,10 @@ public class CodeController {
     }
 
     @PostMapping
-    public Response<Void> create(@RequestBody CodeRequestDto requestDto) {
-        codeService.createCode(requestDto);
+    public Response<Void> create(
+            @RequestBody CodeRequestDto requestDto,
+            @CurrentUser UserAccount userAccount) {
+        codeService.createCode(requestDto, userAccount);
         return Response.success();
     }
 
@@ -89,4 +84,15 @@ public class CodeController {
         codeService.deleteCode(codeId);
         return Response.success();
     }
+
+    /**
+     * 코드타입(플랫폼, 채용전형)으로 코드리스트를 불러오려했으나 플랫폼, 채용전형 또한 코드화 하여 계획을 변경함
+     *  현재는 사용하지 않음 (기록을 위해 남겨둠)
+     */
+//    @GetMapping
+//    public Response<List<CodeResponseDto>> select(
+//            @RequestParam(value = "codeType", required = false) CodeType codeType
+//    ) {
+//        return Response.success(codeService.selectCodes(codeType));
+//    }
 }

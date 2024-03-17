@@ -36,11 +36,14 @@ public class CodeRepositoryCustomImpl extends QuerydslRepositorySupport implemen
                 .fetch();
     }
 
-    @Override
-    public List<Code> selectCodesByUserAndPrimeCodeName(String primeCodeName, UserAccount userAccount) {
-        return queryFactory
-                .selectFrom(code)
-                .where(code.userAccount.eq(userAccount).and(code.primeCodeName.eq(primeCodeName)))
-                .fetch();
-    }
+    /**
+     * codeRepository에서 메소드쿼리로 구현함
+     */
+//    @Override
+//    public List<Code> selectCodesByUserAndPrimeCodeName(String primeCodeName, UserAccount userAccount) {
+//        return queryFactory
+//                .selectFrom(code)
+//                .where(code.userAccount.eq(userAccount).and(code.primeCodeName.eq(primeCodeName)))
+//                .fetch();
+//    }
 }

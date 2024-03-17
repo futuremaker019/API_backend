@@ -11,15 +11,19 @@ import java.util.Map;
 
 public interface CodeService {
 
-    List<CodeResponseDto> selectCodes(CodeType codeType);
-    List<CodeResponseDto> selectCodesByUserAndParentIdIsNull(UserAccount userAccount);
-    CodeResponseDto getCode(Long codeId);
-    void createCode(CodeRequestDto requestDto);
-    void updateCode(CodeRequestDto requestDto);
-    void deleteCode(Long codeId);
     List<CodeResponseDto> selectCodesByUserAndParentId(Long codeId, UserAccount userAccount);
     List<CodeResponseDto> selectCodesByUserAndPrimeCodeName(String primeCodeName, UserAccount userAccount);
     List<CodeDto> selectSequencingCodes(Long codeId, UserAccount userAccount);
+    List<CodeResponseDto> selectCodesByUserAndParentIdIsNull(UserAccount userAccount);
+
+    CodeResponseDto getCode(Long codeId);
+
+    void createCode(CodeRequestDto requestDto, UserAccount userAccount);
+    void updateCode(CodeRequestDto requestDto);
+    void deleteCode(Long codeId);
+
     Map<Long, CodeDto> selectFlatCodes(UserAccount userAccount);
+
+    //    List<CodeResponseDto> selectCodes(CodeType codeType);
 
 }
