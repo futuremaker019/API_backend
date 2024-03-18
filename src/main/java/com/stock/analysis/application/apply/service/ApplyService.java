@@ -27,7 +27,6 @@ public class ApplyService {
     }
 
     public Apply createApply(ApplyRequestDto responseDto, UserAccount userAccount) {
-
-        return null;
+        return applyRepository.saveAndFlush(responseDto.toEntity(userAccount));
     }
 }

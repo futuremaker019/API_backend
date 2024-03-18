@@ -3,6 +3,7 @@ package com.stock.analysis.dto.upload;
 import com.stock.analysis.domain.entity.Article;
 import com.stock.analysis.domain.entity.upload.ArticleUpload;
 import com.stock.analysis.utils.Utils;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,21 +12,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ArticleUploadDto extends UploadDto {
 
-    private Long id;
-    private String name;
-    private String storedName;
-    private String path;
-    private String contentType;
-
     private Article article;
 
     @Builder
     public ArticleUploadDto(Long id, String name, String storedName, String path, String contentType, Article article) {
-        this.id = id;
-        this.name = name;
-        this.storedName = storedName;
-        this.path = path;
-        this.contentType = contentType;
+        super(id, name, storedName, path, contentType);
         this.article = article;
     }
 

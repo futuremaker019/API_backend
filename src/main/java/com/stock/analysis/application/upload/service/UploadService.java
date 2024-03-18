@@ -50,17 +50,14 @@ public class UploadService {
                 e.printStackTrace();
             }
         }
-
         files.forEach(file -> {
             String originalFilename = file.getOriginalFilename();
             String storedFileName = createStoredFileName(originalFilename);
-
             try {
                 file.transferTo(new File(rootDir, storedFileName));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
             saveUploadByUploadType(uploadDto, uploadType, file, originalFilename, storedFileName, filePath);
         });
     }
@@ -68,22 +65,12 @@ public class UploadService {
     private void saveUploadByUploadType(UploadDto uploadDto, UploadType uploadType, MultipartFile file, String originalFilename, String storedFileName, String filePath) {
         switch (uploadType) {
             case APPLY -> {
-                ArticleUpload articleUpload = uploadDto.toArticleUpload(
-                        originalFilename,
-                        storedFileName,
-                        filePath,
-                        file.getContentType()
-                );
-                articleUploadRepository.save(articleUpload);
+                ApplyUpload applyUpload = uploadDto.toApplyUpload(originalFilename, storedFileName, filePath, file.getContentType());
+                applyUploadRepository.save(applyUpload);
             }
             case ARTICLE -> {
-                ApplyUpload applyUpload = uploadDto.toApplyUpload(
-                        originalFilename,
-                        storedFileName,
-                        filePath,
-                        file.getContentType()
-                );
-                applyUploadRepository.save(applyUpload);
+                ArticleUpload articleUpload = uploadDto.toArticleUpload(originalFilename, storedFileName, filePath, file.getContentType());
+                articleUploadRepository.save(articleUpload);
             }
         }
     }

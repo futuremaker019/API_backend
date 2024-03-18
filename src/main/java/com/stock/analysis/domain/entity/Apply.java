@@ -6,14 +6,15 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Getter
-@ToString(callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
-@AllArgsConstructor
 @Entity
+@Getter
+@Builder
+@ToString(callSuper = true)
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Apply extends AuditingFields {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,15 +26,15 @@ public class Apply extends AuditingFields {
     @Setter @Column(length = 1000)
     private String companyLocation;
 
-    @Setter @Column(length = 50)
-    private String platform;
+    @Setter
+    private Long platform;
 
-    @Setter @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime appliedAt;
-    @Setter @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime jobOpeningDate;
-    @Setter @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime jobCloseDate;
+    @Setter @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate applyDate;
+    @Setter @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate jobOpeningDate;
+    @Setter @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate jobCloseDate;
 
     @Setter
     @Column(name = "is_applied")
@@ -60,10 +61,10 @@ public class Apply extends AuditingFields {
     public static Apply of(
             String companyName,
             String companyLocation,
-            String platform,
-            LocalDateTime appliedAt,
-            LocalDateTime jobOpeningDate,
-            LocalDateTime jobCloseDate,
+            Long platform,
+            LocalDate applyDate,
+            LocalDate jobOpeningDate,
+            LocalDate jobCloseDate,
             ApplyType isApplied,
             ApplyType applyType,
             boolean pass,
@@ -74,7 +75,7 @@ public class Apply extends AuditingFields {
                 .companyName(companyName)
                 .companyLocation(companyLocation)
                 .platform(platform)
-                .appliedAt(appliedAt)
+                .applyDate(applyDate)
                 .jobOpeningDate(jobOpeningDate)
                 .jobCloseDate(jobCloseDate)
                 .isApplied(isApplied)

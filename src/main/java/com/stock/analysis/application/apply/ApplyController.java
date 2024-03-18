@@ -11,12 +11,18 @@ import com.stock.analysis.application.apply.service.ApplyService;
 import com.stock.analysis.dto.response.Response;
 import com.stock.analysis.dto.security.CurrentUser;
 import com.stock.analysis.dto.upload.ApplyUploadDto;
+import com.stock.analysis.exception.ApplyAppException;
+import com.stock.analysis.exception.AuthenticationException;
+import com.stock.analysis.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.awt.print.Pageable;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,10 +50,16 @@ public class ApplyController {
 
     @PostMapping
     public Response<Void> createApply(
-            @RequestPart ApplyRequestDto responseDto,
-            @RequestPart(required = false) List<MultipartFile> attachments,
-            @CurrentUser UserAccount userAccount
+            @Valid @RequestPart(value = "requestDto") ApplyRequestDto responseDto,
+            @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments,
+            @CurrentUser UserAccount userAccount, Errors errors
     ) {
+        if (errors.hasErrors()) {
+            String defaultMessage = Objects.requireNonNull(errors.getFieldError()).getDefaultMessage();
+            System.out.println("errors = " + defaultMessage);
+            throw new ApplyAppException(ErrorCode.HAS_NO_ARGUMENTS, defaultMessage);
+        }
+
         Apply apply = applyService.createApply(responseDto, userAccount);
         uploadService.saveUploads(
                 ApplyUploadDto.builder().apply(apply).build(),
