@@ -1,6 +1,7 @@
 package com.stock.analysis.domain.entity;
 
 import com.stock.analysis.domain.AuditingFields;
+import com.stock.analysis.dto.UserAccountDto;
 import com.stock.analysis.dto.request.CodeRequestDto;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -29,7 +30,11 @@ public class Code extends AuditingFields {
     private String name;
 
     @Setter
-    @Column(length = 100)
+    @Column(length = 50)
+    private String primeCodeName;
+
+    @Setter
+    @Column(length = 50)
     private String icon;
 
     @Setter
@@ -38,6 +43,11 @@ public class Code extends AuditingFields {
     @ToString.Exclude
     @OneToMany(mappedBy = "parentId")
     private List<Code> children = new ArrayList<>();
+
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserAccount userAccount;
 
     @Setter
     @Column(columnDefinition = "bit DEFAULT false NOT NULL COMMENT '삭제여부'")
@@ -50,12 +60,20 @@ public class Code extends AuditingFields {
         this.children = children;
     }
 
+    public Code(Long id, String name, Long parentId, List<Code> children, UserAccount userAccount) {
+        this.id = id;
+        this.name = name;
+        this.parentId = parentId;
+        this.children = children;
+        this.userAccount = userAccount;
+    }
+
     public static Code of(Long id, String name, Long parentId, List<Code> children) {
         return new Code(id, name, parentId, children);
     }
 
-    public static Code of(Long id, String name, Long parentId) {
-        return new Code(id, name, parentId, null);
+    public static Code of(String name, Long parentId, UserAccount userAccount) {
+        return new Code(null, name, parentId, null, userAccount);
     }
 
     @Override

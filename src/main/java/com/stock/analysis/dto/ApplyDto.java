@@ -1,7 +1,6 @@
 package com.stock.analysis.dto;
 
-public record ApplyDto(
-
-) {
+public class ApplyDto {
+    private Long id;
 
 }

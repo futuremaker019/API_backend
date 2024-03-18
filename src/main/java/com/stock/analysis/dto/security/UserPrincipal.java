@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,6 +21,20 @@ public record UserPrincipal(
         String email,
         String nickname
 ) implements UserDetails {
+
+    public static UserPrincipal of(Long id, String userId, String password, Set<RoleType> roleTypes, String email, String nickname) {
+        return new UserPrincipal(
+                id,
+                userId,
+                password,
+                roleTypes.stream()
+                        .map(RoleType::getRoleName)
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toUnmodifiableSet()),
+                email,
+                nickname
+        );
+    }
 
     public static UserPrincipal of(Long id, String userId, String password, String email, String nickname) {
         Set<RoleType> roleTypes = Set.of(RoleType.USER);
@@ -58,6 +73,28 @@ public record UserPrincipal(
                 dto.userPassword(),
                 dto.email(),
                 dto.nickname()
+        );
+    }
+
+    public static UserPrincipal fromEntity(UserAccount userAccount) {
+        return UserPrincipal.of(
+                userAccount.getId(),
+                userAccount.getUserId(),
+                userAccount.getUserPassword(),
+                userAccount.getRoleTypes(),
+                userAccount.getEmail(),
+                userAccount.getNickname()
+        );
+    }
+
+    public static UserPrincipal of(UserPrincipal userPrincipal, List<SimpleGrantedAuthority> grantedAuthorities) {
+        return new UserPrincipal(
+                userPrincipal.id,
+                userPrincipal.userId(),
+                userPrincipal.password(),
+                grantedAuthorities,
+                userPrincipal.email(),
+                userPrincipal.nickname()
         );
     }
 

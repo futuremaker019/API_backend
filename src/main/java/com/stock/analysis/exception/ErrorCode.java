@@ -19,13 +19,15 @@ public enum ErrorCode {
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid token"),                // 401
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.GONE, "Invalid refresh token"),      // 410
     EXPIRED_TOKEN(HttpStatus.GONE, "token expired"),
+    REFRESH_EXPIRED_TOKEN(HttpStatus.GONE, "Refresh token expired"),
 
     HAS_NO_AUTHORITIES(HttpStatus.FORBIDDEN, "Has no Authorities"),         // 403
     PASSWORD_NOT_MATCHED(HttpStatus.NOT_FOUND, "Password not matched"),
 
     CODE_NOT_FOUND(HttpStatus.NOT_FOUND, "Code not found"),                 // 404
     CODE_NAME_EXISTED(HttpStatus.CONFLICT, "code name existed"),            // 409
-    CODE_CHILDREN_EXISTED(HttpStatus.CONFLICT, "children existed")          // 409
+
+    CODE_CHILDREN_EXISTED(HttpStatus.CONFLICT, "children existed"),          // 409
 
     ;
 

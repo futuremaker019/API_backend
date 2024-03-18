@@ -1,6 +1,9 @@
 package com.stock.analysis.application.upload.service;
 
+import com.stock.analysis.application.upload.repository.ApplyUploadRepository;
 import com.stock.analysis.application.upload.repository.ArticleUploadRepository;
+import com.stock.analysis.domain.contant.UploadType;
+import com.stock.analysis.domain.entity.upload.ApplyUpload;
 import com.stock.analysis.domain.entity.upload.ArticleUpload;
 import com.stock.analysis.dto.upload.UploadDto;
 import lombok.RequiredArgsConstructor;
@@ -31,13 +34,14 @@ public class UploadService {
     private String rootPath;
 
     private final ArticleUploadRepository articleUploadRepository;
+    private final ApplyUploadRepository applyUploadRepository;
 
     public String getFullPath(String fileName) {
         return rootPath + fileName;
     }
 
-    public void saveUploads(UploadDto uploadDto, List<MultipartFile> files) {
-        String filePath = DateTimeFormatter.ofPattern("YYYY/MM/dd").format(LocalDate.now());
+    public void saveUploads(UploadDto uploadDto, List<MultipartFile> files, UploadType uploadType) {
+        String filePath = DateTimeFormatter.ofPattern("yyyy/MM/dd").format(LocalDate.now());
         File rootDir = new File(getFullPath(filePath));
         if (!rootDir.exists()) {
             try {
@@ -46,26 +50,29 @@ public class UploadService {
                 e.printStackTrace();
             }
         }
-
         files.forEach(file -> {
             String originalFilename = file.getOriginalFilename();
             String storedFileName = createStoredFileName(originalFilename);
-
             try {
                 file.transferTo(new File(rootDir, storedFileName));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
-            ArticleUpload articleUpload = uploadDto.toEntity(
-                    originalFilename,
-                    storedFileName,
-                    filePath,
-                    file.getContentType()
-            );
-
-            articleUploadRepository.save(articleUpload);
+            saveUploadByUploadType(uploadDto, uploadType, file, originalFilename, storedFileName, filePath);
         });
+    }
+
+    private void saveUploadByUploadType(UploadDto uploadDto, UploadType uploadType, MultipartFile file, String originalFilename, String storedFileName, String filePath) {
+        switch (uploadType) {
+            case APPLY -> {
+                ApplyUpload applyUpload = uploadDto.toApplyUpload(originalFilename, storedFileName, filePath, file.getContentType());
+                applyUploadRepository.save(applyUpload);
+            }
+            case ARTICLE -> {
+                ArticleUpload articleUpload = uploadDto.toArticleUpload(originalFilename, storedFileName, filePath, file.getContentType());
+                articleUploadRepository.save(articleUpload);
+            }
+        }
     }
 
     private String createStoredFileName(String originalFilename) {

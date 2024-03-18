@@ -1,9 +1,10 @@
 package com.stock.analysis.application.article;
 
+import com.stock.analysis.domain.contant.UploadType;
 import com.stock.analysis.domain.entity.Article;
 import com.stock.analysis.dto.ArticleDto;
 import com.stock.analysis.dto.ArticleWithCommentsDto;
-import com.stock.analysis.dto.request.ArticleRequest;
+import com.stock.analysis.dto.request.ArticleRequestDto;
 import com.stock.analysis.dto.security.UserPrincipal;
 import com.stock.analysis.dto.upload.ArticleUploadDto;
 import com.stock.analysis.application.article.service.ArticleService;
@@ -44,21 +45,20 @@ public class ArticleController {
 
     @PostMapping( "/create")
     public ResponseEntity<Long> saveArticle(
-            @RequestPart(value = "dto") ArticleRequest dto,
+            @RequestPart(value = "dto") ArticleRequestDto dto,
             @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
         Article savedArticle = articleService.saveArticle(dto.toDto(userPrincipal.toDto()));
         uploadService.saveUploads(
                 ArticleUploadDto.builder().article(savedArticle).build(),
-                attachments
-        );
+                attachments, UploadType.ARTICLE);
         return ResponseEntity.ok().body(savedArticle.getId());
     }
 
     @PutMapping("/{articleId}")
     public ResponseEntity<Boolean> updateArticle(
-            @RequestBody ArticleRequest dto,
+            @RequestBody ArticleRequestDto dto,
             @PathVariable Long articleId,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {

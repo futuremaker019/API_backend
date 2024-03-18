@@ -1,4 +1,4 @@
-package com.stock.analysis.service;
+package com.stock.analysis.application.article.service;
 
 import com.stock.analysis.application.article.service.ArticleService;
 import com.stock.analysis.domain.contant.RoleType;

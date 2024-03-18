@@ -1,56 +1,29 @@
 package com.stock.analysis.application.code.service;
 
-import com.stock.analysis.application.code.repository.CodeRepository;
 import com.stock.analysis.domain.contant.CodeType;
-import com.stock.analysis.domain.entity.Code;
+import com.stock.analysis.domain.entity.UserAccount;
+import com.stock.analysis.dto.CodeDto;
 import com.stock.analysis.dto.request.CodeRequestDto;
 import com.stock.analysis.dto.response.CodeResponseDto;
-import com.stock.analysis.exception.CodeAppException;
-import com.stock.analysis.exception.ErrorCode;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
-@Service
-@Transactional
-@RequiredArgsConstructor
-public class CodeService {
+public interface CodeService {
 
-    private final CodeRepository codeRepository;
+    List<CodeResponseDto> selectCodesByUserAndParentId(Long codeId, UserAccount userAccount);
+    List<CodeResponseDto> selectCodesByUserAndPrimeCodeName(String primeCodeName, UserAccount userAccount);
+    List<CodeDto> selectSequencingCodes(Long codeId, UserAccount userAccount);
+    List<CodeResponseDto> selectCodesByUserAndParentIdIsNull(UserAccount userAccount);
 
-    @Transactional(readOnly = true)
-    public List<CodeResponseDto> getCodes(CodeType codeType) {
-        if (codeType != null) {
-            return null;
-        } else {
-            //
-            return codeRepository.findAllByParentIdIsNullOrderByCreatedAtAsc().stream().map(CodeResponseDto::from).toList();
-        }
-    }
+    CodeResponseDto getCode(Long codeId);
 
-    public void createCode(CodeRequestDto requestDto) {
-        codeRepository.findByNameAndParentId(requestDto.name(), requestDto.parentId()).ifPresent(c -> {
-            throw new CodeAppException(ErrorCode.CODE_NAME_EXISTED, "code name existed : %s".formatted(c.getName()));
-        });
-        codeRepository.save(requestDto.to());
-    }
+    void createCode(CodeRequestDto requestDto, UserAccount userAccount);
+    void updateCode(CodeRequestDto requestDto);
+    void deleteCode(Long codeId);
 
-    public void updateCode(CodeRequestDto requestDto) {
-        Code code = codeRepository.findById(requestDto.id()).orElseThrow(
-                () -> new CodeAppException(ErrorCode.CODE_NOT_FOUND, "code not found : id - %d".formatted(requestDto.id()))
-        );
-        code.updateCode(requestDto);
-    }
+    Map<Long, CodeDto> selectFlatCodes(UserAccount userAccount);
 
-    public void deleteCode(Long codeId) {
-        Code code = codeRepository.findById(codeId).orElseThrow(
-                () -> new CodeAppException(ErrorCode.CODE_NOT_FOUND, "code not found : id - %d".formatted(codeId))
-        );
-        if (!code.getChildren().isEmpty()) {
-            throw new CodeAppException(ErrorCode.CODE_CHILDREN_EXISTED, "children existed");
-        }
-        codeRepository.deleteById(codeId);
-    }
+    //    List<CodeResponseDto> selectCodes(CodeType codeType);
+
 }

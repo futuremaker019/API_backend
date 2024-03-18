@@ -1,5 +1,6 @@
 package com.stock.analysis.application.useraccount.service;
 
+import antlr.Token;
 import com.stock.analysis.application.useraccount.repository.UserAccountRepository;
 import com.stock.analysis.config.jwt.CookieUtils;
 import com.stock.analysis.config.jwt.JwtUtils;
@@ -9,6 +10,8 @@ import com.stock.analysis.dto.UserAccountDto;
 import com.stock.analysis.dto.request.UserJoinRequest;
 import com.stock.analysis.dto.request.UserLoginRequest;
 import com.stock.analysis.dto.response.UserLoginResponse;
+import com.stock.analysis.dto.security.CustomUser;
+import com.stock.analysis.dto.security.UserPrincipal;
 import com.stock.analysis.exception.AuthenticationException;
 import com.stock.analysis.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +19,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,12 +31,14 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserAccountService {
+public class UserAccountService implements UserDetailsService {
 
     private final JwtUtils jwtUtils;
     private final CookieUtils cookieUtils;
@@ -56,20 +65,20 @@ public class UserAccountService {
      * token과 user의 정보를 같이 전달
      */
     @Transactional(readOnly = true)
-    public UserLoginResponse loginUserAccount(UserLoginRequest request, HttpServletResponse response) {
-        UserAccount userAccount = userAccountRepository.findByUserId(request.userId())
-                .orElseThrow(() -> new AuthenticationException(ErrorCode.USER_NOT_FOUND));
-
-        if (!passwordEncoder.matches(request.password(), userAccount.getUserPassword())) {
+    public UserLoginResponse loginUserAccount(UserLoginRequest userLoginRequest, HttpServletResponse response) {
+        CustomUser customUser = (CustomUser) loadUserByUsername(userLoginRequest.userId());
+        System.out.println("customUser = " + customUser);
+        System.out.println("request = " + userLoginRequest);
+        if (!passwordEncoder.matches(userLoginRequest.password(), customUser.getPassword())) {
             throw new AuthenticationException(ErrorCode.PASSWORD_NOT_MATCHED, ErrorCode.PASSWORD_NOT_MATCHED.getMessage());
         }
-        String accessToken = getAccessToken(request, response);
-        return UserLoginResponse.from(userAccount, accessToken);
+        String accessToken = getAccessToken(customUser, userLoginRequest, response);
+        return UserLoginResponse.from(customUser.getUserAccount(), accessToken);
     }
 
-    private String getAccessToken(UserLoginRequest request, HttpServletResponse response) {
+    private String getAccessToken(CustomUser customUser, UserLoginRequest loginRequest, HttpServletResponse response) {
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(request.userId(), request.password());
+                new UsernamePasswordAuthenticationToken(customUser, loginRequest.password());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -97,9 +106,18 @@ public class UserAccountService {
         return jwtUtils.createToken(authentication, TokenType.ACCESS_TOKEN);
     }
 
-    public void signout(HttpServletRequest request) {
+    public void signout(HttpServletRequest request, HttpServletResponse response) {
         // TODO: security 로그아웃 처리 및 header에서 accessToken 삭제해야 한다.
         // 쿠키에 담겨있는 refresh token의 만료일을 지워준다.
-        cookieUtils.deleteCookie(request, TokenType.REFRESH_TOKEN.name());
+        if (cookieUtils.getCookie(request, TokenType.REFRESH_TOKEN.getValue()) != null){
+            response.addCookie(cookieUtils.deleteCookie(request, TokenType.REFRESH_TOKEN.getValue()));
+        }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserAccount userAccount = userAccountRepository.findByUserId(username)
+                .orElseThrow(() -> new AuthenticationException(ErrorCode.USER_NOT_FOUND, "user not found - username : %s".formatted(username)));
+        return new CustomUser(userAccount);
     }
 }

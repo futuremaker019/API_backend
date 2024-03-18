@@ -1,7 +1,8 @@
-package com.stock.analysis.exception;
+package com.stock.analysis.config.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stock.analysis.dto.response.Response;
+import com.stock.analysis.exception.ErrorCode;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 

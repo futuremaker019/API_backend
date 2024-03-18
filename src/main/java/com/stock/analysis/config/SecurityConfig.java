@@ -2,8 +2,8 @@ package com.stock.analysis.config;
 
 import com.stock.analysis.config.jwt.JwtFilter;
 import com.stock.analysis.config.jwt.JwtUtils;
-import com.stock.analysis.exception.CustomAccessDeniedHandler;
-import com.stock.analysis.exception.CustomAuthenticationEntryPoint;
+import com.stock.analysis.config.jwt.CustomAccessDeniedHandler;
+import com.stock.analysis.config.jwt.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;

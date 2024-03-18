@@ -1,6 +1,8 @@
 package com.stock.analysis.dto.response;
 
 import com.stock.analysis.domain.entity.UserAccount;
+import com.stock.analysis.dto.security.CustomUser;
+import com.stock.analysis.dto.security.UserPrincipal;
 
 public record UserLoginResponse(
         Long id,

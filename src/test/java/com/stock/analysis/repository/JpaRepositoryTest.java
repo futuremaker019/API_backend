@@ -1,7 +1,10 @@
 package com.stock.analysis.repository;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.stock.analysis.application.article.repository.ArticleRepository;
 import com.stock.analysis.application.articlecomment.repository.ArticleCommentRepository;
+import com.stock.analysis.config.JpaTestConfig;
+import com.stock.analysis.config.QuerydslTestConfig;
 import com.stock.analysis.domain.contant.RoleType;
 import com.stock.analysis.domain.entity.Article;
 import com.stock.analysis.domain.entity.UserAccount;
@@ -15,7 +18,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.test.context.ContextConfiguration;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -23,7 +29,7 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("JPA 연결 테스트")
-@Import({JpaRepositoryTest.TestJpaConfig.class})
+@Import({JpaTestConfig.class, QuerydslTestConfig.class})
 @DataJpaTest
 //@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class JpaRepositoryTest {
@@ -118,13 +124,4 @@ public class JpaRepositoryTest {
         // then
     }
 
-    @EnableJpaAuditing
-    @TestConfiguration
-    public static class TestJpaConfig {
-
-        @Bean
-        public AuditorAware<String> auditorAware() {
-            return () -> Optional.of("noah00o");
-        }
-    }
 }
