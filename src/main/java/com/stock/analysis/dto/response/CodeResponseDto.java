@@ -21,6 +21,7 @@ public class CodeResponseDto{
 
     private Long id;
     private String name;
+    private String icon;
     private Long parentId;
     private List<CodeResponseDto> children;
     private String createdBy;
@@ -40,13 +41,14 @@ public class CodeResponseDto{
     public static CodeResponseDto of(Long id,
                                      String name,
                                      Long parentId,
+                                     String icon,
                                      List<CodeResponseDto> children,
                                      String createdBy,
                                      LocalDateTime createdAt,
                                      String modifiedBy,
                                      LocalDateTime modifiedAt
                                      ) {
-        return new CodeResponseDto(id, name, parentId, children, createdBy, modifiedBy, createdAt, modifiedAt);
+        return new CodeResponseDto(id, name, icon, parentId, children, createdBy, modifiedBy, createdAt, modifiedAt);
     }
 
     public static CodeResponseDto from(Code code) {
@@ -54,6 +56,7 @@ public class CodeResponseDto{
                 code.getId(),
                 code.getName(),
                 code.getParentId(),
+                code.getIcon(),
                 code.getChildren().stream()
                         .map(CodeResponseDto::from).toList(),
                 code.getCreatedBy(),
