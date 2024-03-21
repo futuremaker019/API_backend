@@ -1,4 +1,4 @@
-package com.stock.analysis.dto.response;
+package com.stock.analysis.application.article.dto;
 
 /**
  * 필요하면 추가하는 방식으로 고려

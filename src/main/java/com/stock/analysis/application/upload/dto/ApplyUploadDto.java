@@ -1,4 +1,4 @@
-package com.stock.analysis.dto.upload;
+package com.stock.analysis.application.upload.dto;
 
 import com.stock.analysis.domain.entity.Apply;
 import com.stock.analysis.domain.entity.upload.ApplyUpload;

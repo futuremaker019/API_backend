@@ -1,4 +1,4 @@
-package com.stock.analysis.dto.request;
+package com.stock.analysis.application.code.dto;
 
 import com.stock.analysis.domain.entity.Code;
 import com.stock.analysis.domain.entity.UserAccount;

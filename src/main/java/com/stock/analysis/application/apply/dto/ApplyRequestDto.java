@@ -1,4 +1,4 @@
-package com.stock.analysis.dto.request;
+package com.stock.analysis.application.apply.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

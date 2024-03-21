@@ -2,7 +2,7 @@ package com.stock.analysis.dto;
 
 
 import com.stock.analysis.domain.entity.Article;
-import com.stock.analysis.dto.upload.ArticleUploadDto;
+import com.stock.analysis.application.upload.dto.ArticleUploadDto;
 import com.stock.analysis.utils.Utils;
 
 import java.io.Serializable;

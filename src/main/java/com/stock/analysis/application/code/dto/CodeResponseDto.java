@@ -1,18 +1,13 @@
-package com.stock.analysis.dto.response;
+package com.stock.analysis.application.code.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
-import com.stock.analysis.application.code.repository.CodeRepository;
 import com.stock.analysis.domain.entity.Code;
-import com.stock.analysis.utils.Utils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor

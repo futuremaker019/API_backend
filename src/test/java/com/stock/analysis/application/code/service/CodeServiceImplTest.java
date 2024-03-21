@@ -4,7 +4,7 @@ import com.stock.analysis.application.code.repository.CodeRepository;
 import com.stock.analysis.domain.entity.Code;
 import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.dto.CodeDto;
-import com.stock.analysis.dto.response.CodeResponseDto;
+import com.stock.analysis.application.code.dto.CodeResponseDto;
 import com.stock.analysis.dummy.DummyData;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
