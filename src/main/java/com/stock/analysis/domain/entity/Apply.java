@@ -3,11 +3,14 @@ package com.stock.analysis.domain.entity;
 import com.stock.analysis.domain.AuditingFields;
 import com.stock.analysis.domain.contant.ApplyType;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -15,6 +18,8 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE apply SET is_removed = true WHERE id = ?")
+@Where(clause = "is_removed = false")
 public class Apply extends AuditingFields {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,12 +42,12 @@ public class Apply extends AuditingFields {
     private LocalDate jobCloseDate;
 
     @Setter
-    @Column(name = "is_applied")
+    @Column(columnDefinition = "varchar(50) DEFAULT 'NONE' COMMENT '지원유무: 지원, 지원안함, 미정'")
     @Enumerated(value = EnumType.STRING)
     private ApplyType isApplied;
 
     @Setter
-    @Column(name = "apply_type")
+    @Column(columnDefinition = "varchar(50) DEFAULT 'NONE' COMMENT '지원종류: 직접지원, 헤드헌터, 미정'")
     @Enumerated(value = EnumType.STRING)
     private ApplyType applyType;
 
@@ -57,6 +62,10 @@ public class Apply extends AuditingFields {
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     private UserAccount userAccount;
+
+    @Setter
+    @Column(columnDefinition = "bit DEFAULT false NOT NULL COMMENT '삭제여부'")
+    private Boolean isRemoved;
 
     public static Apply of(
             String companyName,
@@ -84,6 +93,18 @@ public class Apply extends AuditingFields {
                 .passResume(passResume)
                 .userAccount(userAccount)
                 .build();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Apply apply)) return false;
+        return id != null && id.equals(apply.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
 }
