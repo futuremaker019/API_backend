@@ -62,8 +62,8 @@ public class ApplyResponseDto {
                             boolean pass, boolean passResume
     ) {
         this.id = id;
-        this.companyLocation = companyLocation;
         this.companyName = companyName;
+        this.companyLocation = companyLocation;
         this.applyDate = applyDate;
         this.jobOpeningDate = jobOpeningDate;
         this.jobCloseDate = jobCloseDate;

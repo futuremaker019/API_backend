@@ -41,8 +41,8 @@ public class ApplyRepositoryQuerySupport extends QuerydslRepositorySupport {
                 .orderBy(Utils.getOrderList(pageable.getSort(), Apply.class).toArray(OrderSpecifier[]::new))
                 .transform(groupBy(apply).as(new QApplyResponseDto(
                         apply.id,
-                        apply.companyLocation,
                         apply.companyName,
+                        apply.companyLocation,
                         apply.applyDate,
                         apply.jobOpeningDate,
                         apply.jobCloseDate,
