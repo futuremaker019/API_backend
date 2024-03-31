@@ -3,6 +3,7 @@ package com.stock.analysis.domain.entity;
 import com.stock.analysis.domain.AuditingFields;
 import com.stock.analysis.domain.contant.ApplyType;
 import lombok.*;
+import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,43 +26,44 @@ public class Apply extends AuditingFields {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter @Column(nullable = false, length = 100)
-    private String companyName;
+    @Setter @Column(nullable = false, length = 100) @Comment("회사명")
+    private String companyName;             // 회사명
 
-    @Setter @Column(length = 1000)
-    private String companyLocation;
+    @Setter @Column(length = 1000) @Comment("회사위치")
+    private String companyLocation;         // 회사위치
 
-    @Setter
-    private Long platform;
+    @Setter @Comment("플랫폼")
+    private Long platform;                  // 플랫폼
 
-    @Setter @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate applyDate;
-    @Setter @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate jobOpeningDate;
-    @Setter @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate jobCloseDate;
+    @Setter @DateTimeFormat(pattern = "yyyy-MM-dd") @Comment("지원일자")
+    private LocalDate applyDate;            // 지원일자
+    @Setter @DateTimeFormat(pattern = "yyyy-MM-dd") @Comment("공고시작일")
+    private LocalDate jobOpeningDate;       // 공고시작일
+    @Setter @DateTimeFormat(pattern = "yyyy-MM-dd") @Comment("공고종료일")
+    private LocalDate jobCloseDate;         // 공고종료일
 
     @Setter
     @Column(columnDefinition = "varchar(50) DEFAULT 'NONE' COMMENT '지원유무: 지원, 지원안함, 미정'")
     @Enumerated(value = EnumType.STRING)
-    private ApplyType isApplied;
+    private ApplyType isApplied;            // 지원유무
 
     @Setter
     @Column(columnDefinition = "varchar(50) DEFAULT 'NONE' COMMENT '지원종류: 직접지원, 헤드헌터, 미정'")
     @Enumerated(value = EnumType.STRING)
-    private ApplyType applyType;
+    private ApplyType applyType;            // 지원종류
 
-    @Setter
-    private boolean pass;
-    @Setter
-    private boolean passResume;
+    @Setter @Comment("합격여부")
+    private boolean pass;                   // 합격여부
+    @Setter @Comment("이력서 합격여부")
+    private boolean passResume;             // 이력서 합격여부
 
-    @Setter
-    private Long processCodeId;
+    @Setter @Comment("채용전형 codeId")
+    private Long processCodeId;             // 채용전형 id
 
+    @Comment("사용자 id")
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
-    private UserAccount userAccount;
+    private UserAccount userAccount;        // 사용자 id
 
     @Setter
     @Column(columnDefinition = "bit DEFAULT false NOT NULL COMMENT '삭제여부'")
