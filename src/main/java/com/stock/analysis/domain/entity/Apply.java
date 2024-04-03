@@ -1,7 +1,7 @@
 package com.stock.analysis.domain.entity;
 
 import com.stock.analysis.domain.AuditingFields;
-import com.stock.analysis.domain.contant.ApplyType;
+import com.stock.analysis.domain.contant.ApplyEnum;
 import lombok.*;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.SQLDelete;
@@ -10,7 +10,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -45,12 +44,12 @@ public class Apply extends AuditingFields {
     @Setter
     @Column(columnDefinition = "varchar(50) DEFAULT 'NONE' COMMENT '지원유무: 지원, 지원안함, 미정'")
     @Enumerated(value = EnumType.STRING)
-    private ApplyType isApplied;            // 지원유무
+    private ApplyEnum.IsApplied isApplied;            // 지원유무
 
     @Setter
     @Column(columnDefinition = "varchar(50) DEFAULT 'NONE' COMMENT '지원종류: 직접지원, 헤드헌터, 미정'")
     @Enumerated(value = EnumType.STRING)
-    private ApplyType applyType;            // 지원종류
+    private ApplyEnum.ApplyType applyType;            // 지원종류
 
     @Setter @Comment("합격여부")
     private boolean pass;                   // 합격여부
@@ -76,8 +75,8 @@ public class Apply extends AuditingFields {
             LocalDate applyDate,
             LocalDate jobOpeningDate,
             LocalDate jobCloseDate,
-            ApplyType isApplied,
-            ApplyType applyType,
+            ApplyEnum.IsApplied isApplied,
+            ApplyEnum.ApplyType applyType,
             boolean pass,
             boolean passResume,
             UserAccount userAccount

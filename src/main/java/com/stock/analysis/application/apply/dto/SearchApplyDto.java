@@ -1,6 +1,5 @@
 package com.stock.analysis.application.apply.dto;
 
-import com.stock.analysis.domain.contant.ApplyType;
 import lombok.*;
 
 @Getter
@@ -14,7 +13,7 @@ public class SearchApplyDto {
     private Boolean pass;
 
     // 지원유무
-    private ApplyType isApplied;
+    private String isAppliedValue;
 
     // 공고 종료일 기준 3일전 5일전 10일전 이런거 있었으면 좋겠다.
 

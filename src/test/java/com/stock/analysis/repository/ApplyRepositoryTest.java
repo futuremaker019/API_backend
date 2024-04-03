@@ -5,7 +5,7 @@ import com.stock.analysis.application.apply.dto.ApplyResponseDto;
 import com.stock.analysis.application.apply.repository.ApplyRepositoryQuerySupport;
 import com.stock.analysis.config.JpaTestConfig;
 import com.stock.analysis.config.QuerydslTestConfig;
-import com.stock.analysis.domain.contant.ApplyType;
+import com.stock.analysis.domain.contant.ApplyEnum;
 import com.stock.analysis.domain.contant.RoleType;
 import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.application.apply.dto.SearchApplyDto;
@@ -46,7 +46,7 @@ public class ApplyRepositoryTest {
     SearchApplyDto searchCompanyName() {
         return SearchApplyDto.builder()
                 .companyName("쿠팡2")
-                .isApplied(ApplyType.APPLIED)
+                .isAppliedValue(ApplyEnum.IsApplied.APPLIED.name())
                 .build();
     }
 
@@ -58,7 +58,7 @@ public class ApplyRepositoryTest {
 
     SearchApplyDto searchIsApplied() {
         return SearchApplyDto.builder()
-                .isApplied(ApplyType.APPLIED)
+                .isAppliedValue(ApplyEnum.IsApplied.APPLIED.name())
                 .build();
     }
 

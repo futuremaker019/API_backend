@@ -4,13 +4,15 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.stock.analysis.application.apply.dto.ApplyResponseDto;
-import com.stock.analysis.domain.contant.ApplyType;
+import com.stock.analysis.domain.contant.ApplyEnum;
 import com.stock.analysis.domain.entity.Apply;
 import com.stock.analysis.application.apply.dto.SearchApplyDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.util.StringUtils;
+
+import java.util.Arrays;
 
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.stock.analysis.domain.entity.QApply.apply;
@@ -51,7 +53,7 @@ public class ApplyRepositoryCustomImpl extends QuerydslRepositorySupport impleme
         return builder
                 .and(companyNameEq(searchDto.getCompanyName()))
                 .and(passEq(searchDto.getPass()))
-                .and(applyEq(searchDto.getIsApplied()));
+                .and(applyEq(searchDto.getIsAppliedValue()));
     }
 
     private BooleanExpression companyNameEq(String companyName) {
@@ -60,11 +62,16 @@ public class ApplyRepositoryCustomImpl extends QuerydslRepositorySupport impleme
     private BooleanExpression passEq(Boolean pass) {
         return pass != null ? apply.pass.eq(pass) : null;
     }
-    private BooleanExpression applyEq(ApplyType isApplied) {
+    private BooleanExpression applyEq(String isAppliedValue) {
+        ApplyEnum.IsApplied isApplied = Arrays.stream(ApplyEnum.IsApplied.values())
+                .filter(value -> value.name().equals(isAppliedValue))
+                .findFirst().orElse(null);
+
         return switch (isApplied) {
-            case APPLIED -> apply.isApplied.eq(ApplyType.APPLIED);
-            case NOT_APPLIED -> apply.isApplied.eq(ApplyType.NOT_APPLIED);
-            default -> apply.isApplied.eq(ApplyType.NONE);
+            case APPLIED -> apply.isApplied.eq(ApplyEnum.IsApplied.APPLIED);
+            case NOT_APPLIED -> apply.isApplied.eq(ApplyEnum.IsApplied.NOT_APPLIED);
+            case NONE -> apply.isApplied.eq(ApplyEnum.IsApplied.NONE);
+            default -> null;
         };
     }
 }

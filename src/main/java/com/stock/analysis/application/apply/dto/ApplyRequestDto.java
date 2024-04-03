@@ -3,8 +3,7 @@ package com.stock.analysis.application.apply.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.stock.analysis.domain.contant.ApplyType;
+import com.stock.analysis.domain.contant.ApplyEnum;
 import com.stock.analysis.domain.entity.Apply;
 import com.stock.analysis.domain.entity.UserAccount;
 import lombok.*;
@@ -13,7 +12,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -41,8 +39,8 @@ public class ApplyRequestDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate jobCloseDate;
 
-    private ApplyType isApplied;
-    private ApplyType applyType;
+    private ApplyEnum.IsApplied isApplied;
+    private ApplyEnum.ApplyType applyType;
     private boolean pass;
     private boolean passResume;
 
