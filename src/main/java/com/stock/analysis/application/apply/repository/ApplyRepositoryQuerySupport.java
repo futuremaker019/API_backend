@@ -64,25 +64,43 @@ public class ApplyRepositoryQuerySupport extends QuerydslRepositorySupport {
         BooleanBuilder builder = new BooleanBuilder();
         return builder
                 .and(companyNameEq(searchDto.getCompanyName()))
-                .and(passEq(searchDto.getPass()))
+                .and(passEq(searchDto.getPassValue()))
                 .and(applyEq(searchDto.getIsAppliedValue()));
     }
 
     private BooleanExpression companyNameEq(String companyName) {
-        return StringUtils.hasText(companyName) ? apply.companyName.like(companyName) : null;
+        /**
+         * like (string), contains (%string%), startWith (string%), endWith(%string)
+         */
+        return StringUtils.hasText(companyName) ? apply.companyName.contains(companyName) : null;
     }
-    private BooleanExpression passEq(Boolean pass) {
-        return pass != null ? apply.pass.eq(pass) : null;
+    private BooleanExpression passEq(String passValue) {
+        if (!StringUtils.hasText(passValue)) {
+            return null;
+        }
+        ApplyEnum.PassType passType = Arrays.stream(ApplyEnum.PassType.values())
+                    .filter(value -> value.name().equals(passValue))
+                    .findFirst().orElse(null);
+
+        if (passType == null) {
+            return null;
+        }
+        return switch (passType) {
+            case PASS -> apply.pass.eq(ApplyEnum.PassType.PASS.getPass());
+            case NOT_PASS -> apply.pass.eq(ApplyEnum.PassType.NOT_PASS.getPass());
+            default -> null;
+        };
     }
     private BooleanExpression applyEq(String isAppliedValue) {
+        if (!StringUtils.hasText(isAppliedValue)) {
+            return null;
+        }
         ApplyEnum.IsApplied isApplied = Arrays.stream(ApplyEnum.IsApplied.values())
                 .filter(value -> value.name().equals(isAppliedValue))
                 .findFirst().orElse(null);
-
         if (isApplied == null) {
             return null;
         }
-
         return switch (isApplied) {
             case APPLIED -> apply.isApplied.eq(ApplyEnum.IsApplied.APPLIED);
             case NOT_APPLIED -> apply.isApplied.eq(ApplyEnum.IsApplied.NOT_APPLIED);

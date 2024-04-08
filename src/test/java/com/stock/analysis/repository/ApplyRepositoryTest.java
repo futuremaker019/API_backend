@@ -50,12 +50,6 @@ public class ApplyRepositoryTest {
                 .build();
     }
 
-    SearchApplyDto searchPass() {
-        return SearchApplyDto.builder()
-                .pass(true)
-                .build();
-    }
-
     SearchApplyDto searchIsApplied() {
         return SearchApplyDto.builder()
                 .isAppliedValue(ApplyEnum.IsApplied.APPLIED.name())

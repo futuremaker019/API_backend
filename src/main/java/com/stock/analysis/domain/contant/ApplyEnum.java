@@ -10,7 +10,8 @@ public class ApplyEnum {
     public enum ApplyType {
         APPLIED_BY_SELF("직접지원"),
         APPLIED_BY_HEADHUNTER("헤드헌터지원"),
-        NONE("해당없음");
+        NONE("미정")
+        ;
 
         private final String kor;
     }
@@ -18,9 +19,10 @@ public class ApplyEnum {
     @Getter
     @AllArgsConstructor
     public enum IsApplied {
-        APPLIED("지원함"),
-        NOT_APPLIED("지원안함"),
-        NONE("해당없음");
+        APPLIED("지원"),
+        NOT_APPLIED("미지원"),
+        NONE("미정")
+        ;
 
         private final String kor;
     }
