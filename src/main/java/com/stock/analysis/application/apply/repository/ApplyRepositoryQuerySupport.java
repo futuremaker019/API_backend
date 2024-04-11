@@ -5,12 +5,12 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.stock.analysis.application.apply.dto.ApplyResponseDto;
 import com.stock.analysis.application.apply.dto.QApplyResponseDto;
+import com.stock.analysis.application.apply.dto.SearchApplyDto;
 import com.stock.analysis.domain.contant.ApplyEnum;
 import com.stock.analysis.domain.entity.Apply;
 import com.stock.analysis.domain.entity.UserAccount;
-import com.stock.analysis.application.apply.dto.SearchApplyDto;
-import com.stock.analysis.application.apply.dto.ApplyResponseDto;
 import com.stock.analysis.utils.Utils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +19,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +66,15 @@ public class ApplyRepositoryQuerySupport extends QuerydslRepositorySupport {
         return builder
                 .and(companyNameEq(searchDto.getCompanyName()))
                 .and(passEq(searchDto.getPassValue()))
-                .and(applyEq(searchDto.getIsAppliedValue()));
+                .and(applyEq(searchDto.getIsAppliedValue()))
+                .and(jobCloseDateBetween(searchDto.getJobCloseStartDate(), searchDto.getJobCloseEndDate()));
+    }
+
+    private BooleanExpression jobCloseDateBetween(LocalDate jobCloseStartDate, LocalDate jobCloseEndDate) {
+        if (jobCloseStartDate == null || jobCloseEndDate == null) {
+            return null;
+        }
+        return apply.jobCloseDate.between(jobCloseStartDate, jobCloseEndDate);
     }
 
     private BooleanExpression companyNameEq(String companyName) {
