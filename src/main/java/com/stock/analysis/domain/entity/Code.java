@@ -1,8 +1,7 @@
 package com.stock.analysis.domain.entity;
 
 import com.stock.analysis.domain.AuditingFields;
-import com.stock.analysis.dto.UserAccountDto;
-import com.stock.analysis.dto.request.CodeRequestDto;
+import com.stock.analysis.application.code.dto.CodeRequestDto;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;

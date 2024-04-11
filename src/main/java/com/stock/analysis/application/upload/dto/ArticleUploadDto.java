@@ -1,9 +1,7 @@
-package com.stock.analysis.dto.upload;
+package com.stock.analysis.application.upload.dto;
 
 import com.stock.analysis.domain.entity.Article;
 import com.stock.analysis.domain.entity.upload.ArticleUpload;
-import com.stock.analysis.utils.Utils;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

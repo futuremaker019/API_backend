@@ -1,32 +1,18 @@
 package com.stock.analysis.application.apply.service;
 
+import com.stock.analysis.application.apply.dto.ApplyRequestDto;
+import com.stock.analysis.application.apply.dto.ApplyResponseDto;
 import com.stock.analysis.domain.entity.Apply;
 import com.stock.analysis.domain.entity.UserAccount;
-import com.stock.analysis.dto.request.ApplyRequestDto;
-import com.stock.analysis.dto.response.ApplyResponseDto;
-import com.stock.analysis.dto.common.SearchDto;
-import com.stock.analysis.application.apply.repository.ApplyRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import com.stock.analysis.application.apply.dto.SearchApplyDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import javax.transaction.Transactional;
-import java.awt.print.Pageable;
-import java.util.List;
+public interface ApplyService {
+    Page<ApplyResponseDto> selectApplies(SearchApplyDto searchApplyDto, Pageable pageable, UserAccount userAccount);
+    Apply createApply(ApplyRequestDto responseDto, UserAccount userAccount);
 
-@Slf4j
-@Service
-@Transactional
-@RequiredArgsConstructor
-public class ApplyService {
+    void updateApply(ApplyRequestDto requestDto);
 
-    private final ApplyRepository applyRepository;
-
-    public List<ApplyResponseDto> selectApplies(SearchDto searchDto, Pageable pageable) {
-        return null;
-    }
-
-    public Apply createApply(ApplyRequestDto responseDto, UserAccount userAccount) {
-        return applyRepository.saveAndFlush(responseDto.toEntity(userAccount));
-    }
+    void deleteApply(ApplyResponseDto responseDto);
 }

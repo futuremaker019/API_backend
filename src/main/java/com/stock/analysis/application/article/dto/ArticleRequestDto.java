@@ -1,4 +1,4 @@
-package com.stock.analysis.dto.request;
+package com.stock.analysis.application.article.dto;
 
 
 import com.stock.analysis.dto.ArticleDto;

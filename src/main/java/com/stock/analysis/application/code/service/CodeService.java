@@ -1,10 +1,9 @@
 package com.stock.analysis.application.code.service;
 
-import com.stock.analysis.domain.contant.CodeType;
 import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.dto.CodeDto;
-import com.stock.analysis.dto.request.CodeRequestDto;
-import com.stock.analysis.dto.response.CodeResponseDto;
+import com.stock.analysis.application.code.dto.CodeRequestDto;
+import com.stock.analysis.application.code.dto.CodeResponseDto;
 
 import java.util.List;
 import java.util.Map;

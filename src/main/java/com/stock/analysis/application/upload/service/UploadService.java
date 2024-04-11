@@ -5,7 +5,7 @@ import com.stock.analysis.application.upload.repository.ArticleUploadRepository;
 import com.stock.analysis.domain.contant.UploadType;
 import com.stock.analysis.domain.entity.upload.ApplyUpload;
 import com.stock.analysis.domain.entity.upload.ArticleUpload;
-import com.stock.analysis.dto.upload.UploadDto;
+import com.stock.analysis.application.upload.dto.UploadDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;

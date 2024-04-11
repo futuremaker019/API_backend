@@ -1,19 +1,36 @@
 package com.stock.analysis.utils;
 
-import org.springframework.stereotype.Component;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.PathBuilder;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
-@Component
 public class Utils {
 
-    /**
-     * TODO: dataTime 형식으로 변환하여 화면에 보내줘야 함
-     * @Bean 으로 할지 싱글턴으로 할지 고민중
-     */
-
     public static String ConvertDate(LocalDateTime dateTime) {
-        return dateTime.format(DateTimeFormatter.ofPattern("YYYY.MM.dd"));
+        return dateTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
     }
+
+    public static <T> List<OrderSpecifier> getOrderList(Sort sort, Class<T> clazz) {
+        List<OrderSpecifier> orders = new ArrayList<>();
+        sort.stream().forEach(order -> {
+            Order direction = order.isAscending() ? Order.ASC : Order.DESC;
+            PathBuilder pathBuilder = new PathBuilder(clazz, convertLowercase(clazz.getSimpleName()));
+            orders.add(new OrderSpecifier(direction, pathBuilder.get(order.getProperty())));
+        });
+        return orders;
+    }
+
+    public static String convertLowercase(String className) {
+        return className.chars()
+                .mapToObj(c -> c == className.charAt(0) ? Character.toLowerCase((char) c) : (char) c)
+                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+                .toString();
+    }
+
 }

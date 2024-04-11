@@ -3,8 +3,6 @@ package com.stock.analysis.application.code.repository.custom;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.stock.analysis.domain.entity.Code;
 import com.stock.analysis.domain.entity.UserAccount;
-import com.stock.analysis.dto.response.CodeResponseDto;
-import com.stock.analysis.dto.response.QCodeResponseDto;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.List;

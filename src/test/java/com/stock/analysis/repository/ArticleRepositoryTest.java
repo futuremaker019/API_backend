@@ -1,6 +1,5 @@
 package com.stock.analysis.repository;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.stock.analysis.application.article.repository.ArticleRepository;
 import com.stock.analysis.application.articlecomment.repository.ArticleCommentRepository;
 import com.stock.analysis.config.JpaTestConfig;
@@ -13,17 +12,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.AuditorAware;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.test.context.ContextConfiguration;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,13 +23,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Import({JpaTestConfig.class, QuerydslTestConfig.class})
 @DataJpaTest
 //@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class JpaRepositoryTest {
+public class ArticleRepositoryTest {
 
     private final ArticleRepository articleRepository;
     private final ArticleCommentRepository articleCommentRepository;
     private final UserAccountRepository userAccountRepository;
 
-    public JpaRepositoryTest(
+    public ArticleRepositoryTest(
             @Autowired ArticleRepository articleRepository,
             @Autowired ArticleCommentRepository articleCommentRepository,
             @Autowired UserAccountRepository userAccountRepository

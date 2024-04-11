@@ -1,26 +1,28 @@
 package com.stock.analysis.application.apply;
 
+import com.stock.analysis.application.apply.service.ApplyService;
 import com.stock.analysis.application.upload.service.UploadService;
 import com.stock.analysis.domain.contant.UploadType;
 import com.stock.analysis.domain.entity.Apply;
 import com.stock.analysis.domain.entity.UserAccount;
-import com.stock.analysis.dto.request.ApplyRequestDto;
-import com.stock.analysis.dto.response.ApplyResponseDto;
-import com.stock.analysis.dto.common.SearchDto;
-import com.stock.analysis.application.apply.service.ApplyService;
+import com.stock.analysis.application.apply.dto.ApplyRequestDto;
+import com.stock.analysis.application.apply.dto.ApplyResponseDto;
+import com.stock.analysis.application.apply.dto.SearchApplyDto;
 import com.stock.analysis.dto.response.Response;
 import com.stock.analysis.dto.security.CurrentUser;
-import com.stock.analysis.dto.upload.ApplyUploadDto;
+import com.stock.analysis.application.upload.dto.ApplyUploadDto;
 import com.stock.analysis.exception.ApplyAppException;
-import com.stock.analysis.exception.AuthenticationException;
 import com.stock.analysis.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,15 +34,13 @@ public class ApplyController {
     private final ApplyService applyService;
     private final UploadService uploadService;
 
-    /**
-     * 파라미터로 받아야할 조건
-     *  검색, orderBy
-     */
-    @GetMapping
-    public Response<List<ApplyResponseDto>> selectApplies(
-            SearchDto searchDto, Pageable pageable
+    @PostMapping
+    public Response<Page<ApplyResponseDto>> selectApplies(
+            @RequestBody SearchApplyDto searchApplyDto,
+            @PageableDefault(size = 10, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @CurrentUser UserAccount userAccount
     ) {
-        return Response.success(applyService.selectApplies(searchDto, pageable));
+        return Response.success(applyService.selectApplies(searchApplyDto, pageable, userAccount));
     }
 
     @GetMapping("{applyId}")
@@ -48,7 +48,7 @@ public class ApplyController {
         return Response.success();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public Response<Void> createApply(
             @Valid @RequestPart(value = "requestDto") ApplyRequestDto responseDto,
             @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments,
