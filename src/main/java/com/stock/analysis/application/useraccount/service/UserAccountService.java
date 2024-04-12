@@ -1,6 +1,5 @@
 package com.stock.analysis.application.useraccount.service;
 
-import antlr.Token;
 import com.stock.analysis.application.useraccount.repository.UserAccountRepository;
 import com.stock.analysis.config.jwt.CookieUtils;
 import com.stock.analysis.config.jwt.JwtUtils;
@@ -11,7 +10,6 @@ import com.stock.analysis.dto.request.UserJoinRequest;
 import com.stock.analysis.dto.request.UserLoginRequest;
 import com.stock.analysis.dto.response.UserLoginResponse;
 import com.stock.analysis.dto.security.CustomUser;
-import com.stock.analysis.dto.security.UserPrincipal;
 import com.stock.analysis.exception.AuthenticationException;
 import com.stock.analysis.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +17,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,9 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -95,6 +90,7 @@ public class UserAccountService implements UserDetailsService {
         String refreshToken = null;
         if (cookie != null) {
             refreshToken = cookie.getValue();
+            System.out.println("refreshToken = " + refreshToken);
         }
         // refresh token이 없거나, 발급된 refresh token이 유효하지 않다면 에러를 던진다.
         if (StringUtils.isBlank(refreshToken) || !jwtUtils.validateToken(refreshToken)) {
@@ -109,8 +105,10 @@ public class UserAccountService implements UserDetailsService {
     public void signout(HttpServletRequest request, HttpServletResponse response) {
         // TODO: security 로그아웃 처리 및 header에서 accessToken 삭제해야 한다.
         // 쿠키에 담겨있는 refresh token의 만료일을 지워준다.
-        if (cookieUtils.getCookie(request, TokenType.REFRESH_TOKEN.getValue()) != null){
-            response.addCookie(cookieUtils.deleteCookie(request, TokenType.REFRESH_TOKEN.getValue()));
+        Cookie cookie = cookieUtils.getCookie(request, TokenType.REFRESH_TOKEN.getValue());
+        if (cookie != null){
+            cookieUtils.deleteCookie(response, cookie);
+//            response.addCookie(cookieUtils.deleteCookie(request, TokenType.REFRESH_TOKEN.getValue()));
         }
     }
 

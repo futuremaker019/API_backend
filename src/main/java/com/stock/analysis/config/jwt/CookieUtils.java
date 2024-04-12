@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Component
 public class CookieUtils {
@@ -31,4 +32,10 @@ public class CookieUtils {
         return cookie;
     }
 
+    public void deleteCookie(HttpServletResponse response, Cookie cookie) {
+        cookie.setMaxAge(0);
+        cookie.setPath("/api/v1/user");
+        cookie.setValue("");
+        response.addCookie(cookie);
+    }
 }
