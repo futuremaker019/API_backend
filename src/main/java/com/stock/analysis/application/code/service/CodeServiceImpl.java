@@ -9,6 +9,8 @@ import com.stock.analysis.application.code.dto.CodeResponseDto;
 import com.stock.analysis.exception.CodeAppException;
 import com.stock.analysis.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 public class CodeServiceImpl implements CodeService {
 
     private final CodeRepository codeRepository;
+    private final RedisTemplate redisTemplate;
 
     @Override
     public void createCode(CodeRequestDto requestDto, UserAccount userAccount) {
@@ -97,6 +100,14 @@ public class CodeServiceImpl implements CodeService {
      */
     @Override
     public Map<Long, CodeDto> selectFlatCodes(UserAccount userAccount) {
+        // redis 로 데이터를 가져와서 없으면 데이터베이스에서 찾고 있으면 redis 값을 넘긴다.
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        HashMap<Long, CodeResponseDto> map = (HashMap<Long, CodeResponseDto>) valueOperations.get(String.valueOf(userAccount.getId()));
+        if (map == null) {
+            System.out.println("map is null");
+            return Collections.emptyMap();
+        }
+
         List<Code> codes = codeRepository.findAllByUserAccount(userAccount);
         if (codes.isEmpty()) {
             throw new CodeAppException(ErrorCode.CODE_NOT_FOUND);
