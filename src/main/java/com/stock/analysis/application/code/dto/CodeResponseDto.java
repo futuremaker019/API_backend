@@ -1,12 +1,9 @@
 package com.stock.analysis.application.code.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.querydsl.core.annotations.QueryProjection;
+import com.stock.analysis.application.useraccount.dto.UserAccountResponseDto;
 import com.stock.analysis.domain.entity.Code;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -14,18 +11,21 @@ import java.util.List;
 
 @Getter
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class CodeResponseDto implements Serializable{
+public class CodeResponseDto implements Serializable {
 
     private Long id;
     private String name;
     private String icon;
     private Long parentId;
     private List<CodeResponseDto> children;
+    private UserAccountResponseDto userAccount;
+    private Long userId;
+
     private String createdBy;
     private String modifiedBy;
-
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -46,8 +46,8 @@ public class CodeResponseDto implements Serializable{
                                      LocalDateTime createdAt,
                                      String modifiedBy,
                                      LocalDateTime modifiedAt
-                                     ) {
-        return new CodeResponseDto(id, name, icon, parentId, children, createdBy, modifiedBy, createdAt, modifiedAt);
+    ) {
+        return new CodeResponseDto(id, name, icon, parentId, children, null, null, createdBy, modifiedBy, createdAt, modifiedAt);
     }
 
     public static CodeResponseDto from(Code code) {
@@ -64,4 +64,19 @@ public class CodeResponseDto implements Serializable{
                 code.getModifiedAt()
         );
     }
+
+    public static CodeResponseDto dtoWithoutChildren(Code code) {
+        return CodeResponseDto.builder()
+                .id(code.getId())
+                .name(code.getName())
+                .parentId(code.getParentId())
+                .icon(code.getIcon())
+                .userId(code.getUserAccount().getId())
+                .createdBy(code.getCreatedBy())
+                .createdAt(code.getCreatedAt())
+                .modifiedBy(code.getModifiedBy())
+                .modifiedAt(code.getModifiedAt())
+                .build();
+    }
+
 }
