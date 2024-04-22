@@ -101,12 +101,12 @@ public class CodeServiceImpl implements CodeService {
     @Override
     public Map<Long, CodeDto> selectFlatCodes(UserAccount userAccount) {
         // redis 로 데이터를 가져와서 없으면 데이터베이스에서 찾고 있으면 redis 값을 넘긴다.
-        ValueOperations valueOperations = redisTemplate.opsForValue();
-        HashMap<Long, CodeResponseDto> map = (HashMap<Long, CodeResponseDto>) valueOperations.get(String.valueOf(userAccount.getId()));
-        if (map == null) {
-            System.out.println("map is null");
-            return Collections.emptyMap();
-        }
+//        ValueOperations valueOperations = redisTemplate.opsForValue();
+//        HashMap<Long, CodeResponseDto> map = (HashMap<Long, CodeResponseDto>) valueOperations.get(String.valueOf(userAccount.getId()));
+//        if (map == null) {
+//            System.out.println("map is null");
+//            return Collections.emptyMap();
+//        }
 
         List<Code> codes = codeRepository.findAllByUserAccount(userAccount);
         if (codes.isEmpty()) {
