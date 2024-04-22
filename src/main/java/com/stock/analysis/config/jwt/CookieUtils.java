@@ -34,8 +34,6 @@ public class CookieUtils {
 
     public void deleteCookie(HttpServletResponse response, Cookie cookie) {
         cookie.setMaxAge(0);
-        cookie.setPath("/api/v1/user");
-        cookie.setValue("");
         response.addCookie(cookie);
     }
 }
