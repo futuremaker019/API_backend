@@ -59,6 +59,9 @@ public class Apply extends AuditingFields {
     @Setter @Comment("채용전형 codeId")
     private Long processCodeId;             // 채용전형 id
 
+    @Setter @Comment("헤드헌터 회사")
+    private String headhunterCompany;
+
     @Comment("사용자 id")
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
@@ -67,6 +70,11 @@ public class Apply extends AuditingFields {
     @Setter
     @Column(columnDefinition = "bit DEFAULT false NOT NULL COMMENT '삭제여부'")
     private Boolean isRemoved;
+
+    @PrePersist
+    void applyCreated() {
+        isRemoved = false;
+    }
 
     public static Apply of(
             String companyName,

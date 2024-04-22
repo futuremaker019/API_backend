@@ -3,6 +3,7 @@ package com.stock.analysis.application.apply.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.stock.analysis.application.process.dto.ApplyProcessRequestDto;
 import com.stock.analysis.domain.contant.ApplyEnum;
 import com.stock.analysis.domain.entity.Apply;
 import com.stock.analysis.domain.entity.UserAccount;
@@ -12,6 +13,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -44,6 +47,10 @@ public class ApplyRequestDto {
     private boolean pass;
     private boolean passResume;
 
+    private String headhunterCompany;
+
+    private List<ApplyProcessRequestDto> processCodes = new ArrayList<>();
+
     @Min(value = 0, message = "채용전형을 선택해주세요.")
     private Long processCodeId;
 
@@ -59,6 +66,7 @@ public class ApplyRequestDto {
                 .jobCloseDate(jobCloseDate)
                 .pass(pass)
                 .passResume(passResume)
+                .headhunterCompany(headhunterCompany)
                 .userAccount(userAccount)
                 .processCodeId(processCodeId)
                 .build();

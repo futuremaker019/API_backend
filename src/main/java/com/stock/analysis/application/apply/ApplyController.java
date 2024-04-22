@@ -61,11 +61,13 @@ public class ApplyController {
         }
 
         Apply apply = applyService.createApply(responseDto, userAccount);
-        uploadService.saveUploads(
-                ApplyUploadDto.builder().apply(apply).build(),
-                attachments,
-                UploadType.APPLY
-        );
+        if (attachments != null) {
+            uploadService.saveUploads(
+                    ApplyUploadDto.builder().apply(apply).build(),
+                    attachments,
+                    UploadType.APPLY
+            );
+        }
         return Response.success();
     }
 
