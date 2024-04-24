@@ -10,6 +10,8 @@ import com.stock.analysis.domain.entity.Apply;
 import com.stock.analysis.domain.entity.ApplyProcess;
 import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.application.apply.dto.SearchApplyDto;
+import com.stock.analysis.exception.ApplyAppException;
+import com.stock.analysis.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,6 +33,14 @@ public class ApplyServiceImpl implements ApplyService{
     @Transactional(readOnly = true)
     public Page<ApplyResponseDto> selectApplies(SearchApplyDto searchApplyDto, Pageable pageable, UserAccount userAccount) {
         return applyRepositoryQuerySupport.searchSelectApplies(searchApplyDto, pageable, userAccount);
+    }
+
+    @Override
+    public ApplyResponseDto getApplyById(Long applyId) {
+        ApplyResponseDto applyResponseDto = applyRepositoryQuerySupport.getApplyById(applyId).orElseThrow(
+                () -> new ApplyAppException(ErrorCode.CODE_NOT_FOUND)
+        );
+        return applyResponseDto;
     }
 
     @Transactional

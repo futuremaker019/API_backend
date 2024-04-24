@@ -44,8 +44,8 @@ public class ApplyController {
     }
 
     @GetMapping("{applyId}")
-    public Response<ApplyResponseDto> getApply(@PathVariable("applyId") String applyId) {
-        return Response.success();
+    public Response<ApplyResponseDto> getApply(@PathVariable("applyId") Long applyId) {
+        return Response.success(applyService.getApplyById(applyId));
     }
 
     @PostMapping("/create")

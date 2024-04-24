@@ -10,9 +10,11 @@ import org.springframework.data.domain.Pageable;
 
 public interface ApplyService {
     Page<ApplyResponseDto> selectApplies(SearchApplyDto searchApplyDto, Pageable pageable, UserAccount userAccount);
+
+    ApplyResponseDto getApplyById(Long applyId);
+
     Apply createApply(ApplyRequestDto responseDto, UserAccount userAccount);
 
     void updateApply(ApplyRequestDto requestDto);
-
     void deleteApply(ApplyResponseDto responseDto);
 }
