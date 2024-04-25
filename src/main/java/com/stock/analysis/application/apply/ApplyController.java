@@ -1,16 +1,15 @@
 package com.stock.analysis.application.apply;
 
-import com.stock.analysis.application.apply.service.ApplyService;
-import com.stock.analysis.application.upload.service.UploadService;
-import com.stock.analysis.domain.contant.UploadType;
-import com.stock.analysis.domain.entity.Apply;
-import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.application.apply.dto.ApplyRequestDto;
 import com.stock.analysis.application.apply.dto.ApplyResponseDto;
 import com.stock.analysis.application.apply.dto.SearchApplyDto;
+import com.stock.analysis.application.apply.service.ApplyService;
+import com.stock.analysis.application.contentFile.service.ContentFileService;
+import com.stock.analysis.domain.contant.UploadType;
+import com.stock.analysis.domain.entity.Apply;
+import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.dto.response.Response;
 import com.stock.analysis.dto.security.CurrentUser;
-import com.stock.analysis.application.upload.dto.ApplyUploadDto;
 import com.stock.analysis.exception.ApplyAppException;
 import com.stock.analysis.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +31,7 @@ import java.util.Objects;
 public class ApplyController {
 
     private final ApplyService applyService;
-    private final UploadService uploadService;
+    private final ContentFileService contentFileService;
 
     @PostMapping
     public Response<Page<ApplyResponseDto>> selectApplies(
@@ -61,13 +60,7 @@ public class ApplyController {
         }
 
         Apply apply = applyService.createApply(responseDto, userAccount);
-        if (attachments != null) {
-            uploadService.saveUploads(
-                    ApplyUploadDto.builder().apply(apply).build(),
-                    attachments,
-                    UploadType.APPLY
-            );
-        }
+        contentFileService.saveContentFiles(attachments, apply.getId(), UploadType.APPLY);
         return Response.success();
     }
 
