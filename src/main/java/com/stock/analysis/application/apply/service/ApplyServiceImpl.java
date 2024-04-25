@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -38,8 +39,12 @@ public class ApplyServiceImpl implements ApplyService{
     @Override
     public ApplyResponseDto getApplyById(Long applyId) {
         ApplyResponseDto applyResponseDto = applyRepositoryQuerySupport.getApplyById(applyId).orElseThrow(
-                () -> new ApplyAppException(ErrorCode.CODE_NOT_FOUND)
-        );
+                () -> new ApplyAppException(ErrorCode.CONTENT_NOT_FOUND, "apply not found, id : %d".formatted(applyId)));
+        List<ApplyProcess> processes = applyProcessRepository.findAllByIdApplyId(applyId);
+        if (!processes.isEmpty()) {
+            applyResponseDto.setProcesses(processes);
+        }
+
         return applyResponseDto;
     }
 

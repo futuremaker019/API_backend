@@ -215,13 +215,13 @@ insert into apply (company_name, company_location, platform, job_close_date, job
 ('쿠팡23', '성남시 분당구', 4, '2024-04-22', '2024-03-13', '2024-03-15', 'APPLIED_BY_SELF', 'APPLIED', 0, 0, 9, 1, '2023-03-07 18:33:10', 'noah', '2023-03-07 18:33:10', 'noah');
 
 insert into apply_process (apply_id, process_code_id, user_id, name, orders) values
-(23, 6, 1, '서류전형', 1),
-(23, 8, 1, '1차 화상면접', 2),
-(23, 9, 1, '2차 화상면접', 3),
-(23, 10, 1, '최종합격', 4);
+(18, 6, 1, '서류전형', 1),
+(18, 8, 1, '1차 화상면접', 2),
+(18, 9, 1, '2차 화상면접', 3),
+(18, 10, 1, '최종합격', 4);
 
-insert into upload (upload_type, id, content_type, name, path, stored_name, parent_id) values
-('APPLY', 1, 'image/jpeg', 'image.jpeg', '2024/04/23', '2581e0ab-ac52-4074-bf18-78d5acdcab1a.jpeg', 23),
-('APPLY', 2, 'image/jpeg', 'image2.jpeg', '2024/04/23', '935bdb1e-e88c-483f-a5f3-952b5c339496.jpeg', 23),
+insert into content_file (upload_type, id, content_type, name, path, stored_name, join_key) values
+('APPLY', 1, 'image/jpeg', 'image.jpeg', '2024/04/23', '2581e0ab-ac52-4074-bf18-78d5acdcab1a.jpeg', 18),
+('APPLY', 2, 'image/jpeg', 'image2.jpeg', '2024/04/23', '935bdb1e-e88c-483f-a5f3-952b5c339496.jpeg', 18),
 ('ARTICLE', 3, 'image/jpeg', 'image.jpeg', '2024/04/23', '2581e0ab-ac52-4074-bf18-78d5acdcab1a.jpeg', 1),
 ('ARTICLE', 4, 'image/jpeg', 'image2.jpeg', '2024/04/23', '935bdb1e-e88c-483f-a5f3-952b5c339496.jpeg', 1);

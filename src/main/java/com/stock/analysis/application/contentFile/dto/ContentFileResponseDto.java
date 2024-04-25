@@ -1,5 +1,7 @@
 package com.stock.analysis.application.contentFile.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
+import com.stock.analysis.domain.SuperDto;
 import com.stock.analysis.domain.contant.UploadType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContentFileResponseDto {
+public class ContentFileResponseDto extends SuperDto {
 
     private Long id;
     private String name;
@@ -20,4 +22,12 @@ public class ContentFileResponseDto {
     private Long joinKey;
     private UploadType uploadType;
 
+    @QueryProjection
+    public ContentFileResponseDto(Long id, String name, String storedName, String contentType, String path) {
+        this.id = id;
+        this.name = name;
+        this.storedName = storedName;
+        this.contentType = contentType;
+        this.path = path;
+    }
 }

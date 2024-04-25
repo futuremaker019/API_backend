@@ -3,6 +3,7 @@ package com.stock.analysis.utils;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.PathBuilder;
+import com.stock.analysis.domain.SuperDto;
 import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,20 @@ public class Utils {
 
     public static String ConvertDate(LocalDateTime dateTime) {
         return dateTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+    }
+
+    public static <T extends SuperDto> List<T> getList(List<T> entityList) {
+        if (entityList.get(0).getId() != null) {
+            return entityList;
+        }
+        return new ArrayList<>();
+    }
+
+    public static <T extends SuperDto> T get(T entity) {
+        if (entity.getId() == null) {
+            return null;
+        }
+        return entity;
     }
 
     public static <T> List<OrderSpecifier> getOrderList(Sort sort, Class<T> clazz) {

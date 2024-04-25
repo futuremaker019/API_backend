@@ -28,7 +28,7 @@ public class Apply extends AuditingFields {
     @Setter @Column(nullable = false, length = 100) @Comment("회사명")
     private String companyName;             // 회사명
 
-    @Setter @Column(length = 1000) @Comment("회사위치")
+    @Setter @Column(length = 100) @Comment("회사위치")
     private String companyLocation;         // 회사위치
 
     @Setter @Comment("플랫폼")

@@ -1,14 +1,20 @@
 package com.stock.analysis.application.apply.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
+import com.stock.analysis.application.contentFile.dto.ContentFileResponseDto;
+import com.stock.analysis.application.process.dto.ApplyProcessResponseDto;
 import com.stock.analysis.application.useraccount.dto.UserAccountResponseDto;
 import com.stock.analysis.domain.contant.ApplyEnum;
+import com.stock.analysis.domain.entity.ApplyProcess;
+import com.stock.analysis.utils.Utils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Builder
@@ -39,11 +45,27 @@ public class ApplyResponseDto {
     private UserAccountResponseDto userAccount;
     private Boolean isRemoved;
 
+    private List<ContentFileResponseDto> attachments = new ArrayList<>();
+    private List<ApplyProcessResponseDto> processDtos = new ArrayList<>();
+
+    public void setProcesses(List<ApplyProcess> processes) {
+        this.processDtos = processes.stream().map(ApplyResponseDto::from).toList();
+    }
+
+    public static ApplyProcessResponseDto from(ApplyProcess process) {
+        return ApplyProcessResponseDto.builder()
+                .processCodeId(process.getId().getProcessCodeId())
+                .name(process.getName())
+                .orders(process.getOrders())
+                .build();
+    }
+
     @QueryProjection
     public ApplyResponseDto(Long id, String companyName, String companyLocation,
                             Long platform, LocalDate applyDate, LocalDate jobOpeningDate,
                             LocalDate jobCloseDate, ApplyEnum.IsApplied isApplied, ApplyEnum.ApplyType applyType,
-                            boolean pass, boolean passResume, Long processCodeId
+                            boolean pass, boolean passResume, Long processCodeId,
+                            List<ContentFileResponseDto> attachments
     ) {
         this.id = id;
         this.companyLocation = companyLocation;
@@ -59,6 +81,7 @@ public class ApplyResponseDto {
         this.pass = pass;
         this.passResume = passResume;
         this.processCodeId = processCodeId;
+        this.attachments = Utils.getList(attachments);
     }
 
     @QueryProjection

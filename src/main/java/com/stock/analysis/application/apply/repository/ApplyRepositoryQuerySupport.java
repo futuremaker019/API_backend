@@ -8,13 +8,11 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.stock.analysis.application.apply.dto.ApplyResponseDto;
 import com.stock.analysis.application.apply.dto.QApplyResponseDto;
 import com.stock.analysis.application.apply.dto.SearchApplyDto;
-import com.stock.analysis.application.process.dto.QApplyProcessResponseDto;
-import com.stock.analysis.application.upload.dto.QApplyUploadResponseDto;
+import com.stock.analysis.application.contentFile.dto.QContentFileResponseDto;
 import com.stock.analysis.domain.contant.ApplyEnum;
+import com.stock.analysis.domain.contant.UploadType;
 import com.stock.analysis.domain.entity.Apply;
 import com.stock.analysis.domain.entity.UserAccount;
-import com.stock.analysis.domain.entity.upload.QApplyUpload;
-import com.stock.analysis.domain.entity.upload.QUpload;
 import com.stock.analysis.utils.Utils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,8 +30,7 @@ import java.util.Optional;
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.list;
 import static com.stock.analysis.domain.entity.QApply.apply;
-import static com.stock.analysis.domain.entity.QApplyProcess.applyProcess;
-import static com.stock.analysis.domain.entity.upload.QApplyUpload.applyUpload;
+import static com.stock.analysis.domain.entity.QContentFile.contentFile;
 
 @Repository
 public class ApplyRepositoryQuerySupport extends QuerydslRepositorySupport {
@@ -73,19 +70,16 @@ public class ApplyRepositoryQuerySupport extends QuerydslRepositorySupport {
      */
     public Optional<ApplyResponseDto> getApplyById(Long applyId) {
         Map<Apply, ApplyResponseDto> result = queryFactory.selectFrom(apply)
-                .leftJoin(applyProcess).on(applyProcess.id.applyId.eq(applyId))
+                .leftJoin(contentFile).on(contentFile.joinKey.eq(apply.id).and(contentFile.uploadType.eq(UploadType.APPLY)))
                 .where(apply.id.eq(applyId))
                 .transform(groupBy(apply).as(new QApplyResponseDto(
                         apply.id, apply.companyName, apply.companyLocation, apply.platform,
                         apply.applyDate, apply.jobOpeningDate, apply.jobCloseDate,
                         apply.isApplied, apply.applyType, apply.pass, apply.passResume,
                         apply.processCodeId,
-                        list(new QApplyUploadResponseDto(
-                                applyUpload.id, applyUpload.name, applyUpload.storedName,
-                                applyUpload.path, applyUpload.contentType
-                        )),
-                        list(new QApplyProcessResponseDto(
-                                applyProcess.name, applyProcess.orders
+                        list(new QContentFileResponseDto(
+                                contentFile.id, contentFile.name, contentFile.storedName,
+                                contentFile.path, contentFile.contentType
                         ))
                 )));
         return result.keySet().stream().map(result::get).findFirst();
