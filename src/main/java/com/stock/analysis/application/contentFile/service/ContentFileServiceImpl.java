@@ -3,6 +3,7 @@ package com.stock.analysis.application.contentFile.service;
 import com.stock.analysis.application.contentFile.repository.ContentFileRepository;
 import com.stock.analysis.domain.contant.UploadType;
 import com.stock.analysis.domain.entity.ContentFile;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,19 +21,13 @@ import java.util.UUID;
 
 @Slf4j
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class ContentFileServiceImpl implements ContentFileService{
 
     @Value("${rootPath}")
     private String rootPath;
-    private final String filePath;
-    private final File rootDir;
     private final ContentFileRepository contentFileRepository;
-
-    public ContentFileServiceImpl(@Autowired ContentFileRepository contentFileRepository) {
-        this.contentFileRepository = contentFileRepository;
-        filePath = DateTimeFormatter.ofPattern("yyyy/MM/dd").format(LocalDate.now());
-        rootDir = new File(getFullPath(filePath));
-    }
 
     public String getFullPath(String fileName) {
         return rootPath + fileName;
@@ -46,8 +41,9 @@ public class ContentFileServiceImpl implements ContentFileService{
     }
 
     @Override
-    @Transactional
     public void saveContentFile(MultipartFile file, Long joinKey, UploadType uploadType) {
+        String filePath = DateTimeFormatter.ofPattern("yyyy/MM/dd").format(LocalDate.now());
+        File rootDir = new File(getFullPath(filePath));
         if (!rootDir.exists()) {
             try {
                 rootDir.mkdirs();

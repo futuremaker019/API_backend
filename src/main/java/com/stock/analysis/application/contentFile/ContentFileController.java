@@ -1,7 +1,6 @@
 package com.stock.analysis.application.contentFile;
 
 import com.stock.analysis.application.contentFile.dto.ContentFileRequestDto;
-import com.stock.analysis.application.contentFile.repository.ContentFileRepository;
 import com.stock.analysis.application.contentFile.service.ContentFileService;
 import com.stock.analysis.dto.response.Response;
 import lombok.RequiredArgsConstructor;
