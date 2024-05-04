@@ -31,7 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class UserAccountService implements UserDetailsService {
 
@@ -47,6 +46,7 @@ public class UserAccountService implements UserDetailsService {
         return userAccountRepository.findByUserId(userId).map(UserAccountDto::from);
     }
 
+    @Transactional
     public void saveUserAccount(UserJoinRequest userJoinRequest) {
         userAccountRepository.findByUserId(userJoinRequest.userId()).ifPresent(e -> {
             throw new AuthenticationException(ErrorCode.USER_EXISTED, "UserId Existed");
@@ -112,6 +112,7 @@ public class UserAccountService implements UserDetailsService {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserAccount userAccount = userAccountRepository.findByUserId(username)

@@ -17,7 +17,7 @@ public class ContentFileResponseDto extends SuperDto {
     private Long id;
     private String name;
     private String storedName;
-    private String contentType;
+    private String type;
     private String path;
     private Long joinKey;
     private UploadType uploadType;
@@ -27,7 +27,7 @@ public class ContentFileResponseDto extends SuperDto {
         this.id = id;
         this.name = name;
         this.storedName = storedName;
-        this.contentType = contentType;
+        this.type = contentType;
         this.path = path;
     }
 }
