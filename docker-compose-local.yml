@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile
       context: ./redis
     image: futuremaker019/redis_local
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     ports:
       - "6379:6379"
   mysql_local:

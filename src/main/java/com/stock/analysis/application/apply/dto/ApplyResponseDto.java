@@ -29,6 +29,7 @@ public class ApplyResponseDto {
     private LocalDate applyDate;
     private LocalDate jobOpeningDate;
     private LocalDate jobCloseDate;
+    private String headhunterCompany;
 
     private ApplyEnum.IsApplied isApplied;
     private String isAppliedValue;
@@ -64,7 +65,7 @@ public class ApplyResponseDto {
     public ApplyResponseDto(Long id, String companyName, String companyLocation,
                             Long platform, LocalDate applyDate, LocalDate jobOpeningDate,
                             LocalDate jobCloseDate, ApplyEnum.IsApplied isApplied, ApplyEnum.ApplyType applyType,
-                            boolean pass, boolean passResume, Long processCodeId,
+                            boolean pass, boolean passResume, Long processCodeId, String headhunterCompany,
                             List<ContentFileResponseDto> attachments
     ) {
         this.id = id;
@@ -82,6 +83,7 @@ public class ApplyResponseDto {
         this.passResume = passResume;
         this.processCodeId = processCodeId;
         this.attachments = Utils.getList(attachments);
+        this.headhunterCompany = headhunterCompany;
     }
 
     @QueryProjection

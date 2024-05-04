@@ -76,10 +76,10 @@ public class ApplyRepositoryQuerySupport extends QuerydslRepositorySupport {
                         apply.id, apply.companyName, apply.companyLocation, apply.platform,
                         apply.applyDate, apply.jobOpeningDate, apply.jobCloseDate,
                         apply.isApplied, apply.applyType, apply.pass, apply.passResume,
-                        apply.processCodeId,
+                        apply.processCodeId, apply.headhunterCompany,
                         list(new QContentFileResponseDto(
                                 contentFile.id, contentFile.name, contentFile.storedName,
-                                contentFile.path, contentFile.contentType
+                                contentFile.contentType, contentFile.path
                         ))
                 )));
         return result.keySet().stream().map(result::get).findFirst();
