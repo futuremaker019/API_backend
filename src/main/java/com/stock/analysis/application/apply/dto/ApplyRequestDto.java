@@ -1,6 +1,7 @@
 package com.stock.analysis.application.apply.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.stock.analysis.application.process.dto.ApplyProcessRequestDto;
@@ -21,6 +22,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ApplyRequestDto {
 
     private Long id;
@@ -42,10 +44,10 @@ public class ApplyRequestDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate jobCloseDate;
 
-    private ApplyEnum.IsApplied isApplied;
+    private ApplyEnum.ApplyStatus applyStatus;
     private ApplyEnum.ApplyType applyType;
-    private boolean pass;
-    private boolean passResume;
+    private ApplyEnum.PassType passType;
+    private ApplyEnum.PassResumeType passResumeType;
 
     private String headhunterCompany;
 
@@ -59,15 +61,15 @@ public class ApplyRequestDto {
                 .companyName(companyName)
                 .companyLocation(companyLocation)
                 .platform(platform)
-                .isApplied(isApplied)
+                .applyStatus(applyStatus)
                 .applyType(applyType)
                 .applyDate(applyDate)
                 .jobOpeningDate(jobOpeningDate)
                 .jobCloseDate(jobCloseDate)
-                .pass(pass)
-                .passResume(passResume)
+                .passType(passType)
+                .passResumeType(passResumeType)
                 .headhunterCompany(headhunterCompany)
-                .userAccount(userAccount)
+                .userId(userAccount.getId())
                 .processCodeId(processCodeId)
                 .build();
     }

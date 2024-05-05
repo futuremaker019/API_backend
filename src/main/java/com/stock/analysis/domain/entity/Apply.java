@@ -1,14 +1,14 @@
 package com.stock.analysis.domain.entity;
 
+import com.stock.analysis.application.apply.dto.ApplyRequestDto;
 import com.stock.analysis.domain.AuditingFields;
 import com.stock.analysis.domain.contant.ApplyEnum;
 import lombok.*;
-import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -18,6 +18,8 @@ import java.util.Objects;
 @ToString(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicInsert
+@DynamicUpdate
 @SQLDelete(sql = "UPDATE apply SET is_removed = true WHERE id = ?")
 @Where(clause = "is_removed = false")
 public class Apply extends AuditingFields {
@@ -44,17 +46,22 @@ public class Apply extends AuditingFields {
     @Setter
     @Column(columnDefinition = "varchar(50) DEFAULT 'NONE' COMMENT '지원유무: 지원, 지원안함, 미정'")
     @Enumerated(value = EnumType.STRING)
-    private ApplyEnum.IsApplied isApplied;            // 지원유무
+    private ApplyEnum.ApplyStatus applyStatus;            // 지원유무
 
     @Setter
     @Column(columnDefinition = "varchar(50) DEFAULT 'NONE' COMMENT '지원종류: 직접지원, 헤드헌터, 미정'")
     @Enumerated(value = EnumType.STRING)
     private ApplyEnum.ApplyType applyType;            // 지원종류
 
-    @Setter @Comment("합격여부")
-    private boolean pass;                   // 합격여부
-    @Setter @Comment("이력서 합격여부")
-    private boolean passResume;             // 이력서 합격여부
+    @Setter
+    @Column(columnDefinition = "varchar(50) DEFAULT 'NONE' COMMENT '합격여부: 합격, 불합격, 미정'")
+    @Enumerated(value = EnumType.STRING)
+    private ApplyEnum.PassType passType;                   // 합격여부
+
+    @Setter
+    @Column(columnDefinition = "varchar(50) DEFAULT 'NONE' COMMENT '이력서 합격여부: 서류통과, 서류미통과, 미정'")
+    @Enumerated(value = EnumType.STRING)
+    private ApplyEnum.PassResumeType passResumeType;             // 이력서 합격여부
 
     @Setter @Comment("채용전형 codeId")
     private Long processCodeId;             // 채용전형 id
@@ -62,10 +69,8 @@ public class Apply extends AuditingFields {
     @Setter @Comment("헤드헌터 회사")
     private String headhunterCompany;
 
-    @Comment("사용자 id")
-    @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
-    private UserAccount userAccount;        // 사용자 id
+    @Setter @Comment("사용자 id")
+    private Long userId;        // 사용자 id
 
     @Setter
     @Column(columnDefinition = "bit DEFAULT false NOT NULL COMMENT '삭제여부'")
@@ -83,11 +88,11 @@ public class Apply extends AuditingFields {
             LocalDate applyDate,
             LocalDate jobOpeningDate,
             LocalDate jobCloseDate,
-            ApplyEnum.IsApplied isApplied,
+            ApplyEnum.ApplyStatus applyStatus,
             ApplyEnum.ApplyType applyType,
-            boolean pass,
-            boolean passResume,
-            UserAccount userAccount
+            ApplyEnum.PassType passType,
+            ApplyEnum.PassResumeType passResumeType,
+            Long userId
     ) {
         return Apply.builder()
                 .companyName(companyName)
@@ -96,11 +101,11 @@ public class Apply extends AuditingFields {
                 .applyDate(applyDate)
                 .jobOpeningDate(jobOpeningDate)
                 .jobCloseDate(jobCloseDate)
-                .isApplied(isApplied)
+                .applyStatus(applyStatus)
                 .applyType(applyType)
-                .pass(pass)
-                .passResume(passResume)
-                .userAccount(userAccount)
+                .passType(passType)
+                .passResumeType(passResumeType)
+                .userId(userId)
                 .build();
     }
 
@@ -116,4 +121,18 @@ public class Apply extends AuditingFields {
         return Objects.hash(id);
     }
 
+    public void update(ApplyRequestDto requestDto) {
+        setCompanyName(requestDto.getCompanyName());
+        setCompanyLocation(requestDto.getCompanyLocation());
+        setJobOpeningDate(requestDto.getJobOpeningDate());
+        setJobCloseDate(requestDto.getJobCloseDate());
+        setApplyDate(requestDto.getApplyDate());
+        setApplyStatus(requestDto.getApplyStatus());
+        setApplyType(requestDto.getApplyType());
+        setPlatform(requestDto.getPlatform());
+        setPassType(requestDto.getPassType());
+        setPassResumeType(requestDto.getPassResumeType());
+        setHeadhunterCompany(requestDto.getHeadhunterCompany());
+        setProcessCodeId(requestDto.getProcessCodeId());
+    }
 }

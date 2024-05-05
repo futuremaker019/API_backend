@@ -44,7 +44,7 @@ public class ApplyRepositoryQuerySupport extends QuerydslRepositorySupport {
 
     public Page<ApplyResponseDto> searchSelectApplies(SearchApplyDto searchApplyDto, Pageable pageable, UserAccount userAccount) {
         Map<Apply, ApplyResponseDto> result = queryFactory.selectFrom(apply)
-                .where(getBooleanBuilder(searchApplyDto), apply.userAccount.eq(userAccount))
+                .where(getBooleanBuilder(searchApplyDto), apply.userId.eq(userAccount.getId()))
                 .orderBy(Utils.getOrderList(pageable.getSort(), Apply.class).toArray(OrderSpecifier[]::new))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -55,10 +55,10 @@ public class ApplyRepositoryQuerySupport extends QuerydslRepositorySupport {
                         apply.applyDate,
                         apply.jobOpeningDate,
                         apply.jobCloseDate,
-                        apply.isApplied,
+                        apply.applyStatus,
                         apply.applyType,
-                        apply.pass,
-                        apply.passResume
+                        apply.passType,
+                        apply.passResumeType
                 )));
         List<ApplyResponseDto> list = result.keySet().stream().map(result::get).toList();
         JPAQuery<Long> countQuery = queryFactory.select(apply.id.count()).from(apply).where(getBooleanBuilder(searchApplyDto));
@@ -75,7 +75,7 @@ public class ApplyRepositoryQuerySupport extends QuerydslRepositorySupport {
                 .transform(groupBy(apply).as(new QApplyResponseDto(
                         apply.id, apply.companyName, apply.companyLocation, apply.platform,
                         apply.applyDate, apply.jobOpeningDate, apply.jobCloseDate,
-                        apply.isApplied, apply.applyType, apply.pass, apply.passResume,
+                        apply.applyStatus, apply.applyType, apply.passType, apply.passResumeType,
                         apply.processCodeId, apply.headhunterCompany,
                         list(new QContentFileResponseDto(
                                 contentFile.id, contentFile.name, contentFile.storedName,
@@ -118,8 +118,8 @@ public class ApplyRepositoryQuerySupport extends QuerydslRepositorySupport {
             return null;
         }
         return switch (passType) {
-            case PASS -> apply.pass.eq(ApplyEnum.PassType.PASS.getPass());
-            case NOT_PASS -> apply.pass.eq(ApplyEnum.PassType.NOT_PASS.getPass());
+            case PASSED -> apply.passType.eq(ApplyEnum.PassType.PASSED);
+            case NOT_PASSED -> apply.passType.eq(ApplyEnum.PassType.NOT_PASSED);
             default -> null;
         };
     }
@@ -128,16 +128,16 @@ public class ApplyRepositoryQuerySupport extends QuerydslRepositorySupport {
         if (!StringUtils.hasText(isAppliedValue)) {
             return null;
         }
-        ApplyEnum.IsApplied isApplied = Arrays.stream(ApplyEnum.IsApplied.values())
+        ApplyEnum.ApplyStatus applyStatus = Arrays.stream(ApplyEnum.ApplyStatus.values())
                 .filter(value -> value.name().equals(isAppliedValue))
                 .findFirst().orElse(null);
-        if (isApplied == null) {
+        if (applyStatus == null) {
             return null;
         }
-        return switch (isApplied) {
-            case APPLIED -> apply.isApplied.eq(ApplyEnum.IsApplied.APPLIED);
-            case NOT_APPLIED -> apply.isApplied.eq(ApplyEnum.IsApplied.NOT_APPLIED);
-            case NONE -> apply.isApplied.eq(ApplyEnum.IsApplied.NONE);
+        return switch (applyStatus) {
+            case APPLIED -> apply.applyStatus.eq(ApplyEnum.ApplyStatus.APPLIED);
+            case NOT_APPLIED -> apply.applyStatus.eq(ApplyEnum.ApplyStatus.NOT_APPLIED);
+            case NONE -> apply.applyStatus.eq(ApplyEnum.ApplyStatus.NONE);
         };
     }
 }

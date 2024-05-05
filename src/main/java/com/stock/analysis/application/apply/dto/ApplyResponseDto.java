@@ -31,15 +31,10 @@ public class ApplyResponseDto {
     private LocalDate jobCloseDate;
     private String headhunterCompany;
 
-    private ApplyEnum.IsApplied isApplied;
-    private String isAppliedValue;
+    private ApplyEnum.ApplyStatus applyStatus;
     private ApplyEnum.ApplyType applyType;
-    private String applyTypeValue;
-
-    private boolean pass;
-    private String passValue;
-    private boolean passResume;
-    private String passResumeValue;
+    private ApplyEnum.PassType passType;
+    private ApplyEnum.PassResumeType passResumeType;
 
     private Long processCodeId;
 
@@ -62,10 +57,11 @@ public class ApplyResponseDto {
     }
 
     @QueryProjection
-    public ApplyResponseDto(Long id, String companyName, String companyLocation,
-                            Long platform, LocalDate applyDate, LocalDate jobOpeningDate,
-                            LocalDate jobCloseDate, ApplyEnum.IsApplied isApplied, ApplyEnum.ApplyType applyType,
-                            boolean pass, boolean passResume, Long processCodeId, String headhunterCompany,
+    public ApplyResponseDto(Long id, String companyName, String companyLocation, Long platform,
+                            LocalDate applyDate, LocalDate jobOpeningDate, LocalDate jobCloseDate,
+                            ApplyEnum.ApplyStatus applyStatus, ApplyEnum.ApplyType applyType,
+                            ApplyEnum.PassType passType, ApplyEnum.PassResumeType passResumeType,
+                            Long processCodeId, String headhunterCompany,
                             List<ContentFileResponseDto> attachments
     ) {
         this.id = id;
@@ -75,12 +71,10 @@ public class ApplyResponseDto {
         this.applyDate = applyDate;
         this.jobOpeningDate = jobOpeningDate;
         this.jobCloseDate = jobCloseDate;
-        this.isApplied = isApplied;
+        this.applyStatus = applyStatus;
         this.applyType = applyType;
-        this.isAppliedValue = isApplied.getKor();
-        this.applyTypeValue = applyType.getKor();
-        this.pass = pass;
-        this.passResume = passResume;
+        this.passType = passType;
+        this.passResumeType = passResumeType;
         this.processCodeId = processCodeId;
         this.attachments = Utils.getList(attachments);
         this.headhunterCompany = headhunterCompany;
@@ -88,9 +82,9 @@ public class ApplyResponseDto {
 
     @QueryProjection
     public ApplyResponseDto(Long id, String companyName, String companyLocation,
-                            LocalDate applyDate, LocalDate jobOpeningDate,
-                            LocalDate jobCloseDate, ApplyEnum.IsApplied isApplied, ApplyEnum.ApplyType applyType,
-                            boolean pass, boolean passResume
+                            LocalDate applyDate, LocalDate jobOpeningDate, LocalDate jobCloseDate,
+                            ApplyEnum.ApplyStatus applyStatus, ApplyEnum.ApplyType applyType,
+                            ApplyEnum.PassType passType, ApplyEnum.PassResumeType passResumeType
     ) {
         this.id = id;
         this.companyName = companyName;
@@ -98,10 +92,9 @@ public class ApplyResponseDto {
         this.applyDate = applyDate;
         this.jobOpeningDate = jobOpeningDate;
         this.jobCloseDate = jobCloseDate;
-        this.isAppliedValue = isApplied.getKor();
-        this.applyTypeValue = applyType.getKor();
-        this.passValue = pass ? ApplyEnum.PassType.PASS.getValue() : ApplyEnum.PassType.NOT_PASS.getValue();
-        this.passResumeValue = passResume ? ApplyEnum.PassResumeType.PASS_RESUME.getValue()
-                : ApplyEnum.PassResumeType.NOT_PASS_RESUME.getValue();
+        this.applyStatus = applyStatus;
+        this.applyType = applyType;
+        this.passType = passType;
+        this.passResumeType = passResumeType;
     }
 }

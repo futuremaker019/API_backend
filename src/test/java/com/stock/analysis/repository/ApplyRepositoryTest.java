@@ -46,13 +46,13 @@ public class ApplyRepositoryTest {
     SearchApplyDto searchCompanyName() {
         return SearchApplyDto.builder()
                 .companyName("쿠팡2")
-                .isAppliedValue(ApplyEnum.IsApplied.APPLIED.name())
+                .isAppliedValue(ApplyEnum.ApplyStatus.APPLIED.name())
                 .build();
     }
 
     SearchApplyDto searchIsApplied() {
         return SearchApplyDto.builder()
-                .isAppliedValue(ApplyEnum.IsApplied.APPLIED.name())
+                .isAppliedValue(ApplyEnum.ApplyStatus.APPLIED.name())
                 .build();
     }
 

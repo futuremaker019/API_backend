@@ -64,6 +64,13 @@ public class ApplyController {
         return Response.success();
     }
 
+    @PutMapping
+    public Response<Void> updateApply(@RequestBody ApplyRequestDto responseDto) {
+        System.out.println("responseDto = " + responseDto);
+        applyService.updateApply(responseDto);
+        return Response.success();
+    }
+
     @DeleteMapping("{applyId}")
     public Response<Void> deleteApply(@PathVariable("applyId") String applyId) {
         return Response.success();
