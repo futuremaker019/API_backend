@@ -14,4 +14,5 @@ public interface ContentFileService {
 
     Resource downloadFile(Long id);
 
+    void deleteContentFile(Long id);
 }

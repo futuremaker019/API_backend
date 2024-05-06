@@ -3,9 +3,9 @@ package com.stock.analysis.application.contentFile.service;
 import com.stock.analysis.application.contentFile.repository.ContentFileRepository;
 import com.stock.analysis.domain.contant.UploadType;
 import com.stock.analysis.domain.entity.ContentFile;
+import com.stock.analysis.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -72,6 +73,23 @@ public class ContentFileServiceImpl implements ContentFileService{
     @Override
     public Resource downloadFile(Long id) {
         return null;
+    }
+
+    @Override
+    public void deleteContentFile(Long id) {
+        Optional<ContentFile> savedContentFile = contentFileRepository.findById(id);
+        if (savedContentFile.isEmpty()) {
+            log.error("%s, file not found: %d".formatted(ErrorCode.CONTENT_NOT_FOUND, id));
+        }
+        savedContentFile.ifPresent(contentFile -> {
+            contentFileRepository.deleteById(contentFile.getId());
+            File file = new File(rootPath, "%s/%s".formatted(contentFile.getPath(), contentFile.getStoredName()));
+            if (file.exists()) {
+                if (file.delete()) {
+                    log.info("file deleted: %s, %s".formatted(contentFile.getName(), contentFile.getStoredName()));
+                }
+            }
+        });
     }
 
 
