@@ -77,6 +77,7 @@ public class ApplyRepositoryQuerySupport extends QuerydslRepositorySupport {
                         apply.applyDate, apply.jobOpeningDate, apply.jobCloseDate,
                         apply.applyStatus, apply.applyType, apply.passType, apply.passResumeType,
                         apply.processCodeId, apply.headhunterCompany,
+                        apply.createdAt, apply.modifiedAt, apply.createdBy, apply.modifiedBy,
                         list(new QContentFileResponseDto(
                                 contentFile.id, contentFile.name, contentFile.storedName,
                                 contentFile.contentType, contentFile.path
