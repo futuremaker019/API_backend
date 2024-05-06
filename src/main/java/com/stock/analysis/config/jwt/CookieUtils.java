@@ -9,9 +9,12 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class CookieUtils {
 
-    public Cookie createCookie(String cookieName, String value) {
+    public Cookie createCookie(String cookieName, String value, long refreshTokenExpiredTimeMs) {
         Cookie cookie = new Cookie(cookieName, value);
+        cookie.setSecure(true);
         cookie.setHttpOnly(true);
+        cookie.setMaxAge((int)(refreshTokenExpiredTimeMs));
+        cookie.setPath("/");
         return cookie;
     }
 

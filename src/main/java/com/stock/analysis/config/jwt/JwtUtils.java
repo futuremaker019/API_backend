@@ -125,10 +125,7 @@ public class JwtUtils implements InitializingBean {
     }
 
     public void addRefreshTokenInCookie(String refreshToken, HttpServletResponse response) {
-        Cookie refreshTokenCookie = cookieUtils.createCookie(TokenType.REFRESH_TOKEN.getValue(), refreshToken);
-        refreshTokenCookie.setSecure(true);
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setMaxAge((int)(refreshTokenExpiredTimeMs));
+        Cookie refreshTokenCookie = cookieUtils.createCookie(TokenType.REFRESH_TOKEN.getValue(), refreshToken, refreshTokenExpiredTimeMs);
         response.addCookie(refreshTokenCookie);
     }
 
