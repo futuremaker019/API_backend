@@ -10,7 +10,7 @@ import com.stock.analysis.domain.entity.Apply;
 import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.dto.response.Response;
 import com.stock.analysis.dto.security.CurrentUser;
-import com.stock.analysis.exception.ApplyAppException;
+import com.stock.analysis.exception.ContentAppException;
 import com.stock.analysis.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -56,7 +56,7 @@ public class ApplyController {
         if (errors.hasErrors()) {
             String defaultMessage = Objects.requireNonNull(errors.getFieldError()).getDefaultMessage();
             System.out.println("errors = " + defaultMessage);
-            throw new ApplyAppException(ErrorCode.HAS_NO_ARGUMENTS, defaultMessage);
+            throw new ContentAppException(ErrorCode.HAS_NO_ARGUMENTS, defaultMessage);
         }
 
         Apply apply = applyService.createApply(responseDto, userAccount);

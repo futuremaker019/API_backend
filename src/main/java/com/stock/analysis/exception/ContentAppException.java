@@ -5,12 +5,12 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ApplyAppException extends RuntimeException {
+public class ContentAppException extends RuntimeException {
 
     private ErrorCode errorCode;
     private String message;
 
-    public ApplyAppException(ErrorCode errorCode) {
+    public ContentAppException(ErrorCode errorCode) {
         this.errorCode = errorCode;
         this.message = null;
     }
