@@ -220,7 +220,7 @@ insert into apply_process (apply_id, process_code_id, user_id, name, orders) val
 (18, 9, 1, '2차 화상면접', 3),
 (18, 10, 1, '최종합격', 4);
 
-insert into content_file (upload_type, id, content_type, name, path, stored_name, join_key) values
+insert into content_file (upload_type, id, content_type, name, path, stored_name, content_id) values
 ('APPLY', 1, 'image/jpeg', 'image.jpeg', '2024/04/23', '2581e0ab-ac52-4074-bf18-78d5acdcab1a.jpeg', 18),
 ('APPLY', 2, 'image/jpeg', 'image2.jpeg', '2024/04/23', '935bdb1e-e88c-483f-a5f3-952b5c339496.jpeg', 18),
 ('ARTICLE', 3, 'image/jpeg', 'image.jpeg', '2024/04/23', '2581e0ab-ac52-4074-bf18-78d5acdcab1a.jpeg', 1),

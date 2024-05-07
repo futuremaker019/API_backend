@@ -1,5 +1,7 @@
 package com.stock.analysis.application.contentFile.service;
 
+import com.stock.analysis.application.contentFile.dto.ContentFileRequestDto;
+import com.stock.analysis.application.contentFile.dto.ContentFileResponseDto;
 import com.stock.analysis.domain.contant.UploadType;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,4 +17,6 @@ public interface ContentFileService {
     Resource downloadFile(Long id);
 
     void deleteContentFile(Long id);
+
+    List<ContentFileResponseDto> selectContentFilesByContentIdAndUploadType(ContentFileRequestDto requestDto);
 }

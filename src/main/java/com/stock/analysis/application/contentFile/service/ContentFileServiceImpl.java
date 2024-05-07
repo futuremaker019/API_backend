@@ -1,19 +1,26 @@
 package com.stock.analysis.application.contentFile.service;
 
+import com.stock.analysis.application.contentFile.dto.ContentFileRequestDto;
+import com.stock.analysis.application.contentFile.dto.ContentFileResponseDto;
 import com.stock.analysis.application.contentFile.repository.ContentFileRepository;
 import com.stock.analysis.domain.contant.UploadType;
 import com.stock.analysis.domain.entity.ContentFile;
+import com.stock.analysis.exception.ContentAppException;
 import com.stock.analysis.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -35,14 +42,14 @@ public class ContentFileServiceImpl implements ContentFileService{
     }
 
     @Override
-    public void saveContentFiles(List<MultipartFile> files, Long joinKey, UploadType uploadType) {
+    public void saveContentFiles(List<MultipartFile> files, Long contentId, UploadType uploadType) {
         if (files != null) {
-            files.forEach(file -> saveContentFile(file, joinKey, uploadType));
+            files.forEach(file -> saveContentFile(file, contentId, uploadType));
         }
     }
 
     @Override
-    public void saveContentFile(MultipartFile file, Long joinKey, UploadType uploadType) {
+    public void saveContentFile(MultipartFile file, Long contentId, UploadType uploadType) {
         String filePath = DateTimeFormatter.ofPattern("yyyy/MM/dd").format(LocalDate.now());
         File rootDir = new File(getFullPath(filePath));
         if (!rootDir.exists()) {
@@ -60,7 +67,7 @@ public class ContentFileServiceImpl implements ContentFileService{
             throw new RuntimeException(e);
         }
         ContentFile contentFile = ContentFile.builder()
-                .joinKey(joinKey)
+                .contentId(contentId)
                 .name(originalFilename)
                 .storedName(storedFileName)
                 .contentType(file.getContentType())
@@ -72,7 +79,16 @@ public class ContentFileServiceImpl implements ContentFileService{
 
     @Override
     public Resource downloadFile(Long id) {
-        return null;
+        ContentFile contentFile = contentFileRepository.findById(id)
+                .orElseThrow(() -> new ContentAppException(ErrorCode.CONTENT_NOT_FOUND, "file not found: id - %d".formatted(id)));
+        String fullPath = getFullPath(contentFile.getPath());
+        Path filePath = Paths.get(fullPath).resolve(Paths.get(contentFile.getStoredName()));
+
+        try {
+            return new UrlResource(filePath.toUri());
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -90,6 +106,12 @@ public class ContentFileServiceImpl implements ContentFileService{
                 }
             }
         });
+    }
+
+    @Override
+    public List<ContentFileResponseDto> selectContentFilesByContentIdAndUploadType(ContentFileRequestDto requestDto) {
+        return contentFileRepository.findByContentIdAndUploadType(requestDto.getContentId(), requestDto.getUploadType())
+                .stream().map(ContentFileResponseDto::from).toList();
     }
 
 
