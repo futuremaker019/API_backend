@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Table(indexes = @Index(name = "joinkey_upload_type_idx", columnList = "joinkey, uploadType"))
+@Table(indexes = @Index(name = "content_id_upload_type_idx", columnList = "contentId, uploadType"))
 public class ContentFile {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +29,8 @@ public class ContentFile {
     @Setter @Column(length = 100)
     private String path;
 
-    @Setter @Comment("조인키")
-    private Long joinKey;
+    @Setter @Comment("컨텐츠 id")
+    private Long contentId;
 
     @Setter
     @Column(columnDefinition = "varchar(20) NOT NULL COMMENT '컨텐츠 종류'")

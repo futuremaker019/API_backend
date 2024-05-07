@@ -70,7 +70,7 @@ public class ApplyRepositoryQuerySupport extends QuerydslRepositorySupport {
      */
     public Optional<ApplyResponseDto> getApplyById(Long applyId) {
         Map<Apply, ApplyResponseDto> result = queryFactory.selectFrom(apply)
-                .leftJoin(contentFile).on(contentFile.joinKey.eq(apply.id).and(contentFile.uploadType.eq(UploadType.APPLY)))
+                .leftJoin(contentFile).on(contentFile.contentId.eq(apply.id).and(contentFile.uploadType.eq(UploadType.APPLY)))
                 .where(apply.id.eq(applyId))
                 .transform(groupBy(apply).as(new QApplyResponseDto(
                         apply.id, apply.companyName, apply.companyLocation, apply.platform,
