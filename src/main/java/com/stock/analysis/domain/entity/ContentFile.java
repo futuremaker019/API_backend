@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(indexes = @Index(name = "joinkey_upload_type_idx", columnList = "joinkey, uploadType"))
 public class ContentFile {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
