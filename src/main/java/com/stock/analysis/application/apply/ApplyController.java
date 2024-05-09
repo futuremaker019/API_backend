@@ -1,17 +1,16 @@
 package com.stock.analysis.application.apply;
 
-import com.stock.analysis.application.apply.service.ApplyService;
-import com.stock.analysis.application.upload.service.UploadService;
-import com.stock.analysis.domain.contant.UploadType;
-import com.stock.analysis.domain.entity.Apply;
-import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.application.apply.dto.ApplyRequestDto;
 import com.stock.analysis.application.apply.dto.ApplyResponseDto;
 import com.stock.analysis.application.apply.dto.SearchApplyDto;
+import com.stock.analysis.application.apply.service.ApplyService;
+import com.stock.analysis.application.contentFile.service.ContentFileService;
+import com.stock.analysis.domain.contant.UploadType;
+import com.stock.analysis.domain.entity.Apply;
+import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.dto.response.Response;
 import com.stock.analysis.dto.security.CurrentUser;
-import com.stock.analysis.application.upload.dto.ApplyUploadDto;
-import com.stock.analysis.exception.ApplyAppException;
+import com.stock.analysis.exception.ContentAppException;
 import com.stock.analysis.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,7 +31,7 @@ import java.util.Objects;
 public class ApplyController {
 
     private final ApplyService applyService;
-    private final UploadService uploadService;
+    private final ContentFileService contentFileService;
 
     @PostMapping
     public Response<Page<ApplyResponseDto>> selectApplies(
@@ -44,8 +43,8 @@ public class ApplyController {
     }
 
     @GetMapping("{applyId}")
-    public Response<ApplyResponseDto> getApply(@PathVariable("applyId") String applyId) {
-        return Response.success();
+    public Response<ApplyResponseDto> getApply(@PathVariable("applyId") Long applyId) {
+        return Response.success(applyService.getApplyById(applyId));
     }
 
     @PostMapping("/create")
@@ -57,15 +56,18 @@ public class ApplyController {
         if (errors.hasErrors()) {
             String defaultMessage = Objects.requireNonNull(errors.getFieldError()).getDefaultMessage();
             System.out.println("errors = " + defaultMessage);
-            throw new ApplyAppException(ErrorCode.HAS_NO_ARGUMENTS, defaultMessage);
+            throw new ContentAppException(ErrorCode.HAS_NO_ARGUMENTS, defaultMessage);
         }
 
         Apply apply = applyService.createApply(responseDto, userAccount);
-        uploadService.saveUploads(
-                ApplyUploadDto.builder().apply(apply).build(),
-                attachments,
-                UploadType.APPLY
-        );
+        contentFileService.saveContentFiles(attachments, apply.getId(), UploadType.APPLY);
+        return Response.success();
+    }
+
+    @PutMapping
+    public Response<Void> updateApply(@RequestBody ApplyRequestDto responseDto) {
+        System.out.println("responseDto = " + responseDto);
+        applyService.updateApply(responseDto);
         return Response.success();
     }
 

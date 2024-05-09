@@ -18,7 +18,7 @@ public class ApplyEnum {
 
     @Getter
     @AllArgsConstructor
-    public enum IsApplied {
+    public enum ApplyStatus {
         APPLIED("지원"),
         NOT_APPLIED("미지원"),
         NONE("미정")
@@ -30,20 +30,22 @@ public class ApplyEnum {
     @Getter
     @AllArgsConstructor
     public enum PassType {
-        PASS(true, "합격"),
-        NOT_PASS(false, "불합격");
+        PASSED("합격"),
+        NOT_PASSED( "불합격"),
+        NONE("미정")
+        ;
 
-        private final Boolean pass;
         private final String value;
     }
 
     @Getter
     @AllArgsConstructor
     public enum PassResumeType {
-        PASS_RESUME(true, "서류통과"),
-        NOT_PASS_RESUME(false, "서류미통과");
+        PASS_RESUME( "서류통과"),
+        NOT_PASS_RESUME( "서류미통과"),
+        NONE("미정")
+        ;
 
-        private final Boolean passResume;
         private final String value;
     }
 

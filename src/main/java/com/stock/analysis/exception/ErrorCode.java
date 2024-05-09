@@ -30,8 +30,8 @@ public enum ErrorCode {
     CODE_CHILDREN_EXISTED(HttpStatus.CONFLICT, "children existed"),          // 409
 
     MAX_UPLOAD_SIZE_EXCEEDED(HttpStatus.INTERNAL_SERVER_ERROR, "Max upload size exceeded")  // 500
-
-    ;
+    ,
+    CONTENT_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "CONTENT_NOT_FOUND");
 
     private final HttpStatus status;
     private final String message;

@@ -8,7 +8,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.stock.analysis.application.apply.dto.ApplyResponseDto;
 import com.stock.analysis.application.apply.dto.QApplyResponseDto;
 import com.stock.analysis.application.apply.dto.SearchApplyDto;
+import com.stock.analysis.application.contentFile.dto.QContentFileResponseDto;
 import com.stock.analysis.domain.contant.ApplyEnum;
+import com.stock.analysis.domain.contant.UploadType;
 import com.stock.analysis.domain.entity.Apply;
 import com.stock.analysis.domain.entity.UserAccount;
 import com.stock.analysis.utils.Utils;
@@ -23,9 +25,12 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.group.GroupBy.list;
 import static com.stock.analysis.domain.entity.QApply.apply;
+import static com.stock.analysis.domain.entity.QContentFile.contentFile;
 
 @Repository
 public class ApplyRepositoryQuerySupport extends QuerydslRepositorySupport {
@@ -39,7 +44,7 @@ public class ApplyRepositoryQuerySupport extends QuerydslRepositorySupport {
 
     public Page<ApplyResponseDto> searchSelectApplies(SearchApplyDto searchApplyDto, Pageable pageable, UserAccount userAccount) {
         Map<Apply, ApplyResponseDto> result = queryFactory.selectFrom(apply)
-                .where(getBooleanBuilder(searchApplyDto), apply.userAccount.eq(userAccount))
+                .where(getBooleanBuilder(searchApplyDto), apply.userId.eq(userAccount.getId()))
                 .orderBy(Utils.getOrderList(pageable.getSort(), Apply.class).toArray(OrderSpecifier[]::new))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -50,15 +55,35 @@ public class ApplyRepositoryQuerySupport extends QuerydslRepositorySupport {
                         apply.applyDate,
                         apply.jobOpeningDate,
                         apply.jobCloseDate,
-                        apply.isApplied,
+                        apply.applyStatus,
                         apply.applyType,
-                        apply.pass,
-                        apply.passResume
+                        apply.passType,
+                        apply.passResumeType
                 )));
         List<ApplyResponseDto> list = result.keySet().stream().map(result::get).toList();
-        JPAQuery<Long> countQuery = queryFactory.select(apply.id.count())
-                .from(apply).where(getBooleanBuilder(searchApplyDto));
+        JPAQuery<Long> countQuery = queryFactory.select(apply.id.count()).from(apply).where(getBooleanBuilder(searchApplyDto));
         return PageableExecutionUtils.getPage(list, pageable, countQuery::fetchOne);
+    }
+
+    /**
+     * 기본 지원필드, 진행단계를 위한 채용전형코드, 파일다운로드를 위한 파일정보들
+     */
+    public Optional<ApplyResponseDto> getApplyById(Long applyId) {
+        Map<Apply, ApplyResponseDto> result = queryFactory.selectFrom(apply)
+                .leftJoin(contentFile).on(contentFile.contentId.eq(apply.id).and(contentFile.uploadType.eq(UploadType.APPLY)))
+                .where(apply.id.eq(applyId))
+                .transform(groupBy(apply).as(new QApplyResponseDto(
+                        apply.id, apply.companyName, apply.companyLocation, apply.platform,
+                        apply.applyDate, apply.jobOpeningDate, apply.jobCloseDate,
+                        apply.applyStatus, apply.applyType, apply.passType, apply.passResumeType,
+                        apply.processCodeId, apply.headhunterCompany,
+                        apply.createdAt, apply.modifiedAt, apply.createdBy, apply.modifiedBy,
+                        list(new QContentFileResponseDto(
+                                contentFile.id, contentFile.name, contentFile.storedName,
+                                contentFile.contentType, contentFile.path
+                        ))
+                )));
+        return result.keySet().stream().map(result::get).findFirst();
     }
 
     private BooleanBuilder getBooleanBuilder(SearchApplyDto searchDto) {
@@ -76,7 +101,6 @@ public class ApplyRepositoryQuerySupport extends QuerydslRepositorySupport {
         }
         return apply.jobCloseDate.between(jobCloseStartDate, jobCloseEndDate);
     }
-
     private BooleanExpression companyNameEq(String companyName) {
         /**
          * like (string), contains (%string%), startWith (string%), endWith(%string)
@@ -95,26 +119,26 @@ public class ApplyRepositoryQuerySupport extends QuerydslRepositorySupport {
             return null;
         }
         return switch (passType) {
-            case PASS -> apply.pass.eq(ApplyEnum.PassType.PASS.getPass());
-            case NOT_PASS -> apply.pass.eq(ApplyEnum.PassType.NOT_PASS.getPass());
+            case PASSED -> apply.passType.eq(ApplyEnum.PassType.PASSED);
+            case NOT_PASSED -> apply.passType.eq(ApplyEnum.PassType.NOT_PASSED);
             default -> null;
         };
     }
+
     private BooleanExpression applyEq(String isAppliedValue) {
         if (!StringUtils.hasText(isAppliedValue)) {
             return null;
         }
-        ApplyEnum.IsApplied isApplied = Arrays.stream(ApplyEnum.IsApplied.values())
+        ApplyEnum.ApplyStatus applyStatus = Arrays.stream(ApplyEnum.ApplyStatus.values())
                 .filter(value -> value.name().equals(isAppliedValue))
                 .findFirst().orElse(null);
-        if (isApplied == null) {
+        if (applyStatus == null) {
             return null;
         }
-        return switch (isApplied) {
-            case APPLIED -> apply.isApplied.eq(ApplyEnum.IsApplied.APPLIED);
-            case NOT_APPLIED -> apply.isApplied.eq(ApplyEnum.IsApplied.NOT_APPLIED);
-            case NONE -> apply.isApplied.eq(ApplyEnum.IsApplied.NONE);
+        return switch (applyStatus) {
+            case APPLIED -> apply.applyStatus.eq(ApplyEnum.ApplyStatus.APPLIED);
+            case NOT_APPLIED -> apply.applyStatus.eq(ApplyEnum.ApplyStatus.NOT_APPLIED);
+            case NONE -> apply.applyStatus.eq(ApplyEnum.ApplyStatus.NONE);
         };
     }
-
 }

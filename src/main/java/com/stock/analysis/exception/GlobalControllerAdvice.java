@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
-import org.springframework.web.multipart.MultipartException;
 
 @Slf4j
 @RestControllerAdvice
@@ -24,8 +23,8 @@ public class GlobalControllerAdvice {
                 .body(Response.error(e.getErrorCode().name()));
     }
 
-    @ExceptionHandler(ApplyAppException.class)
-    public ResponseEntity<?> applyErrorHandler(ApplyAppException e) {
+    @ExceptionHandler(ContentAppException.class)
+    public ResponseEntity<?> applyErrorHandler(ContentAppException e) {
         log.error("Error occurred {}", e.toString());
         return ResponseEntity.status(e.getErrorCode().getStatus())
                 .body(Response.error(e.getErrorCode().name()));

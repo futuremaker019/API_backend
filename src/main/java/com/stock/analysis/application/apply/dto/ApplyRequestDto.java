@@ -1,8 +1,10 @@
 package com.stock.analysis.application.apply.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.stock.analysis.application.process.dto.ApplyProcessRequestDto;
 import com.stock.analysis.domain.contant.ApplyEnum;
 import com.stock.analysis.domain.entity.Apply;
 import com.stock.analysis.domain.entity.UserAccount;
@@ -12,12 +14,15 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ApplyRequestDto {
 
     private Long id;
@@ -39,10 +44,14 @@ public class ApplyRequestDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate jobCloseDate;
 
-    private ApplyEnum.IsApplied isApplied;
+    private ApplyEnum.ApplyStatus applyStatus;
     private ApplyEnum.ApplyType applyType;
-    private boolean pass;
-    private boolean passResume;
+    private ApplyEnum.PassType passType;
+    private ApplyEnum.PassResumeType passResumeType;
+
+    private String headhunterCompany;
+
+    private List<ApplyProcessRequestDto> processCodes = new ArrayList<>();
 
     @Min(value = 0, message = "채용전형을 선택해주세요.")
     private Long processCodeId;
@@ -52,14 +61,15 @@ public class ApplyRequestDto {
                 .companyName(companyName)
                 .companyLocation(companyLocation)
                 .platform(platform)
-                .isApplied(isApplied)
+                .applyStatus(applyStatus)
                 .applyType(applyType)
                 .applyDate(applyDate)
                 .jobOpeningDate(jobOpeningDate)
                 .jobCloseDate(jobCloseDate)
-                .pass(pass)
-                .passResume(passResume)
-                .userAccount(userAccount)
+                .passType(passType)
+                .passResumeType(passResumeType)
+                .headhunterCompany(headhunterCompany)
+                .userId(userAccount.getId())
                 .processCodeId(processCodeId)
                 .build();
     }
