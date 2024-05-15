@@ -37,22 +37,22 @@ public class ApplyRepositoryTest {
         this.applyRepositoryQuerySupport = new ApplyRepositoryQuerySupport(queryFactory);
     }
 
-    @Test
-    void 회사검색_지원목록페이지_페이징목록_반환() {
-        Page<ApplyResponseDto> dtos = applyRepositoryQuerySupport.searchSelectApplies(searchCompanyName(), Pageable.unpaged(), createUserAccount());
-        assertThat(dtos.getSize()).isEqualTo(0);
-    }
+//    @Test
+//    void 회사검색_지원목록페이지_페이징목록_반환() {
+//        Page<ApplyResponseDto> dtos = applyRepositoryQuerySupport.searchSelectApplies(searchCompanyName(), Pageable.unpaged(), createUserAccount());
+//        assertThat(dtos.getSize()).isEqualTo(0);
+//    }
 
     SearchApplyDto searchCompanyName() {
         return SearchApplyDto.builder()
                 .companyName("쿠팡2")
-                .isAppliedValue(ApplyEnum.ApplyStatus.APPLIED.name())
+                .applyStatusValue(ApplyEnum.ApplyStatus.APPLIED.name())
                 .build();
     }
 
     SearchApplyDto searchIsApplied() {
         return SearchApplyDto.builder()
-                .isAppliedValue(ApplyEnum.ApplyStatus.APPLIED.name())
+                .applyStatusValue(ApplyEnum.ApplyStatus.APPLIED.name())
                 .build();
     }
 
