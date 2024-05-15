@@ -90,8 +90,8 @@ public class ApplyRepositoryQuerySupport extends QuerydslRepositorySupport {
         BooleanBuilder builder = new BooleanBuilder();
         return builder
                 .and(companyNameEq(searchDto.getCompanyName()))
-                .and(passEq(searchDto.getPassValue()))
-                .and(applyEq(searchDto.getIsAppliedValue()))
+                .and(passEq(searchDto.getPassTypeValue()))
+                .and(applyEq(searchDto.getApplyStatusValue()))
                 .and(jobCloseDateBetween(searchDto.getJobCloseStartDate(), searchDto.getJobCloseEndDate()));
     }
 

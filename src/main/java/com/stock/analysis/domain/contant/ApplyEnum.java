@@ -35,7 +35,7 @@ public class ApplyEnum {
         NONE("미정")
         ;
 
-        private final String value;
+        private final String kor;
     }
 
     @Getter
@@ -46,7 +46,7 @@ public class ApplyEnum {
         NONE("미정")
         ;
 
-        private final String value;
+        private final String kor;
     }
 
 

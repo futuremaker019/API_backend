@@ -37,6 +37,10 @@ public class ApplyResponseDto {
     private ApplyEnum.ApplyType applyType;
     private ApplyEnum.PassType passType;
     private ApplyEnum.PassResumeType passResumeType;
+    private String applyStatusValue;
+    private String applyTypeValue;
+    private String passTypeValue;
+    private String passResumeTypeValue;
 
     private Long processCodeId;
 
@@ -110,5 +114,9 @@ public class ApplyResponseDto {
         this.applyType = applyType;
         this.passType = passType;
         this.passResumeType = passResumeType;
+        this.applyStatusValue = applyStatus.getKor();
+        this.applyTypeValue = applyType.getKor();
+        this.passTypeValue = passType.getKor();
+        this.passResumeTypeValue = passResumeType.getKor();
     }
 }
